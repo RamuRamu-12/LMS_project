@@ -1,0 +1,65 @@
+{
+  "development": {
+    "username": "test_owner",
+    "password": "tcWI7unQ6REA",
+    "database": "test",
+    "host": "ep-yellow-recipe-a5fny139.us-east-2.aws.neon.tech",
+    "port": 5432,
+    "dialect": "postgres",
+    "logging": true,
+    "pool": {
+      "max": 5,
+      "min": 0,
+      "acquire": 30000,
+      "idle": 10000
+    },
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
+  },
+  "test": {
+    "username": "test_owner",
+    "password": "tcWI7unQ6REA",
+    "database": "test_test",
+    "host": "ep-yellow-recipe-a5fny139.us-east-2.aws.neon.tech",
+    "port": 5432,
+    "dialect": "postgres",
+    "logging": false,
+    "pool": {
+      "max": 5,
+      "min": 0,
+      "acquire": 30000,
+      "idle": 10000
+    },
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
+  },
+  "production": {
+    "username": "test_owner",
+    "password": "tcWI7unQ6REA",
+    "database": "test",
+    "host": "ep-yellow-recipe-a5fny139.us-east-2.aws.neon.tech",
+    "port": 5432,
+    "dialect": "postgres",
+    "logging": false,
+    "pool": {
+      "max": 20,
+      "min": 5,
+      "acquire": 30000,
+      "idle": 10000
+    },
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
+  }
+}
