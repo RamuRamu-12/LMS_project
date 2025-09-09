@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import VideoPlayer from './VideoPlayer'
-import PDFViewer from './PDFViewer'
+import SmartPDFViewer from './SmartPDFViewer'
 import ChapterProgressTracker from './ChapterProgressTracker'
 import { FiFile, FiPlay, FiEye } from 'react-icons/fi'
 
@@ -138,13 +138,13 @@ const StudentChapterView = ({ chapter, enrollmentId }) => {
             showControls={true}
             autoplay={false}
           />
-        ) : viewMode === 'pdf' && hasPDF ? (
-          <PDFViewer
-            pdfUrl={chapter.pdf_url}
-            title={chapter.title}
-            className="h-full"
-          />
-        ) : (
+         ) : viewMode === 'pdf' && hasPDF ? (
+           <SmartPDFViewer
+             pdfUrl={chapter.pdf_url}
+             title={chapter.title}
+             className="h-full"
+           />
+         ) : (
           <div className="flex items-center justify-center h-full bg-gradient-to-br from-gray-50 to-gray-100">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}

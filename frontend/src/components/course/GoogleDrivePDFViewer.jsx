@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { FiDownload, FiExternalLink, FiFile, FiAlertCircle, FiLoader } from 'react-icons/fi'
 
-const PDFViewer = ({ 
+const GoogleDrivePDFViewer = ({ 
   pdfUrl, 
   title = 'PDF Document', 
   className = '',
@@ -10,9 +10,7 @@ const PDFViewer = ({
 }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [pdfLoaded, setPdfLoaded] = useState(false)
-  const [proxyUrl, setProxyUrl] = useState(null)
-  const [isExternal, setIsExternal] = useState(false)
+  const [viewerUrl, setViewerUrl] = useState(null)
 
   useEffect(() => {
     if (!pdfUrl) {
@@ -21,35 +19,47 @@ const PDFViewer = ({
       return
     }
 
-    // Check if URL is external (not from same origin)
-    const isExternalUrl = !pdfUrl.startsWith(window.location.origin) && 
-                         !pdfUrl.startsWith('/') && 
-                         (pdfUrl.startsWith('http://') || pdfUrl.startsWith('https://'))
-    
-    setIsExternal(isExternalUrl)
-
-    if (isExternalUrl) {
-      // For external URLs, use our proxy
-      const proxyUrl = `/api/pdf/proxy?url=${encodeURIComponent(pdfUrl)}`
-      setProxyUrl(proxyUrl)
-      setPdfLoaded(true)
-      setIsLoading(false)
-    } else {
-      // For internal URLs, check accessibility
-      fetch(pdfUrl, { method: 'HEAD' })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('PDF not accessible')
-          }
-          setPdfLoaded(true)
-          setIsLoading(false)
-        })
-        .catch(err => {
-          setError(err.message)
-          setIsLoading(false)
-        })
-    }
+    // Convert various Google Drive URLs to embeddable format
+    const embeddableUrl = convertToEmbeddableUrl(pdfUrl)
+    setViewerUrl(embeddableUrl)
+    setIsLoading(false)
   }, [pdfUrl])
+
+  const convertToEmbeddableUrl = (url) => {
+    try {
+      // Handle different Google Drive URL formats
+      let fileId = null
+      
+      // Format 1: https://drive.google.com/file/d/FILE_ID/view
+      const match1 = url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)
+      if (match1) {
+        fileId = match1[1]
+      }
+      
+      // Format 2: https://drive.google.com/open?id=FILE_ID
+      const match2 = url.match(/[?&]id=([a-zA-Z0-9-_]+)/)
+      if (match2) {
+        fileId = match2[1]
+      }
+      
+      // Format 3: https://docs.google.com/document/d/FILE_ID/edit
+      const match3 = url.match(/\/document\/d\/([a-zA-Z0-9-_]+)/)
+      if (match3) {
+        fileId = match3[1]
+      }
+
+      if (fileId) {
+        // Convert to Google Drive embeddable URL
+        return `https://drive.google.com/file/d/${fileId}/preview`
+      }
+
+      // For other URLs, try to use Google Docs viewer
+      return `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`
+    } catch (error) {
+      console.error('Error converting URL:', error)
+      return url
+    }
+  }
 
   const handleDownload = () => {
     const link = document.createElement('a')
@@ -70,13 +80,13 @@ const PDFViewer = ({
       <div className={`flex items-center justify-center bg-gray-100 rounded-lg ${className}`}>
         <div className="text-center">
           <FiLoader className="w-8 h-8 text-indigo-600 animate-spin mx-auto mb-2" />
-          <p className="text-sm text-gray-600">Loading PDF...</p>
+          <p className="text-sm text-gray-600">Preparing PDF viewer...</p>
         </div>
       </div>
     )
   }
 
-  if (error || !pdfLoaded) {
+  if (error) {
     return (
       <div className={`bg-red-50 border border-red-200 rounded-lg p-4 ${className}`}>
         <div className="flex items-center">
@@ -99,10 +109,10 @@ const PDFViewer = ({
       className={`bg-white rounded-lg shadow-sm overflow-hidden ${className}`}
     >
       {/* PDF Header */}
-      <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-4 py-3 border-b border-blue-200">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <FiFile className="w-5 h-5 text-red-500 mr-2" />
+            <FiFile className="w-5 h-5 text-blue-500 mr-2" />
             <h3 className="text-sm font-medium text-gray-900">{title}</h3>
           </div>
           
@@ -117,7 +127,7 @@ const PDFViewer = ({
               </button>
               <button
                 onClick={handleDownload}
-                className="inline-flex items-center px-3 py-1 text-xs font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 transition-colors duration-200"
+                className="inline-flex items-center px-3 py-1 text-xs font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 transition-colors duration-200"
               >
                 <FiDownload className="w-3 h-3 mr-1" />
                 Download
@@ -127,24 +137,25 @@ const PDFViewer = ({
         </div>
       </div>
 
-      {/* PDF Embed */}
+      {/* Google Drive PDF Embed */}
       <div className="relative w-full" style={{ height: '600px' }}>
         <iframe
-          src={`${proxyUrl || pdfUrl}#toolbar=1&navpanes=1&scrollbar=1`}
+          src={viewerUrl}
           title={title}
           className="w-full h-full border-0"
           frameBorder="0"
+          allowFullScreen
         />
       </div>
 
       {/* PDF Footer */}
       <div className="bg-gray-50 px-4 py-2 border-t border-gray-200">
         <p className="text-xs text-gray-500">
-          {isExternal ? 'PDF document loaded via proxy' : 'PDF document loaded from storage'}
+          PDF viewed through Google Drive • No CORS issues
         </p>
       </div>
     </motion.div>
   )
 }
 
-export default PDFViewer
+export default GoogleDrivePDFViewer
