@@ -67,24 +67,24 @@ const ChapterSidebar = ({ chapters = [], selectedChapterId, onChapterSelect, cou
 
   return (
     <div className={`bg-white border-r border-gray-200 transition-all duration-300 ${
-      isCollapsed ? 'w-16' : 'w-80'
+      isCollapsed ? 'w-12' : 'w-64'
     }`}>
-      {/* Header */}
-      <div className="p-4 border-b border-gray-200">
+      {/* Compact Header */}
+      <div className="p-3 border-b border-gray-200">
         <div className="flex items-center justify-between">
           {!isCollapsed && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">Course Content</h3>
-              <p className="text-sm text-gray-600 truncate">{courseTitle}</p>
+              <h3 className="text-sm font-semibold text-gray-900">Course Content</h3>
+              <p className="text-xs text-gray-600 truncate">{courseTitle}</p>
             </div>
           )}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-2 text-gray-400 hover:text-gray-600 rounded-md hover:bg-gray-100"
+            className="p-1.5 text-gray-400 hover:text-gray-600 rounded-md hover:bg-gray-100"
             title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             <svg 
-              className={`w-5 h-5 transition-transform ${isCollapsed ? 'rotate-180' : ''}`} 
+              className={`w-4 h-4 transition-transform ${isCollapsed ? 'rotate-180' : ''}`} 
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"
@@ -105,14 +105,14 @@ const ChapterSidebar = ({ chapters = [], selectedChapterId, onChapterSelect, cou
             <p className="text-sm">No chapters available</p>
           </div>
         ) : (
-          <div className="p-2">
+          <div className="p-1">
             {chapters.map((chapter, index) => (
               <motion.div
                 key={chapter.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`mb-2 rounded-lg transition-all duration-200 ${
+                className={`mb-1 rounded-md transition-all duration-200 ${
                   selectedChapterId === chapter.id
                     ? 'bg-indigo-50 border-indigo-200'
                     : 'hover:bg-gray-50 border-transparent'
@@ -120,15 +120,15 @@ const ChapterSidebar = ({ chapters = [], selectedChapterId, onChapterSelect, cou
               >
                 <button
                   onClick={() => onChapterSelect(chapter)}
-                  className={`w-full p-3 text-left rounded-lg transition-colors ${
+                  className={`w-full p-2 text-left rounded-md transition-colors ${
                     selectedChapterId === chapter.id
                       ? 'text-indigo-900'
                       : 'text-gray-700 hover:text-gray-900'
                   }`}
                 >
-                  <div className="flex items-start space-x-3">
+                  <div className="flex items-start space-x-2">
                     {/* Chapter Number */}
-                    <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                    <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
                       selectedChapterId === chapter.id
                         ? 'bg-indigo-600 text-white'
                         : 'bg-gray-200 text-gray-600'
@@ -138,24 +138,18 @@ const ChapterSidebar = ({ chapters = [], selectedChapterId, onChapterSelect, cou
 
                     {!isCollapsed && (
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center space-x-2 mb-1">
-                          <h4 className="text-sm font-medium truncate">{chapter.title}</h4>
+                        <div className="flex items-center space-x-1 mb-0.5">
+                          <h4 className="text-xs font-medium truncate">{chapter.title}</h4>
                           <span className={`${getContentTypeColor(chapter)}`}>
                             {getContentTypeIcon(chapter)}
                           </span>
                         </div>
                         
-                        {chapter.description && (
-                          <p className="text-xs text-gray-500 line-clamp-2 mb-2">
-                            {chapter.description}
-                          </p>
-                        )}
-                        
                         <div className="flex items-center justify-between text-xs text-gray-400">
                           <span className="flex items-center space-x-1">
                             {chapter.video_url && (
-                              <span className="flex items-center space-x-1">
-                                <svg className="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                              <span className="flex items-center space-x-0.5">
+                                <svg className="w-2.5 h-2.5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
                                   <path d="M8 5v14l11-7z"/>
                                 </svg>
                                 <span>1 video</span>
@@ -163,8 +157,8 @@ const ChapterSidebar = ({ chapters = [], selectedChapterId, onChapterSelect, cou
                             )}
                             {chapter.video_url && chapter.pdf_url && <span>,</span>}
                             {chapter.pdf_url && (
-                              <span className="flex items-center space-x-1">
-                                <svg className="w-3 h-3 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                              <span className="flex items-center space-x-0.5">
+                                <svg className="w-2.5 h-2.5 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
                                   <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
                                 </svg>
                                 <span>1 PDF</span>
@@ -185,9 +179,9 @@ const ChapterSidebar = ({ chapters = [], selectedChapterId, onChapterSelect, cou
         )}
       </div>
 
-      {/* Footer */}
+      {/* Compact Footer */}
       {!isCollapsed && (
-        <div className="p-4 border-t border-gray-200 bg-gray-50">
+        <div className="p-2 border-t border-gray-200 bg-gray-50">
           <div className="text-xs text-gray-500 text-center">
             {chapters.length} chapter{chapters.length !== 1 ? 's' : ''} available
           </div>

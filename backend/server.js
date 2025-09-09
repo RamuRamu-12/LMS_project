@@ -13,6 +13,7 @@ const userRoutes = require('./routes/users');
 const enrollmentRoutes = require('./routes/enrollments');
 const fileRoutes = require('./routes/files');
 const chapterRoutes = require('./routes/chapters');
+const chapterProgressRoutes = require('./routes/chapterProgress');
 const { errorHandler } = require('./middleware/errorHandler');
 const logger = require('./utils/logger');
 
@@ -91,6 +92,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/enrollments', enrollmentRoutes);
 app.use('/api/files', fileRoutes);
 app.use('/api', chapterRoutes);
+app.use('/api/progress', chapterProgressRoutes);
 
 // Debug: Log all registered routes
 console.log('Registered routes:');
@@ -100,6 +102,7 @@ console.log('- /api/users');
 console.log('- /api/enrollments (including /admin/stats)');
 console.log('- /api/files');
 console.log('- /api/courses/:courseId/chapters');
+console.log('- /api/progress (chapter progress tracking)');
 
 // 404 handler
 app.use('*', (req, res) => {

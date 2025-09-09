@@ -139,110 +139,197 @@ const CourseDetailPage = () => {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-8"
           >
-            {/* Course Header */}
-            <div className="card p-8">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div>
-                  <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                    {course.title}
-                  </h1>
-                  <p className="text-xl text-gray-600 mb-6">
-                    {course.description}
-                  </p>
-                  
-                  <div className="flex flex-wrap gap-4 mb-6">
-                    <span className={`px-3 py-1 text-sm font-medium rounded-full ${
-                      course.difficulty === 'beginner' 
-                        ? 'bg-green-100 text-green-800'
-                        : course.difficulty === 'intermediate'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {course.difficulty}
-                    </span>
-                    <span className="px-3 py-1 text-sm font-medium rounded-full bg-blue-100 text-blue-800">
-                      {course.category}
-                    </span>
-                    <span className="px-3 py-1 text-sm font-medium rounded-full bg-purple-100 text-purple-800">
-                      {course.estimated_duration || 0} hours
-                    </span>
-                  </div>
+            {/* Compact Course Header */}
+            <div className="relative overflow-hidden bg-white rounded-xl shadow-md">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50"></div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-200 to-purple-200 rounded-full -translate-y-16 translate-x-16 opacity-20"></div>
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-pink-200 to-yellow-200 rounded-full translate-y-12 -translate-x-12 opacity-20"></div>
+              
+              <div className="relative p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3 leading-tight">
+                        {course.title}
+                      </h1>
+                      <p className="text-lg text-gray-600 mb-4 leading-relaxed">
+                        {course.description}
+                      </p>
+                    </motion.div>
+                    
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="flex flex-wrap gap-3"
+                    >
+                      <span className={`inline-flex items-center px-4 py-2 text-xs font-semibold rounded-lg shadow-sm ${
+                        course.difficulty === 'beginner' 
+                          ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+                          : course.difficulty === 'intermediate'
+                          ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white'
+                          : 'bg-gradient-to-r from-red-500 to-pink-600 text-white'
+                      }`}>
+                        <svg className="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        {course.difficulty}
+                      </span>
+                      <span className="inline-flex items-center px-4 py-2 text-xs font-semibold rounded-lg shadow-sm bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+                        <svg className="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                        </svg>
+                        {course.category}
+                      </span>
+                      <span className="inline-flex items-center px-4 py-2 text-xs font-semibold rounded-lg shadow-sm bg-gradient-to-r from-purple-500 to-pink-600 text-white">
+                        <svg className="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {course.estimated_duration || 0} hours
+                      </span>
+                    </motion.div>
 
-                  <div className="flex items-center space-x-6 text-sm text-gray-500">
-                    <span className="flex items-center">
-                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                      </svg>
-                      {course.enrollment_count || 0} students
-                    </span>
-                    <span className="flex items-center">
-                      <svg className="w-4 h-4 mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                      </svg>
-                      {course.average_rating || 0} rating
-                    </span>
-                  </div>
-
-                  {/* Enrollment Status for Students */}
-                  {user?.role === 'student' && enrollment && (
-                    <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-sm font-medium text-green-800">You're enrolled in this course</h3>
-                          <p className="text-xs text-green-600">
-                            Enrolled on {new Date(enrollment.enrolled_at).toLocaleDateString()}
-                          </p>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 }}
+                      className="flex items-center space-x-6 text-sm"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-md">
+                          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                          </svg>
                         </div>
-                        <div className="text-right">
-                          <div className="text-sm font-medium text-green-800">
-                            Progress: {enrollment.progress || 0}%
+                        <div>
+                          <div className="text-lg font-bold text-gray-900">{course.enrollment_count || 0}</div>
+                          <div className="text-xs text-gray-600">Students</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="p-2 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg shadow-md">
+                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="text-lg font-bold text-gray-900">{course.average_rating || 0}</div>
+                          <div className="text-xs text-gray-600">Rating</div>
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    {/* Compact Enrollment Status for Students */}
+                    {user?.role === 'student' && enrollment && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.8 }}
+                        className="mt-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg shadow-sm"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg shadow-md">
+                              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </div>
+                            <div>
+                              <h3 className="text-sm font-bold text-green-800">You're enrolled in this course!</h3>
+                              <p className="text-xs text-green-600">
+                                Enrolled on {new Date(enrollment.enrolled_at).toLocaleDateString()}
+                              </p>
+                            </div>
                           </div>
-                          <div className="w-24 bg-green-200 rounded-full h-2 mt-1">
-                            <div
-                              className="bg-green-600 h-2 rounded-full transition-all duration-300"
-                              style={{ width: `${enrollment.progress || 0}%` }}
-                            />
+                          <div className="text-right">
+                            <div className="text-xl font-bold text-green-800 mb-1">
+                              {enrollment.progress || 0}%
+                            </div>
+                            <div className="w-20 bg-green-200 rounded-full h-1.5 overflow-hidden">
+                              <div
+                                className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all duration-1000"
+                                style={{ width: `${enrollment.progress || 0}%` }}
+                              />
+                            </div>
+                            <div className="text-xs text-green-600 mt-0.5">Progress</div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
+
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="relative"
+                  >
+                    {course.thumbnail ? (
+                      <div className="relative group">
+                        <img
+                          src={course.thumbnail}
+                          alt={course.title}
+                          className="w-full h-48 object-cover rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
+                        <div className="absolute bottom-3 left-3 right-3">
+                          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2">
+                            <div className="flex items-center space-x-1">
+                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                              <span className="text-xs font-medium text-gray-900">Live Course</span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="relative">
-                  {course.thumbnail ? (
-                    <img
-                      src={course.thumbnail}
-                      alt={course.title}
-                      className="w-full h-64 object-cover rounded-xl"
-                    />
-                  ) : (
-                    <div className="w-full h-64 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
-                      <span className="text-white text-6xl font-bold">
-                        {course.title.charAt(0)}
-                      </span>
-                    </div>
-                  )}
+                    ) : (
+                      <div className="relative group">
+                        <div className="w-full h-48 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                          <span className="text-white text-4xl font-bold">
+                            {course.title.charAt(0)}
+                          </span>
+                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
+                        <div className="absolute bottom-3 left-3 right-3">
+                          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2">
+                            <div className="flex items-center space-x-1">
+                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                              <span className="text-xs font-medium text-gray-900">Live Course</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
                 </div>
               </div>
             </div>
 
-            {/* Course Content - Chapter-based layout for all users */}
+            {/* Compact Course Content - Chapter-based layout for all users */}
             {chapters.length > 0 ? (
-              <div className="flex h-[calc(100vh-200px)] bg-white rounded-lg shadow-lg overflow-hidden">
-                {/* Chapter Sidebar */}
-                <ChapterSidebar
-                  chapters={chapters}
-                  selectedChapterId={selectedChapter?.id}
-                  onChapterSelect={setSelectedChapter}
-                  courseTitle={course.title}
-                />
-                
-                {/* Chapter Content */}
-                <div className="flex-1 overflow-y-auto">
-                  <StudentChapterView 
-                    chapter={selectedChapter}
-                  />
+              <div className="relative overflow-hidden bg-white rounded-xl shadow-md">
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-blue-50"></div>
+                <div className="relative flex h-[calc(100vh-200px)] overflow-hidden">
+                  {/* Compact Chapter Sidebar */}
+                  <div className="w-64 bg-white/80 backdrop-blur-sm border-r border-gray-200 overflow-y-auto">
+                    <ChapterSidebar
+                      chapters={chapters}
+                      selectedChapterId={selectedChapter?.id}
+                      onChapterSelect={setSelectedChapter}
+                      courseTitle={course.title}
+                    />
+                  </div>
+                  
+                  {/* Large Chapter Content Area */}
+                  <div className="flex-1 overflow-y-auto bg-gradient-to-br from-white to-gray-50">
+                    <StudentChapterView 
+                      chapter={selectedChapter}
+                      enrollmentId={enrollment?.id}
+                    />
+                  </div>
                 </div>
               </div>
             ) : (

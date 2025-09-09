@@ -31,6 +31,7 @@ const Course = require('./Course')(sequelize, Sequelize.DataTypes);
 const Enrollment = require('./Enrollment')(sequelize, Sequelize.DataTypes);
 const FileUpload = require('./FileUpload')(sequelize, Sequelize.DataTypes);
 const CourseChapter = require('./CourseChapter')(sequelize, Sequelize.DataTypes);
+const ChapterProgress = require('./ChapterProgress')(sequelize, Sequelize.DataTypes);
 
 // Define associations
 const defineAssociations = () => {
@@ -103,6 +104,30 @@ const defineAssociations = () => {
     as: 'course'
   });
 
+  CourseChapter.hasMany(ChapterProgress, {
+    foreignKey: 'chapter_id',
+    as: 'progress',
+    onDelete: 'CASCADE'
+  });
+
+  // ChapterProgress associations
+  ChapterProgress.belongsTo(Enrollment, {
+    foreignKey: 'enrollment_id',
+    as: 'enrollment'
+  });
+
+  ChapterProgress.belongsTo(CourseChapter, {
+    foreignKey: 'chapter_id',
+    as: 'chapter'
+  });
+
+  // Enrollment has many ChapterProgress
+  Enrollment.hasMany(ChapterProgress, {
+    foreignKey: 'enrollment_id',
+    as: 'chapterProgress',
+    onDelete: 'CASCADE'
+  });
+
 };
 
 // Define associations
@@ -116,5 +141,6 @@ module.exports = {
   Course,
   Enrollment,
   FileUpload,
-  CourseChapter
+  CourseChapter,
+  ChapterProgress
 };
