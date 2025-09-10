@@ -48,9 +48,11 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL 
-    : 'http://localhost:3000',
+  origin: [
+    'http://frontend-lms-application.s3-website-ap-southeast-1.amazonaws.com',
+    'http://localhost:3000',
+    process.env.FRONTEND_URL
+  ].filter(Boolean), // Remove any undefined values
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
