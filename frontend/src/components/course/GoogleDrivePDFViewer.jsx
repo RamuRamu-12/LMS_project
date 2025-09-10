@@ -49,8 +49,8 @@ const GoogleDrivePDFViewer = ({
       }
 
       if (fileId) {
-        // Convert to Google Drive embeddable URL
-        return `https://drive.google.com/file/d/${fileId}/preview`
+        // Convert to Google Drive direct access URL for PDFs
+        return `https://drive.google.com/uc?export=view&id=${fileId}`
       }
 
       // For other URLs, try to use Google Docs viewer
@@ -62,13 +62,41 @@ const GoogleDrivePDFViewer = ({
   }
 
   const handleDownload = () => {
+    // Convert to direct download URL for Google Drive
+    const downloadUrl = convertToDownloadUrl(pdfUrl)
     const link = document.createElement('a')
-    link.href = pdfUrl
+    link.href = downloadUrl
     link.download = title || 'document.pdf'
     link.target = '_blank'
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+  }
+
+  const convertToDownloadUrl = (url) => {
+    try {
+      // Extract file ID from various Google Drive URL formats
+      let fileId = null
+      
+      const match1 = url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/)
+      if (match1) {
+        fileId = match1[1]
+      }
+      
+      const match2 = url.match(/[?&]id=([a-zA-Z0-9-_]+)/)
+      if (match2) {
+        fileId = match2[1]
+      }
+      
+      if (fileId) {
+        return `https://drive.google.com/uc?export=download&id=${fileId}`
+      }
+      
+      return url
+    } catch (error) {
+      console.error('Error converting download URL:', error)
+      return url
+    }
   }
 
   const handleOpenInNewTab = () => {

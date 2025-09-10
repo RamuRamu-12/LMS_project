@@ -160,14 +160,16 @@ const analyzeGoogleDriveUrl = (url, urlObj) => {
   }
   
   if (fileId) {
-    // For Google Drive files, we can embed them
-    const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`
+    // For Google Drive files, use direct access format for PDFs
+    const embedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`
+    const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`
     
     return {
       type: URL_TYPES.GOOGLE_DRIVE,
       isValid: true,
       originalUrl: url,
       embedUrl,
+      downloadUrl,
       fileId,
       thumbnail: null,
       title: null,
