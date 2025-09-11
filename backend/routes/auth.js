@@ -7,6 +7,9 @@ const { userSchemas } = require('../utils/validation');
 
 const router = express.Router();
 
+// Student registration
+router.post('/register', authController.register);
+
 // Traditional login
 router.post('/login', authController.login);
 

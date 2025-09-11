@@ -56,6 +56,23 @@ module.exports = (sequelize, DataTypes) => {
         isUrl: true
       }
     },
+    logo: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      validate: {
+        isValidLogoPath(value) {
+          if (value && typeof value === 'string') {
+            // Allow relative paths starting with /uploads/ or full URLs
+            const isRelativePath = value.startsWith('/uploads/');
+            const isFullUrl = value.startsWith('http://') || value.startsWith('https://');
+            
+            if (!isRelativePath && !isFullUrl) {
+              throw new Error('Logo must be a valid file path starting with /uploads/ or a full URL');
+            }
+          }
+        }
+      }
+    },
     enrollment_count: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
@@ -129,6 +146,7 @@ module.exports = (sequelize, DataTypes) => {
       difficulty: this.difficulty,
       estimated_duration: this.estimated_duration,
       thumbnail: this.thumbnail,
+      logo: this.logo,
       enrollment_count: this.enrollment_count,
       average_rating: this.average_rating,
       total_ratings: this.total_ratings,

@@ -103,6 +103,7 @@ async function cleanDatabaseSetup() {
         "difficulty" "public"."enum_courses_difficulty" DEFAULT 'beginner',
         "estimated_duration" INTEGER DEFAULT 0,
         "thumbnail" TEXT,
+        "logo" TEXT,
         "is_published" BOOLEAN DEFAULT false,
         "enrollment_count" INTEGER DEFAULT 0,
         "average_rating" DECIMAL(3,2) DEFAULT 0.00,
@@ -174,7 +175,32 @@ async function cleanDatabaseSetup() {
       );
     `);
 
-    // 4. Create essential indexes
+    // 4. Add logo field to existing courses table (if it doesn't exist)
+    console.log('\n🖼️  Adding logo field to courses table...');
+    try {
+      // Check if logo column already exists
+      const logoColumnExists = await sequelize.query(`
+        SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_name = 'courses' 
+        AND column_name = 'logo';
+      `);
+      
+      if (logoColumnExists[0].length === 0) {
+        // Add logo column if it doesn't exist
+        await sequelize.query(`
+          ALTER TABLE "courses" 
+          ADD COLUMN "logo" TEXT;
+        `);
+        console.log('   ✅ Added logo column to courses table');
+      } else {
+        console.log('   ✅ Logo column already exists in courses table');
+      }
+    } catch (error) {
+      console.log(`   ⚠️  Could not add logo column: ${error.message}`);
+    }
+
+    // 5. Create essential indexes
     console.log('\n🔍 Creating essential indexes...');
     const indexes = [
       'CREATE INDEX "idx_courses_instructor_id" ON "courses"("instructor_id");',
@@ -196,7 +222,7 @@ async function cleanDatabaseSetup() {
       }
     }
 
-    // 5. Create SequelizeMeta table and mark migrations as completed
+    // 6. Create SequelizeMeta table and mark migrations as completed
     console.log('\n📝 Setting up migration tracking...');
     await sequelize.query(`
       CREATE TABLE "SequelizeMeta" (
@@ -214,7 +240,9 @@ async function cleanDatabaseSetup() {
       '006-add-course-intro-content.js',
       '007-add-url-analysis.js',
       '008-add-chapter-content-fields.js',
-      '009-update-chapters-for-urls.js'
+      '009-update-chapters-for-urls.js',
+      '010-fix-chapter-schema.js',
+      '011-add-course-logo.js'
     ];
 
     for (const migration of migrations) {
@@ -224,7 +252,7 @@ async function cleanDatabaseSetup() {
       console.log(`   ✅ Marked ${migration} as completed`);
     }
 
-    // 6. Verify final schema
+    // 7. Verify final schema
     console.log('\n🔍 Verifying final schema...');
     const tables = await sequelize.query(`
       SELECT table_name 
@@ -252,7 +280,7 @@ async function cleanDatabaseSetup() {
       console.log(`   - ${col.column_name}: ${col.data_type} (nullable: ${col.is_nullable})`);
     });
 
-    // 7. Test the schema with a sample insert
+    // 8. Test the schema with a sample insert
     console.log('\n🧪 Testing schema with sample data...');
     
     // Create a test user
@@ -264,10 +292,10 @@ async function cleanDatabaseSetup() {
     const userId = testUser[0][0].id;
     console.log(`   ✅ Created test user with ID: ${userId}`);
 
-    // Create a test course
+    // Create a test course with logo
     const testCourse = await sequelize.query(`
-      INSERT INTO "courses" (title, description, instructor_id, is_published) 
-      VALUES ('Test Course', 'A test course for URL-based content', ${userId}, true) 
+      INSERT INTO "courses" (title, description, instructor_id, is_published, logo) 
+      VALUES ('Test Course', 'A test course for URL-based content', ${userId}, true, 'https://example.com/test-logo.png') 
       RETURNING id;
     `);
     const courseId = testCourse[0][0].id;
@@ -284,7 +312,7 @@ async function cleanDatabaseSetup() {
 
     // Verify the test data
     const testResult = await sequelize.query(`
-      SELECT c.title as course_title, ch.title as chapter_title, ch.video_url, ch.pdf_url 
+      SELECT c.title as course_title, c.logo as course_logo, ch.title as chapter_title, ch.video_url, ch.pdf_url 
       FROM "courses" c 
       JOIN "course_chapters" ch ON c.id = ch.course_id 
       WHERE c.id = ${courseId};
@@ -292,6 +320,7 @@ async function cleanDatabaseSetup() {
 
     console.log('\n✅ Test data verification:');
     console.log(`   Course: ${testResult[0][0].course_title}`);
+    console.log(`   Course Logo: ${testResult[0][0].course_logo}`);
     console.log(`   Chapter: ${testResult[0][0].chapter_title}`);
     console.log(`   Video URL: ${testResult[0][0].video_url}`);
     console.log(`   PDF URL: ${testResult[0][0].pdf_url}`);
@@ -305,6 +334,7 @@ async function cleanDatabaseSetup() {
     console.log('\n🎉 Clean database setup completed successfully!');
     console.log('✨ Your database is now ready for the URL-based content system.');
     console.log('🚀 You can now create courses with video and PDF URLs.');
+    console.log('🖼️  Course logo upload feature is now available!');
     console.log('📝 All migrations are marked as completed.');
 
   } catch (error) {

@@ -44,7 +44,17 @@ const CourseListPage = () => {
     }
   )
 
+  const { data: categoriesData } = useQuery(
+    'categories',
+    () => courseService.getCategories(),
+    {
+      refetchOnWindowFocus: false,
+      staleTime: 10 * 60 * 1000 // Cache for 10 minutes
+    }
+  )
+
   const courses = coursesData?.data?.courses || []
+  const categories = categoriesData?.data?.categories || []
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters)
@@ -52,7 +62,7 @@ const CourseListPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <Header />
       
       <main className="py-12">
@@ -63,19 +73,25 @@ const CourseListPage = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Explore Our Courses
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Discover a wide range of courses designed to help you learn and grow. 
-              From beginner to advanced levels, we have something for everyone.
-            </p>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl blur-3xl opacity-20"></div>
+              <div className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
+                <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">
+                  Explore AI-Enhanced Courses
+                </h1>
+                <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                  Discover our comprehensive collection of AI-powered courses designed to accelerate your learning journey. 
+                  From beginner to advanced levels, experience personalized education like never before.
+                </p>
+              </div>
+            </div>
           </motion.div>
 
           {/* Filters */}
           <CourseFilters 
             onFilterChange={handleFilterChange}
             filters={filters}
+            categories={categories}
           />
 
           {/* Courses List */}

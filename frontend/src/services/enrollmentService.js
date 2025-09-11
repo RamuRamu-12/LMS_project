@@ -71,6 +71,36 @@ export const enrollmentService = {
     }
   },
 
+  // Complete chapter (sequential progression)
+  completeChapter: async (enrollmentId, chapterId) => {
+    try {
+      const response = await api.post(`/enrollments/${enrollmentId}/chapters/${chapterId}/complete`)
+      return response.data
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to complete chapter')
+    }
+  },
+
+  // Get chapter progression
+  getChapterProgression: async (enrollmentId) => {
+    try {
+      const response = await api.get(`/enrollments/${enrollmentId}/progression`)
+      return response.data
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to get chapter progression')
+    }
+  },
+
+  // Submit course feedback
+  submitCourseFeedback: async (enrollmentId, feedbackData) => {
+    try {
+      const response = await api.post(`/enrollments/${enrollmentId}/feedback`, feedbackData)
+      return response.data
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to submit feedback')
+    }
+  },
+
   // Drop course
   dropCourse: async (id) => {
     try {

@@ -1,12 +1,90 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useMutation, useQueryClient } from 'react-query'
 import VideoPlayer from './VideoPlayer'
 import SmartPDFViewer from './SmartPDFViewer'
-import ChapterProgressTracker from './ChapterProgressTracker'
+import ChapterNavigation from './ChapterNavigation'
+import { enrollmentService } from '../../services/enrollmentService'
 import { FiFile, FiPlay, FiEye } from 'react-icons/fi'
+import toast from 'react-hot-toast'
 
-const StudentChapterView = ({ chapter, enrollmentId }) => {
+const StudentChapterView = ({ chapter, enrollmentId, chapters = [], onChapterChange, showNavigation = true }) => {
   const [viewMode, setViewMode] = useState('video') // 'video' or 'pdf'
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [feedback, setFeedback] = useState({ rating: 0, review: '' })
+  const queryClient = useQueryClient()
+
+  // Debug enrollmentId
+  console.log('=== StudentChapterView DEBUG ===')
+  console.log('enrollmentId received:', enrollmentId)
+  console.log('chapter received:', chapter)
+  console.log('================================')
+
+
+  // Complete course mutation
+  const completeCourseMutation = useMutation(
+    () => {
+      if (!enrollmentId) {
+        throw new Error('Enrollment ID is required')
+      }
+      return enrollmentService.completeCourse(enrollmentId)
+    },
+    {
+      onSuccess: (data) => {
+        toast.success('Course completed successfully!')
+        setShowFeedback(true) // Show feedback modal after completion
+        queryClient.invalidateQueries(['course', chapter.course_id])
+        queryClient.invalidateQueries(['enrollment', enrollmentId])
+      },
+      onError: (error) => {
+        console.error('Complete course error:', error)
+        toast.error(error.message)
+      }
+    }
+  )
+
+  // Submit feedback mutation
+  const submitFeedbackMutation = useMutation(
+    (feedbackData) => {
+      if (!enrollmentId) {
+        throw new Error('Enrollment ID is required')
+      }
+      return enrollmentService.submitCourseFeedback(enrollmentId, feedbackData)
+    },
+    {
+      onSuccess: () => {
+        toast.success('Thank you for your feedback!')
+        setShowFeedback(false)
+        queryClient.invalidateQueries(['course', chapter.course_id])
+      },
+      onError: (error) => {
+        console.error('Submit feedback error:', error)
+        toast.error(error.message)
+      }
+    }
+  )
+
+  // Complete chapter mutation (for progress tracking)
+  const completeChapterMutation = useMutation(
+    () => {
+      if (!enrollmentId) {
+        throw new Error('Enrollment ID is required')
+      }
+      return enrollmentService.completeChapter(enrollmentId, chapter.id)
+    },
+    {
+      onSuccess: (data) => {
+        toast.success('Chapter completed!')
+        queryClient.invalidateQueries(['course', chapter.course_id])
+        queryClient.invalidateQueries(['enrollment', enrollmentId])
+        queryClient.invalidateQueries(['chapterProgression', enrollmentId])
+      },
+      onError: (error) => {
+        console.error('Complete chapter error:', error)
+        toast.error(error.message)
+      }
+    }
+  )
 
   // Auto-set view mode based on available content
   useEffect(() => {
@@ -42,12 +120,33 @@ const StudentChapterView = ({ chapter, enrollmentId }) => {
 
   return (
     <div className="h-full flex flex-col bg-gradient-to-br from-white to-gray-50">
-      {/* Compact Content Type Selector - No duplicate title */}
+      {/* Compact Content Type Selector with Navigation */}
       <div className="relative overflow-hidden bg-white border-b border-gray-200 px-4 py-2">
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-50 to-purple-50"></div>
         <div className="relative flex items-center justify-between">
-          <div className="flex-1">
-            {/* Removed duplicate chapter title - it's already shown in sidebar */}
+          {/* Left side - Previous button */}
+          <div className="flex items-center space-x-3">
+            {chapters.length > 0 && (
+              <button
+                onClick={() => {
+                  const currentIndex = chapters.findIndex(ch => ch.id === chapter.id)
+                  if (currentIndex > 0) {
+                    onChapterChange(chapters[currentIndex - 1])
+                  }
+                }}
+                disabled={chapters.findIndex(ch => ch.id === chapter.id) === 0}
+                className={`flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  chapters.findIndex(ch => ch.id === chapter.id) > 0
+                    ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                    : 'bg-gray-50 text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                <span>Previous</span>
+              </button>
+            )}
           </div>
           
           {/* Compact View Mode Toggle */}
@@ -125,11 +224,58 @@ const StudentChapterView = ({ chapter, enrollmentId }) => {
               </div>
             </motion.div>
           )}
+
+          {/* Right side - Next/Complete button */}
+          <div className="flex items-center space-x-3">
+            {chapters.length > 0 && (
+              <>
+                {chapters.findIndex(ch => ch.id === chapter.id) === chapters.length - 1 ? (
+                  // Last chapter - Show Complete Course button
+                  <button
+                    onClick={() => completeCourseMutation.mutate()}
+                    disabled={completeCourseMutation.isLoading}
+                    className="flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-green-100 hover:bg-green-200 text-green-700 disabled:opacity-50"
+                  >
+                    {completeCourseMutation.isLoading ? (
+                      <div className="w-3 h-3 border-2 border-green-700 border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                    <span>{completeCourseMutation.isLoading ? 'Completing...' : 'Complete Course'}</span>
+                  </button>
+                ) : (
+                  // Not last chapter - Show Next button
+                  <button
+                    onClick={() => {
+                      const currentIndex = chapters.findIndex(ch => ch.id === chapter.id)
+                      if (currentIndex < chapters.length - 1) {
+                        // Complete current chapter first, then navigate
+                        completeChapterMutation.mutate(undefined, {
+                          onSuccess: () => {
+                            onChapterChange(chapters[currentIndex + 1])
+                          }
+                        })
+                      }
+                    }}
+                    disabled={completeChapterMutation.isLoading}
+                    className="flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-indigo-100 hover:bg-indigo-200 text-indigo-700 disabled:opacity-50"
+                  >
+                    <span>{completeChapterMutation.isLoading ? 'Completing...' : 'Next'}</span>
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Large Video/Content Area */}
-      <div className="flex-1 overflow-hidden bg-gradient-to-br from-white to-gray-50">
+      <div className="flex-1 bg-gradient-to-br from-white to-gray-50">
         {viewMode === 'video' && hasVideo ? (
           <VideoPlayer
             url={chapter.video_url}
@@ -168,17 +314,93 @@ const StudentChapterView = ({ chapter, enrollmentId }) => {
         )}
       </div>
 
-      {/* Chapter Progress Tracker - More Prominent */}
-      {enrollmentId && chapter && (
-        <div className="border-t-2 border-indigo-200 bg-gradient-to-r from-indigo-50 to-purple-50 p-4">
-          <ChapterProgressTracker
-            enrollmentId={enrollmentId}
-            chapterId={chapter.id}
-            chapterTitle={chapter.title}
-            hasVideo={hasVideo}
-            hasPDF={hasPDF}
-          />
-        </div>
+      {/* Chapter Navigation */}
+      {showNavigation && enrollmentId && chapter && chapters.length > 0 && (
+        <ChapterNavigation
+          enrollmentId={enrollmentId}
+          currentChapter={chapter}
+          chapters={chapters}
+          onChapterChange={onChapterChange}
+          isLastChapter={chapters.findIndex(ch => ch.id === chapter.id) === chapters.length - 1}
+          isCourseCompleted={false} // This will be updated based on enrollment status
+        />
+      )}
+
+      {/* Feedback Modal */}
+      {showFeedback && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white rounded-lg p-6 w-full max-w-md mx-4"
+          >
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Rate this Course
+            </h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Rating
+                </label>
+                <div className="flex space-x-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      onClick={() => setFeedback(prev => ({ ...prev, rating: star }))}
+                      className={`text-2xl transition-colors ${
+                        star <= feedback.rating 
+                          ? 'text-yellow-400' 
+                          : 'text-gray-300 hover:text-yellow-300'
+                      }`}
+                    >
+                      ★
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Review (Optional)
+                </label>
+                <textarea
+                  value={feedback.review}
+                  onChange={(e) => setFeedback(prev => ({ ...prev, review: e.target.value }))}
+                  placeholder="Share your thoughts about this course..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  rows={4}
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                onClick={() => setShowFeedback(false)}
+                className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+              >
+                Skip
+              </button>
+              <button
+                onClick={() => {
+                  if (feedback.rating === 0) {
+                    toast.error('Please select a rating')
+                    return
+                  }
+                  submitFeedbackMutation.mutate(feedback)
+                }}
+                disabled={submitFeedbackMutation.isLoading}
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors disabled:opacity-50"
+              >
+                {submitFeedbackMutation.isLoading ? 'Submitting...' : 'Submit'}
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
       )}
 
     </div>

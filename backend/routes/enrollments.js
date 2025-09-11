@@ -55,6 +55,28 @@ router.post('/:id/complete',
   enrollmentController.completeCourse
 );
 
+// New sequential chapter progression routes
+router.post('/:enrollmentId/chapters/:chapterId/complete', 
+  authenticate,
+  requireStudent,
+  validate(commonSchemas.enrollmentAndChapter, 'params'),
+  enrollmentController.completeChapter
+);
+
+router.get('/:enrollmentId/progression', 
+  authenticate,
+  requireStudent,
+  validate(commonSchemas.id, 'params'),
+  enrollmentController.getChapterProgression
+);
+
+router.post('/:enrollmentId/feedback', 
+  authenticate,
+  requireStudent,
+  validate(commonSchemas.id, 'params'),
+  enrollmentController.submitCourseFeedback
+);
+
 router.post('/:id/drop', 
   authenticate,
   requireStudent,

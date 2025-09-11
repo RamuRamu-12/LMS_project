@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 // Pages
 import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
 import AdminDashboard from './pages/AdminDashboard'
 import StudentDashboard from './pages/StudentDashboard'
 import CourseListPage from './pages/CourseListPage'
@@ -47,8 +48,8 @@ function App() {
     return (
       <ErrorBoundary>
         <Helmet>
-          <title>LMS Platform - Learning Management System</title>
-          <meta name="description" content="Empowering Digital Learning with our comprehensive Learning Management System" />
+          <title>Gnanam AI - AI-Powered Learning Platform</title>
+          <meta name="description" content="Experience the future of education with Gnanam AI - your intelligent learning companion" />
         </Helmet>
         
         <AnimatePresence mode="wait">
@@ -56,6 +57,7 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
             
             {/* Protected Routes */}
             <Route

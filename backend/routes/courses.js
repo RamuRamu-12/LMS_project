@@ -1,7 +1,7 @@
 const express = require('express');
 const { authenticate, requireAdmin, requireEnrollment, optionalAuth } = require('../middleware/auth');
 const { validate } = require('../utils/validation');
-const { uploadMultiple, validateUploadedFiles } = require('../middleware/upload');
+const { uploadMultiple, uploadLogo, validateUploadedFiles } = require('../middleware/upload');
 const courseController = require('../controllers/courseController');
 const { courseSchemas, commonSchemas } = require('../utils/validation');
 
@@ -28,6 +28,10 @@ router.get('/popular',
 router.get('/top-rated', 
   optionalAuth,
   courseController.getTopRatedCourses
+);
+
+router.get('/categories', 
+  courseController.getCategories
 );
 
 router.get('/:id', 
@@ -82,6 +86,29 @@ router.post('/:id/files',
   validateUploadedFiles,
   courseController.uploadCourseFiles
 );
+
+router.post('/:id/logo',
+  authenticate,
+  requireAdmin,
+  validate(commonSchemas.id, 'params'),
+  uploadLogo('logo'),
+  courseController.uploadCourseLogo
+);
+
+// Get course logo
+router.get('/:id/logo',
+  validate(commonSchemas.id, 'params'),
+  courseController.getCourseLogo
+);
+
+// Handle preflight OPTIONS request for logo
+router.options('/:id/logo', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'false');
+  res.status(200).end();
+});
 
 router.delete('/:id/files/:fileId', 
   authenticate,

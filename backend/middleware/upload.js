@@ -6,7 +6,7 @@ const logger = require('../utils/logger');
 // Configure multer for memory storage
 const storage = multer.memoryStorage();
 
-// File filter function
+// File filter function for documents
 const fileFilter = (req, file, cb) => {
   // Check file type
   if (!validateFileType(file.mimetype)) {
@@ -21,13 +21,35 @@ const fileFilter = (req, file, cb) => {
   cb(null, true);
 };
 
-// Multer configuration
+// File filter function for images (logos)
+const imageFilter = (req, file, cb) => {
+  // Check if file is an image
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    const error = new Error('Invalid file type. Only image files are allowed for logos.');
+    error.code = 'INVALID_FILE_TYPE';
+    return cb(error, false);
+  }
+};
+
+// Multer configuration for documents
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
     fileSize: 10 * 1024 * 1024, // 10MB
     files: 5 // Maximum 5 files per request
+  }
+});
+
+// Multer configuration for images (logos)
+const imageUpload = multer({
+  storage: storage,
+  fileFilter: imageFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB for images
+    files: 1 // Maximum 1 logo per request
   }
 });
 
@@ -115,6 +137,52 @@ const uploadMultiple = (fieldName = 'files', maxCount = 5) => {
         return res.status(400).json({
           success: false,
           message: 'File upload error: ' + err.message
+        });
+      }
+      
+      next();
+    });
+  };
+};
+
+// Logo upload middleware
+const uploadLogo = (fieldName = 'logo') => {
+  return (req, res, next) => {
+    imageUpload.single(fieldName)(req, res, (err) => {
+      if (err) {
+        logger.error('Logo upload error:', err);
+        
+        if (err.code === 'INVALID_FILE_TYPE') {
+          return res.status(400).json({
+            success: false,
+            message: 'Invalid file type. Only image files are allowed for logos.'
+          });
+        }
+        
+        if (err.code === 'FILE_TOO_LARGE') {
+          return res.status(400).json({
+            success: false,
+            message: 'File too large. Maximum size is 5MB for logos.'
+          });
+        }
+        
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({
+            success: false,
+            message: 'File too large. Maximum size is 5MB for logos.'
+          });
+        }
+        
+        if (err.code === 'LIMIT_FILE_COUNT') {
+          return res.status(400).json({
+            success: false,
+            message: 'Only one logo file is allowed per request.'
+          });
+        }
+        
+        return res.status(400).json({
+          success: false,
+          message: 'Logo upload error: ' + err.message
         });
       }
       
@@ -246,6 +314,7 @@ const handleUploadError = (error, req, res, next) => {
 module.exports = {
   uploadSingle,
   uploadMultiple,
+  uploadLogo,
   uploadFields,
   validateUploadedFiles,
   handleUploadError

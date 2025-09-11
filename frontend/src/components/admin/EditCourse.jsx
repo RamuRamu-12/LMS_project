@@ -15,6 +15,8 @@ const EditCourse = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showChapterForm, setShowChapterForm] = useState(false)
   const [editingChapter, setEditingChapter] = useState(null)
+  const [logoFile, setLogoFile] = useState(null)
+  const [logoPreview, setLogoPreview] = useState(null)
    const [chapterFormData, setChapterFormData] = useState({
      title: '',
      description: '',
@@ -56,6 +58,30 @@ const EditCourse = () => {
    })
 
   const learningObjectives = watch('learning_objectives') || []
+
+  // Handle logo upload
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      // Check if file is an image
+      if (file.type.startsWith('image/')) {
+        setLogoFile(file)
+        
+        // Create preview URL
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          setLogoPreview(e.target.result)
+        }
+        reader.readAsDataURL(file)
+        
+        toast.success('Logo selected successfully!')
+      } else {
+        toast.error('Please select a valid image file (PNG, JPG, GIF, etc.)')
+        setLogoFile(null)
+        setLogoPreview(null)
+      }
+    }
+  }
 
   // Populate form when course data is loaded
   useEffect(() => {
@@ -217,6 +243,45 @@ const EditCourse = () => {
       }
       
       await updateCourseMutation.mutateAsync(filteredData)
+
+      // Handle logo upload if provided
+      if (logoFile) {
+        try {
+          const formData = new FormData()
+          formData.append('logo', logoFile)
+          
+          const logoResponse = await fetch(`http://localhost:5000/api/courses/${id}/logo`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            },
+            body: formData
+          })
+          
+          if (logoResponse.ok) {
+            const logoData = await logoResponse.json()
+            // Update course with logo URL
+            await fetch(`http://localhost:5000/api/courses/${id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+              },
+              body: JSON.stringify({
+                logo: logoData.data.logoUrl
+              })
+            })
+            
+            toast.success('Course and logo updated successfully!')
+          } else {
+            const errorData = await logoResponse.json()
+            throw new Error(errorData.message || 'Logo upload failed')
+          }
+        } catch (logoError) {
+          console.error('Logo upload error:', logoError)
+          toast.error('Course updated but logo upload failed')
+        }
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -353,6 +418,43 @@ const EditCourse = () => {
                 className="input w-full"
                 placeholder="Describe what students will learn in this course"
               />
+            </div>
+
+            {/* Course Logo */}
+            <div className="mt-6 border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Course Logo
+              </label>
+              {courseData?.data?.course?.logo && !logoPreview && (
+                <div className="mb-4">
+                  <p className="text-sm text-gray-600 mb-2">Current Logo:</p>
+                  <img
+                    src={`http://localhost:5000/logo/${courseData.data.course.id}`}
+                    alt="Current course logo"
+                    className="w-24 h-24 object-cover rounded-lg border-2 border-gray-300 shadow-sm"
+                  />
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleLogoChange}
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+              <p className="mt-2 text-sm text-gray-500">
+                Upload a new logo for your course (PNG, JPG, GIF, WebP, SVG, etc.)
+              </p>
+              
+              {logoPreview && (
+                <div className="mt-4">
+                  <p className="text-sm text-gray-600 mb-2 font-medium">New Logo Preview:</p>
+                  <img
+                    src={logoPreview}
+                    alt="Logo preview"
+                    className="w-24 h-24 object-cover rounded-lg border-2 border-gray-300 shadow-sm"
+                  />
+                </div>
+              )}
             </div>
 
              <div className="mt-6">

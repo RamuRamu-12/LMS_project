@@ -55,6 +55,16 @@ export const courseService = {
     }
   },
 
+  // Get unique categories
+  getCategories: async () => {
+    try {
+      const response = await api.get('/courses/categories')
+      return response.data
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to get categories')
+    }
+  },
+
   // Get course by ID
   getCourseById: async (id) => {
     try {

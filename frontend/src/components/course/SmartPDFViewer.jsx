@@ -331,7 +331,7 @@ const SmartPDFViewer = ({
       </div>
 
       {/* Content */}
-      <div className="relative w-full" style={{ height: '600px' }}>
+      <div className="relative w-full h-full">
         {renderContent()}
       </div>
 

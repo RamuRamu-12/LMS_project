@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { courseService } from '../services/courseService'
 import { enrollmentService } from '../services/enrollmentService'
@@ -10,13 +10,16 @@ import Footer from '../components/common/Footer'
 import LoadingSpinner from '../components/common/LoadingSpinner'
 import ChapterSidebar from '../components/course/ChapterSidebar'
 import StudentChapterView from '../components/course/StudentChapterView'
+import ChapterNavigation from '../components/course/ChapterNavigation'
 import { FiAlertCircle } from 'react-icons/fi'
 
 const CourseDetailPage = () => {
   const { id } = useParams()
-  const { user } = useAuth()
+  const { user, isAuthenticated } = useAuth()
   const queryClient = useQueryClient()
   const [selectedChapter, setSelectedChapter] = useState(null)
+  const [showLoginModal, setShowLoginModal] = useState(false)
+  const [chapterProgression, setChapterProgression] = useState(null)
 
   // Use course content endpoint for students, general endpoint for others
   const { data: courseData, isLoading, error } = useQuery(
@@ -34,6 +37,16 @@ const CourseDetailPage = () => {
     }
   )
 
+  // Get chapter progression for students
+  const { data: progressionData } = useQuery(
+    ['chapterProgression', courseData?.data?.enrollment?.id],
+    () => enrollmentService.getChapterProgression(courseData.data.enrollment.id),
+    {
+      enabled: !!courseData?.data?.enrollment?.id && user?.role === 'student',
+      refetchOnWindowFocus: false
+    }
+  )
+
   // Mutation for updating progress
   const updateProgressMutation = useMutation(
     (progress) => enrollmentService.updateMyProgress(id, { progress }),
@@ -42,6 +55,7 @@ const CourseDetailPage = () => {
         // Refetch course data to get updated progress
         queryClient.invalidateQueries(['course', id])
         queryClient.invalidateQueries('student-enrollments')
+        queryClient.invalidateQueries(['chapterProgression', courseData?.data?.enrollment?.id])
       }
     }
   )
@@ -57,12 +71,49 @@ const CourseDetailPage = () => {
   const enrollment = courseData?.data?.enrollment // For enrolled students
   const chapters = course?.chapters || []
 
-  // Set first chapter as selected when chapters are loaded
+  // Temporary debugging - remove after fixing
+  console.log('=== DEBUGGING ENROLLMENT ISSUE ===')
+  console.log('courseData:', courseData)
+  console.log('enrollment object:', enrollment)
+  console.log('enrollment.id:', enrollment?.id)
+  console.log('enrollment status:', enrollment?.status)
+  console.log('user role:', user?.role)
+  console.log('isAuthenticated:', isAuthenticated)
+  console.log('================================')
+
+
+  // Set first accessible chapter as selected when chapters are loaded
   useEffect(() => {
     if (chapters.length > 0 && !selectedChapter) {
+      if (progressionData?.data?.chapters) {
+        // Use progression data to find first accessible chapter
+        const firstAccessibleChapter = progressionData.data.chapters.find(ch => ch.is_accessible)
+        if (firstAccessibleChapter) {
+          const fullChapter = chapters.find(ch => ch.id === firstAccessibleChapter.id)
+          if (fullChapter) {
+            setSelectedChapter(fullChapter)
+            return
+          }
+        }
+      }
+      // Fallback to first chapter
       setSelectedChapter(chapters[0])
     }
-  }, [chapters, selectedChapter])
+  }, [chapters, progressionData, selectedChapter])
+
+  // Update progression data when it changes
+  useEffect(() => {
+    if (progressionData?.data) {
+      setChapterProgression(progressionData.data)
+    }
+  }, [progressionData])
+
+  // Handle chapter change
+  const handleChapterChange = (chapter) => {
+    if (chapter) {
+      setSelectedChapter(chapter)
+    }
+  }
 
 
   // Handle loading state
@@ -121,6 +172,43 @@ const CourseDetailPage = () => {
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Course Not Found</h1>
             <p className="text-gray-600">The course you're looking for doesn't exist.</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    )
+  }
+
+  // Check if user is authenticated for course content access
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+        <Header />
+        <div className="flex items-center justify-center py-20">
+          <div className="text-center max-w-2xl mx-auto px-4">
+            <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Login Required</h1>
+            <p className="text-lg text-gray-600 mb-8">
+              You need to be logged in to access course content. Please sign in or create an account to continue.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                to="/login"
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/register"
+                className="px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-300"
+              >
+                Create Account
+              </Link>
+            </div>
           </div>
         </div>
         <Footer />
@@ -320,15 +408,24 @@ const CourseDetailPage = () => {
                       selectedChapterId={selectedChapter?.id}
                       onChapterSelect={setSelectedChapter}
                       courseTitle={course.title}
+                      progressionData={chapterProgression}
                     />
                   </div>
                   
                   {/* Large Chapter Content Area */}
-                  <div className="flex-1 overflow-y-auto bg-gradient-to-br from-white to-gray-50">
-                    <StudentChapterView 
-                      chapter={selectedChapter}
-                      enrollmentId={enrollment?.id}
-                    />
+                  <div className="flex-1 flex flex-col bg-gradient-to-br from-white to-gray-50">
+                    {/* Video/Content Area - Fixed height, no scrolling */}
+                    <div className="flex-1 flex flex-col">
+                      <StudentChapterView 
+                        chapter={selectedChapter}
+                        enrollmentId={enrollment?.id}
+                        chapters={chapters}
+                        onChapterChange={handleChapterChange}
+                        showNavigation={false}
+                      />
+                    </div>
+                    
+                    {/* Chapter Navigation - Always visible at bottom */}
                   </div>
                 </div>
               </div>

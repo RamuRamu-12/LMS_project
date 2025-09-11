@@ -4,6 +4,62 @@ const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
 
 /**
+ * Student registration
+ */
+const register = async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body;
+    
+    if (!name || !email || !password) {
+      throw new AppError('Name, email, and password are required', 400);
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw new AppError('Please provide a valid email address', 400);
+    }
+    
+    // Validate password strength
+    if (password.length < 6) {
+      throw new AppError('Password must be at least 6 characters long', 400);
+    }
+    
+    // Check if user already exists
+    const existingUser = await User.findByEmail(email);
+    if (existingUser) {
+      throw new AppError('User with this email already exists', 400);
+    }
+    
+    // Create new student user
+    const user = await User.create({
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      password,
+      role: 'student',
+      is_active: true
+    });
+    
+    logger.info(`New student registered: ${email}`);
+    
+    // Generate tokens for immediate login
+    const tokens = generateTokenPair(user);
+    
+    res.status(201).json({
+      success: true,
+      message: 'Registration successful! Welcome to our platform.',
+      data: {
+        user: user.getPublicProfile(),
+        tokens
+      }
+    });
+  } catch (error) {
+    logger.error('Registration error:', error);
+    next(error);
+  }
+};
+
+/**
  * Traditional username/password login
  */
 const login = async (req, res, next) => {
@@ -276,6 +332,7 @@ const getAuthStatus = async (req, res, next) => {
 };
 
 module.exports = {
+  register,
   login,
   googleCallback,
   refreshToken,

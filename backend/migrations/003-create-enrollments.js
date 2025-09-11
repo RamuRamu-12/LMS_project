@@ -45,7 +45,7 @@ module.exports = {
         defaultValue: Sequelize.NOW
       },
       status: {
-        type: Sequelize.ENUM('enrolled', 'in-progress', 'completed', 'dropped'),
+        type: Sequelize.ENUM('enrolled', 'completed', 'dropped'),
         defaultValue: 'enrolled'
       },
       notes: {

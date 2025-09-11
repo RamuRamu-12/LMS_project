@@ -17,6 +17,9 @@ const LoginPage = () => {
   })
   const [loginType, setLoginType] = useState('traditional') // 'traditional' or 'google'
 
+  // Determine if this is admin or student login based on URL params or state
+  const userType = location.state?.userType || new URLSearchParams(location.search).get('type') || 'student'
+
   const from = location.state?.from?.pathname || '/'
 
   useEffect(() => {
@@ -103,7 +106,11 @@ const LoginPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <div className={`min-h-screen flex items-center justify-center ${
+        userType === 'admin' 
+          ? 'bg-gradient-to-br from-slate-900 via-gray-800 to-slate-900' 
+          : 'bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100'
+      }`}>
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -112,46 +119,79 @@ const LoginPage = () => {
           <div className="w-16 h-16 mx-auto mb-4">
             <div className="spinner w-16 h-16" />
           </div>
-          <p className="text-gray-600">Completing your login...</p>
+          <p className={userType === 'admin' ? 'text-gray-300' : 'text-gray-600'}>
+            Completing your login...
+          </p>
         </motion.div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className={`min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 ${
+      userType === 'admin' 
+        ? 'bg-gradient-to-br from-slate-900 via-gray-800 to-slate-900' 
+        : 'bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100'
+    }`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="max-w-md w-full space-y-8"
       >
-        <div className="card p-8">
+        <div className={`p-8 rounded-2xl shadow-2xl ${
+          userType === 'admin' 
+            ? 'bg-white/10 backdrop-blur-sm border border-white/20' 
+            : 'bg-white shadow-xl'
+        }`}>
           {/* Header */}
           <div className="text-center mb-8">
             <Link to="/" className="flex items-center justify-center space-x-2 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-lg">LMS</span>
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                userType === 'admin' 
+                  ? 'bg-gradient-to-r from-gray-600 to-gray-800' 
+                  : 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500'
+              }`}>
+                <span className="text-white font-bold text-lg">AI</span>
               </div>
-              <span className="text-2xl font-bold text-gradient">Aishani</span>
+              <span className={`text-2xl font-bold bg-clip-text text-transparent ${
+                userType === 'admin' 
+                  ? 'bg-gradient-to-r from-gray-400 to-white' 
+                  : 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600'
+              }`}>
+                Gnanam AI
+              </span>
             </Link>
             
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              Welcome Back
+            <h2 className={`text-3xl font-bold mb-2 ${
+              userType === 'admin' ? 'text-white' : 'text-gray-900'
+            }`}>
+              {userType === 'admin' ? 'Admin Portal' : 'Welcome Back'}
             </h2>
-            <p className="text-gray-600">
-              Sign in to your account to continue learning
+            <p className={userType === 'admin' ? 'text-gray-300' : 'text-gray-600'}>
+              {userType === 'admin' 
+                ? 'Access the administrative dashboard' 
+                : 'Sign in to your account to continue learning'
+              }
             </p>
           </div>
 
           {/* Login Type Toggle */}
-          <div className="flex bg-gray-100 rounded-lg p-1 mb-6">
+          <div className={`flex rounded-lg p-1 mb-6 ${
+            userType === 'admin' 
+              ? 'bg-white/10 backdrop-blur-sm' 
+              : 'bg-gray-100'
+          }`}>
             <button
               type="button"
               onClick={() => setLoginType('traditional')}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 ${
                 loginType === 'traditional'
-                  ? 'bg-white text-indigo-600 shadow-sm'
+                  ? userType === 'admin'
+                    ? 'bg-white/20 text-white shadow-sm'
+                    : 'bg-white text-indigo-600 shadow-sm'
+                  : userType === 'admin'
+                    ? 'text-gray-300 hover:text-white'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -162,7 +202,11 @@ const LoginPage = () => {
               onClick={() => setLoginType('google')}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 ${
                 loginType === 'google'
-                  ? 'bg-white text-indigo-600 shadow-sm'
+                  ? userType === 'admin'
+                    ? 'bg-white/20 text-white shadow-sm'
+                    : 'bg-white text-indigo-600 shadow-sm'
+                  : userType === 'admin'
+                    ? 'text-gray-300 hover:text-white'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -181,7 +225,9 @@ const LoginPage = () => {
             >
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="username" className={`block text-sm font-medium mb-2 ${
+                    userType === 'admin' ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
                     Username or Email
                   </label>
                   <input
@@ -191,13 +237,19 @@ const LoginPage = () => {
                     value={formData.username}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                    className={`w-full px-4 py-3 rounded-lg transition-colors duration-200 ${
+                      userType === 'admin'
+                        ? 'bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:ring-2 focus:ring-gray-400 focus:border-gray-400'
+                        : 'border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'
+                    }`}
                     placeholder="Enter username (admin) or email (student@test.com)"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="password" className={`block text-sm font-medium mb-2 ${
+                    userType === 'admin' ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
                     Password
                   </label>
                   <input
@@ -207,7 +259,11 @@ const LoginPage = () => {
                     value={formData.password}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                    className={`w-full px-4 py-3 rounded-lg transition-colors duration-200 ${
+                      userType === 'admin'
+                        ? 'bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:ring-2 focus:ring-gray-400 focus:border-gray-400'
+                        : 'border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'
+                    }`}
                     placeholder="Enter your password"
                   />
                 </div>
@@ -216,7 +272,11 @@ const LoginPage = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`w-full py-3 px-4 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  userType === 'admin'
+                    ? 'bg-gradient-to-r from-gray-600 to-gray-800 text-white hover:from-gray-700 hover:to-gray-900 focus:ring-gray-400'
+                    : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 focus:ring-indigo-500'
+                }`}
               >
                 {loading ? (
                   <div className="flex items-center justify-center">
@@ -224,23 +284,49 @@ const LoginPage = () => {
                     Signing in...
                   </div>
                 ) : (
-                  'Sign In'
+                  userType === 'admin' ? 'Access Admin Portal' : 'Sign In'
                 )}
               </button>
 
               <div className="text-center">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="text-sm text-blue-800 font-medium mb-2">Demo Credentials:</p>
-                  <div className="space-y-2 text-xs text-blue-700">
+                <div className={`rounded-lg p-3 ${
+                  userType === 'admin'
+                    ? 'bg-white/10 border border-white/20'
+                    : 'bg-blue-50 border border-blue-200'
+                }`}>
+                  <p className={`text-sm font-medium mb-2 ${
+                    userType === 'admin' ? 'text-gray-300' : 'text-blue-800'
+                  }`}>
+                    Demo Credentials:
+                  </p>
+                  <div className={`space-y-2 text-xs ${
+                    userType === 'admin' ? 'text-gray-300' : 'text-blue-700'
+                  }`}>
                     <div>
                       <span className="font-medium">Admin:</span> 
-                      <span className="font-mono bg-blue-100 px-2 py-1 rounded ml-1">admin</span> / 
-                      <span className="font-mono bg-blue-100 px-2 py-1 rounded ml-1">admin123</span>
+                      <span className={`font-mono px-2 py-1 rounded ml-1 ${
+                        userType === 'admin' ? 'bg-white/20 text-white' : 'bg-blue-100'
+                      }`}>
+                        admin
+                      </span> / 
+                      <span className={`font-mono px-2 py-1 rounded ml-1 ${
+                        userType === 'admin' ? 'bg-white/20 text-white' : 'bg-blue-100'
+                      }`}>
+                        admin123
+                      </span>
                     </div>
                     <div>
                       <span className="font-medium">Student:</span> 
-                      <span className="font-mono bg-blue-100 px-2 py-1 rounded ml-1">student@test.com</span> / 
-                      <span className="font-mono bg-blue-100 px-2 py-1 rounded ml-1">student123</span>
+                      <span className={`font-mono px-2 py-1 rounded ml-1 ${
+                        userType === 'admin' ? 'bg-white/20 text-white' : 'bg-blue-100'
+                      }`}>
+                        student@test.com
+                      </span> / 
+                      <span className={`font-mono px-2 py-1 rounded ml-1 ${
+                        userType === 'admin' ? 'bg-white/20 text-white' : 'bg-blue-100'
+                      }`}>
+                        student123
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -276,10 +362,44 @@ const LoginPage = () => {
 
           {/* Features */}
           <div className="mt-8 space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 text-center">
-              What you'll get:
+            <h3 className={`text-lg font-semibold text-center ${
+              userType === 'admin' ? 'text-white' : 'text-gray-900'
+            }`}>
+              {userType === 'admin' ? 'Admin Features:' : "What you'll get:"}
             </h3>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <ul className={`space-y-2 text-sm ${
+              userType === 'admin' ? 'text-gray-300' : 'text-gray-600'
+            }`}>
+              {userType === 'admin' ? (
+                <>
+                  <li className="flex items-center">
+                    <svg className="w-4 h-4 text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Manage courses, users, and content
+                  </li>
+                  <li className="flex items-center">
+                    <svg className="w-4 h-4 text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    View analytics and user insights
+                  </li>
+                  <li className="flex items-center">
+                    <svg className="w-4 h-4 text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    System configuration and settings
+                  </li>
+                  <li className="flex items-center">
+                    <svg className="w-4 h-4 text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Secure administrative access
+                  </li>
+                </>
+              ) : (
+                <>
               <li className="flex items-center">
                 <svg className="w-4 h-4 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -304,20 +424,33 @@ const LoginPage = () => {
                 </svg>
                 Mobile-responsive design for learning anywhere
               </li>
+                </>
+              )}
             </ul>
           </div>
 
           {/* Footer */}
           <div className="mt-8 text-center">
-            <p className="text-sm text-gray-600">
+            {userType === 'student' && (
+              <p className={`text-sm mb-2 ${
+                userType === 'admin' ? 'text-gray-300' : 'text-gray-600'
+              }`}>
               Don't have an account?{' '}
-              <span className="text-indigo-600 font-medium">
-                Contact your administrator
-              </span>
-            </p>
+                <Link
+                  to="/register"
+                  className="text-indigo-600 hover:text-indigo-500 font-medium"
+                >
+                  Create one here
+                </Link>
+              </p>
+            )}
             <Link
               to="/"
-              className="text-sm text-indigo-600 hover:text-indigo-500 font-medium mt-2 inline-block"
+              className={`text-sm font-medium mt-2 inline-block ${
+                userType === 'admin' 
+                  ? 'text-gray-300 hover:text-white' 
+                  : 'text-indigo-600 hover:text-indigo-500'
+              }`}
             >
               ← Back to Home
             </Link>
@@ -326,13 +459,23 @@ const LoginPage = () => {
 
         {/* Additional Info */}
         <div className="text-center">
-          <p className="text-xs text-gray-500">
+          <p className={`text-xs ${
+            userType === 'admin' ? 'text-gray-400' : 'text-gray-500'
+          }`}>
             By signing in, you agree to our{' '}
-            <a href="#" className="text-indigo-600 hover:text-indigo-500">
+            <a href="#" className={`hover:underline ${
+              userType === 'admin' 
+                ? 'text-gray-300 hover:text-white' 
+                : 'text-indigo-600 hover:text-indigo-500'
+            }`}>
               Terms of Service
             </a>{' '}
             and{' '}
-            <a href="#" className="text-indigo-600 hover:text-indigo-500">
+            <a href="#" className={`hover:underline ${
+              userType === 'admin' 
+                ? 'text-gray-300 hover:text-white' 
+                : 'text-indigo-600 hover:text-indigo-500'
+            }`}>
               Privacy Policy
             </a>
           </p>

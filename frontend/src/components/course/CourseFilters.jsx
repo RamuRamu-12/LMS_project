@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-const CourseFilters = ({ onFilterChange, filters = {} }) => {
+const CourseFilters = ({ onFilterChange, filters = {}, categories = [] }) => {
   const [localFilters, setLocalFilters] = useState({
     category: filters.category || '',
     difficulty: filters.difficulty || '',
@@ -9,18 +9,8 @@ const CourseFilters = ({ onFilterChange, filters = {} }) => {
     search: filters.search || ''
   })
 
-  const categories = [
-    'All Categories',
-    'Web Development',
-    'Mobile Development',
-    'Data Science',
-    'Machine Learning',
-    'Design',
-    'Business',
-    'Marketing',
-    'Photography',
-    'Music'
-  ]
+  // Add "All Categories" option to the beginning of the categories array
+  const categoryOptions = ['All Categories', ...categories]
 
   const difficulties = [
     'All Levels',
@@ -60,12 +50,12 @@ const CourseFilters = ({ onFilterChange, filters = {} }) => {
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="card mb-6"
+      className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-white/20 shadow-2xl"
     >
       <div className="space-y-6">
         {/* Search */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-300 mb-3">
             Search Courses
           </label>
           <div className="relative">
@@ -74,10 +64,10 @@ const CourseFilters = ({ onFilterChange, filters = {} }) => {
               value={localFilters.search}
               onChange={(e) => handleFilterChange('search', e.target.value)}
               placeholder="Search by title, instructor, or keywords..."
-              className="input-field pl-10"
+              className="w-full px-4 py-3 pl-12 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-sm"
             />
             <svg
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -88,19 +78,19 @@ const CourseFilters = ({ onFilterChange, filters = {} }) => {
         </div>
 
         {/* Filters Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Category Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-3">
               Category
             </label>
             <select
               value={localFilters.category}
               onChange={(e) => handleFilterChange('category', e.target.value)}
-              className="input-field"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-sm"
             >
-              {categories.map((category) => (
-                <option key={category} value={category === 'All Categories' ? '' : category}>
+              {categoryOptions.map((category) => (
+                <option key={category} value={category === 'All Categories' ? '' : category} className="bg-gray-800 text-white">
                   {category}
                 </option>
               ))}
@@ -109,16 +99,16 @@ const CourseFilters = ({ onFilterChange, filters = {} }) => {
 
           {/* Difficulty Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-3">
               Difficulty
             </label>
             <select
               value={localFilters.difficulty}
               onChange={(e) => handleFilterChange('difficulty', e.target.value)}
-              className="input-field"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-sm"
             >
               {difficulties.map((difficulty) => (
-                <option key={difficulty} value={difficulty === 'All Levels' ? '' : difficulty.toLowerCase()}>
+                <option key={difficulty} value={difficulty === 'All Levels' ? '' : difficulty.toLowerCase()} className="bg-gray-800 text-white">
                   {difficulty}
                 </option>
               ))}
@@ -127,16 +117,16 @@ const CourseFilters = ({ onFilterChange, filters = {} }) => {
 
           {/* Rating Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-3">
               Rating
             </label>
             <select
               value={localFilters.rating}
               onChange={(e) => handleFilterChange('rating', e.target.value)}
-              className="input-field"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-sm"
             >
               {ratings.map((rating) => (
-                <option key={rating} value={rating === 'All Ratings' ? '' : rating}>
+                <option key={rating} value={rating === 'All Ratings' ? '' : rating} className="bg-gray-800 text-white">
                   {rating}
                 </option>
               ))}
@@ -149,34 +139,34 @@ const CourseFilters = ({ onFilterChange, filters = {} }) => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="flex items-center justify-between pt-4 border-t border-gray-200"
+            className="flex items-center justify-between pt-6 border-t border-white/20"
           >
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-500">Active filters:</span>
+            <div className="flex items-center space-x-3">
+              <span className="text-sm text-gray-300">Active filters:</span>
               {localFilters.category && (
-                <span className="px-2 py-1 text-xs font-medium bg-indigo-100 text-indigo-800 rounded-full">
+                <span className="px-3 py-1 text-xs font-medium bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full">
                   {localFilters.category}
                 </span>
               )}
               {localFilters.difficulty && (
-                <span className="px-2 py-1 text-xs font-medium bg-indigo-100 text-indigo-800 rounded-full">
+                <span className="px-3 py-1 text-xs font-medium bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full">
                   {localFilters.difficulty}
                 </span>
               )}
               {localFilters.rating && (
-                <span className="px-2 py-1 text-xs font-medium bg-indigo-100 text-indigo-800 rounded-full">
+                <span className="px-3 py-1 text-xs font-medium bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full">
                   {localFilters.rating}
                 </span>
               )}
               {localFilters.search && (
-                <span className="px-2 py-1 text-xs font-medium bg-indigo-100 text-indigo-800 rounded-full">
+                <span className="px-3 py-1 text-xs font-medium bg-gradient-to-r from-pink-500 to-red-500 text-white rounded-full">
                   "{localFilters.search}"
                 </span>
               )}
             </div>
             <button
               onClick={clearFilters}
-              className="text-sm text-indigo-600 hover:text-indigo-500 font-medium"
+              className="text-sm text-purple-400 hover:text-purple-300 font-medium transition-colors duration-200"
             >
               Clear all filters
             </button>

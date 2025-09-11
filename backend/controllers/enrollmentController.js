@@ -1,6 +1,7 @@
-const { Enrollment, Course, User } = require('../models');
+const { Enrollment, Course, User, CourseChapter, ChapterProgress } = require('../models');
 const logger = require('../utils/logger');
 const { AppError } = require('../middleware/errorHandler');
+const { Op } = require('sequelize');
 
 /**
  * Get my enrollments
@@ -423,6 +424,321 @@ const completeCourse = async (req, res, next) => {
 };
 
 /**
+ * Complete chapter and move to next (sequential progression)
+ */
+const completeChapter = async (req, res, next) => {
+  try {
+    const { enrollmentId, chapterId } = req.params;
+
+    const enrollment = await Enrollment.findOne({
+      where: {
+        id: enrollmentId,
+        student_id: req.user.id
+      },
+      include: [
+        {
+          model: Course,
+          as: 'course',
+          include: [
+            {
+              model: CourseChapter,
+              as: 'chapters',
+              attributes: ['id', 'title', 'chapter_order'],
+              order: [['chapter_order', 'ASC']]
+            }
+          ]
+        }
+      ]
+    });
+
+    if (!enrollment) {
+      throw new AppError('Enrollment not found', 404);
+    }
+
+    // Get all chapters in order
+    const chapters = enrollment.course.chapters;
+    const currentChapterIndex = chapters.findIndex(ch => ch.id == chapterId);
+    
+    console.log('=== CHAPTER DEBUGGING ===');
+    console.log('All chapters:', chapters.map(ch => ({ id: ch.id, title: ch.title, order: ch.chapter_order })));
+    console.log('Requested chapterId:', chapterId);
+    console.log('Found chapter index:', currentChapterIndex);
+    console.log('========================');
+    
+    if (currentChapterIndex === -1) {
+      throw new AppError('Chapter not found in this course', 404);
+    }
+
+    // Check if previous chapters are completed (sequential requirement)
+    console.log(`Checking sequential completion for chapter ${chapterId} (index ${currentChapterIndex})`);
+    
+    // Debug: Check all existing chapter progress for this enrollment
+    const allProgress = await ChapterProgress.findAll({
+      where: { enrollment_id: enrollmentId }
+    });
+    console.log('All existing progress records:', allProgress.map(p => ({ 
+      chapter_id: p.chapter_id, 
+      is_completed: p.is_completed 
+    })));
+    
+    for (let i = 0; i < currentChapterIndex; i++) {
+      const chapterProgress = await ChapterProgress.findOne({
+        where: {
+          enrollment_id: enrollmentId,
+          chapter_id: chapters[i].id,
+          is_completed: true
+        }
+      });
+
+      console.log(`Chapter ${chapters[i].id} (${chapters[i].title}) completed:`, !!chapterProgress);
+
+      if (!chapterProgress) {
+        console.log(`BLOCKING: Chapter ${chapters[i].id} not completed`);
+        throw new AppError(`You must complete "${chapters[i].title}" before proceeding to this chapter`, 400);
+      }
+    }
+
+    // Mark current chapter as completed
+    const [chapterProgress, created] = await ChapterProgress.findOrCreate({
+      where: {
+        enrollment_id: enrollmentId,
+        chapter_id: chapterId
+      },
+      defaults: {
+        enrollment_id: enrollmentId,
+        chapter_id: chapterId,
+        is_completed: false
+      }
+    });
+
+    await chapterProgress.markAsCompleted();
+
+    // Calculate new progress based on completed chapters
+    const completedChapters = await ChapterProgress.count({
+      where: {
+        enrollment_id: enrollmentId,
+        is_completed: true
+      }
+    });
+
+    const totalChapters = chapters.length;
+    const newProgress = Math.round((completedChapters / totalChapters) * 100);
+
+    // Update enrollment progress
+    await enrollment.updateProgress(newProgress);
+
+    // Check if course is completed
+    const isCourseCompleted = completedChapters === totalChapters;
+    let nextChapter = null;
+
+    if (!isCourseCompleted && currentChapterIndex < chapters.length - 1) {
+      nextChapter = chapters[currentChapterIndex + 1];
+    }
+
+    logger.info(`User ${req.user.email} completed chapter ${chapterId} in course ${enrollment.course_id}`);
+
+    res.json({
+      success: true,
+      message: 'Chapter completed successfully',
+      data: {
+        chapterProgress: {
+          id: chapterProgress.id,
+          chapter_id: chapterId,
+          is_completed: chapterProgress.is_completed,
+          completed_at: chapterProgress.completed_at
+        },
+        enrollment: {
+          id: enrollment.id,
+          progress: enrollment.progress,
+          status: enrollment.status
+        },
+        nextChapter: nextChapter ? {
+          id: nextChapter.id,
+          title: nextChapter.title,
+          chapter_order: nextChapter.chapter_order
+        } : null,
+        isCourseCompleted,
+        completedChapters,
+        totalChapters
+      }
+    });
+  } catch (error) {
+    logger.error('Complete chapter error:', error);
+    next(error);
+  }
+};
+
+/**
+ * Get chapter progression status
+ */
+const getChapterProgression = async (req, res, next) => {
+  try {
+    const { enrollmentId } = req.params;
+
+    const enrollment = await Enrollment.findOne({
+      where: {
+        id: enrollmentId,
+        student_id: req.user.id
+      },
+      include: [
+        {
+          model: Course,
+          as: 'course',
+          include: [
+            {
+              model: CourseChapter,
+              as: 'chapters',
+              attributes: ['id', 'title', 'chapter_order', 'description'],
+              order: [['chapter_order', 'ASC']]
+            }
+          ]
+        }
+      ]
+    });
+
+    if (!enrollment) {
+      throw new AppError('Enrollment not found', 404);
+    }
+
+    // Get chapter progress for all chapters
+    const chapterProgresses = await ChapterProgress.findAll({
+      where: {
+        enrollment_id: enrollmentId
+      }
+    });
+
+    // Create a map of chapter progress
+    const progressMap = {};
+    chapterProgresses.forEach(progress => {
+      progressMap[progress.chapter_id] = progress;
+    });
+
+    // Build chapter progression data
+    const chaptersWithProgress = enrollment.course.chapters.map((chapter, index) => {
+      const progress = progressMap[chapter.id];
+      const isCompleted = progress ? progress.is_completed : false;
+      const isAccessible = index === 0 || (progressMap[enrollment.course.chapters[index - 1].id]?.is_completed || false);
+
+      return {
+        id: chapter.id,
+        title: chapter.title,
+        description: chapter.description,
+        chapter_order: chapter.chapter_order,
+        is_completed: isCompleted,
+        is_accessible: isAccessible,
+        completed_at: progress?.completed_at || null,
+        time_spent: progress?.time_spent || 0
+      };
+    });
+
+    const completedChapters = chaptersWithProgress.filter(ch => ch.is_completed).length;
+    const totalChapters = chaptersWithProgress.length;
+    const isCourseCompleted = completedChapters === totalChapters;
+
+    res.json({
+      success: true,
+      message: 'Chapter progression retrieved successfully',
+      data: {
+        enrollment: {
+          id: enrollment.id,
+          progress: enrollment.progress,
+          status: enrollment.status
+        },
+        chapters: chaptersWithProgress,
+        stats: {
+          completedChapters,
+          totalChapters,
+          isCourseCompleted,
+          progressPercentage: Math.round((completedChapters / totalChapters) * 100)
+        }
+      }
+    });
+  } catch (error) {
+    logger.error('Get chapter progression error:', error);
+    next(error);
+  }
+};
+
+/**
+ * Submit course feedback and rating
+ */
+const submitCourseFeedback = async (req, res, next) => {
+  try {
+    const { enrollmentId } = req.params;
+    const { rating, review } = req.body;
+
+    if (!rating || rating < 1 || rating > 5) {
+      throw new AppError('Rating must be between 1 and 5', 400);
+    }
+
+    const enrollment = await Enrollment.findOne({
+      where: {
+        id: enrollmentId,
+        student_id: req.user.id
+      },
+      include: [
+        {
+          model: Course,
+          as: 'course'
+        }
+      ]
+    });
+
+    if (!enrollment) {
+      throw new AppError('Enrollment not found', 404);
+    }
+
+    if (enrollment.status !== 'completed') {
+      throw new AppError('Course must be completed before submitting feedback', 400);
+    }
+
+    // Update enrollment with rating and review
+    await enrollment.rate(rating, review);
+
+    // Update course average rating
+    const course = enrollment.course;
+    const allRatings = await Enrollment.findAll({
+      where: {
+        course_id: course.id,
+        rating: { [Op.not]: null }
+      },
+      attributes: ['rating']
+    });
+
+    const averageRating = allRatings.length > 0 
+      ? allRatings.reduce((sum, e) => sum + e.rating, 0) / allRatings.length
+      : 0;
+
+    await course.update({
+      average_rating: Math.round(averageRating * 10) / 10,
+      total_ratings: allRatings.length
+    });
+
+    logger.info(`User ${req.user.email} submitted feedback for course ${course.id}`);
+
+    res.json({
+      success: true,
+      message: 'Feedback submitted successfully',
+      data: {
+        enrollment: {
+          id: enrollment.id,
+          rating: enrollment.rating,
+          review: enrollment.review
+        },
+        course: {
+          id: course.id,
+          average_rating: course.average_rating,
+          total_ratings: course.total_ratings
+        }
+      }
+    });
+  } catch (error) {
+    logger.error('Submit course feedback error:', error);
+    next(error);
+  }
+};
+
+/**
  * Drop course
  */
 const dropCourse = async (req, res, next) => {
@@ -523,6 +839,9 @@ module.exports = {
   getMyStats,
   updateMyProgress,
   completeCourse,
+  completeChapter,
+  getChapterProgression,
+  submitCourseFeedback,
   dropCourse,
   getAdminStats
 };

@@ -203,6 +203,7 @@ const requireEnrollment = async (req, res, next) => {
       }
     });
 
+
     if (!enrollment) {
       return res.status(403).json({
         success: false,

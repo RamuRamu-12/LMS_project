@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-const ChapterSidebar = ({ chapters = [], selectedChapterId, onChapterSelect, courseTitle }) => {
+const ChapterSidebar = ({ chapters = [], selectedChapterId, onChapterSelect, courseTitle, progressionData = null }) => {
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   const getChapterContentType = (chapter) => {
@@ -52,6 +52,18 @@ const ChapterSidebar = ({ chapters = [], selectedChapterId, onChapterSelect, cou
         return 'text-purple-600'
       default:
         return 'text-gray-600'
+    }
+  }
+
+  const getChapterStatus = (chapter) => {
+    if (!progressionData?.chapters) {
+      return { isAccessible: true, isCompleted: false }
+    }
+    
+    const chapterProgress = progressionData.chapters.find(ch => ch.id === chapter.id)
+    return {
+      isAccessible: chapterProgress?.is_accessible || false,
+      isCompleted: chapterProgress?.is_completed || false
     }
   }
 
@@ -106,34 +118,46 @@ const ChapterSidebar = ({ chapters = [], selectedChapterId, onChapterSelect, cou
           </div>
         ) : (
           <div className="p-1">
-            {chapters.map((chapter, index) => (
-              <motion.div
-                key={chapter.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className={`mb-1 rounded-md transition-all duration-200 ${
-                  selectedChapterId === chapter.id
-                    ? 'bg-indigo-50 border-indigo-200'
-                    : 'hover:bg-gray-50 border-transparent'
-                } border`}
-              >
-                <button
-                  onClick={() => onChapterSelect(chapter)}
-                  className={`w-full p-2 text-left rounded-md transition-colors ${
+            {chapters.map((chapter, index) => {
+              const { isAccessible, isCompleted } = getChapterStatus(chapter)
+              
+              return (
+                <motion.div
+                  key={chapter.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`mb-1 rounded-md transition-all duration-200 ${
                     selectedChapterId === chapter.id
-                      ? 'text-indigo-900'
-                      : 'text-gray-700 hover:text-gray-900'
-                  }`}
+                      ? 'bg-indigo-50 border-indigo-200'
+                      : isAccessible
+                        ? 'hover:bg-gray-50 border-transparent'
+                        : 'opacity-50 cursor-not-allowed'
+                  } border`}
                 >
+                  <button
+                    onClick={() => isAccessible && onChapterSelect(chapter)}
+                    disabled={!isAccessible}
+                    className={`w-full p-2 text-left rounded-md transition-colors ${
+                      selectedChapterId === chapter.id
+                        ? 'text-indigo-900'
+                        : isAccessible
+                          ? 'text-gray-700 hover:text-gray-900'
+                          : 'text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
                   <div className="flex items-start space-x-2">
                     {/* Chapter Number */}
                     <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
                       selectedChapterId === chapter.id
                         ? 'bg-indigo-600 text-white'
-                        : 'bg-gray-200 text-gray-600'
+                        : isCompleted
+                          ? 'bg-green-500 text-white'
+                          : isAccessible
+                            ? 'bg-gray-200 text-gray-600'
+                            : 'bg-gray-100 text-gray-400'
                     }`}>
-                      {chapter.chapter_order}
+                      {isCompleted ? '✓' : chapter.chapter_order}
                     </div>
 
                     {!isCollapsed && (
@@ -174,7 +198,8 @@ const ChapterSidebar = ({ chapters = [], selectedChapterId, onChapterSelect, cou
                   </div>
                 </button>
               </motion.div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>

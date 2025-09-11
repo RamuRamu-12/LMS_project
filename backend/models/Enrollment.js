@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     },
     status: {
-      type: DataTypes.ENUM('enrolled', 'in-progress', 'completed', 'dropped'),
+      type: DataTypes.ENUM('enrolled', 'completed', 'dropped'),
       defaultValue: 'enrolled'
     },
   }, {
@@ -96,7 +96,8 @@ module.exports = (sequelize, DataTypes) => {
       this.status = 'completed';
       this.completed_at = new Date();
     } else if (this.progress > 0) {
-      this.status = 'in-progress';
+      // Use 'enrolled' instead of 'in-progress' if the enum doesn't support it
+      this.status = 'enrolled';
     }
     
     return this.save();

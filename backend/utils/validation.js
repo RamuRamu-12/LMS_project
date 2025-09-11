@@ -101,6 +101,12 @@ const commonSchemas = {
     id: Joi.number().integer().positive().required()
   }),
 
+  // For routes with enrollmentId and chapterId
+  enrollmentAndChapter: Joi.object({
+    enrollmentId: Joi.number().integer().positive().required(),
+    chapterId: Joi.number().integer().positive().required()
+  }),
+
   pagination: Joi.object({
     page: Joi.number().integer().min(1).default(1),
     limit: Joi.number().integer().min(1).max(100).default(10)

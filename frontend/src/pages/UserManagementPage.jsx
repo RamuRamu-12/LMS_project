@@ -85,6 +85,9 @@ const UserManagementPage = () => {
                         Status
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Last Login
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Joined
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -137,7 +140,24 @@ const UserManagementPage = () => {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(user.created_at).toLocaleDateString()}
+                          {user.last_login ? (
+                            <div>
+                              <div>{new Date(user.last_login).toLocaleDateString()}</div>
+                              <div className="text-xs text-gray-400">
+                                {new Date(user.last_login).toLocaleTimeString()}
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="text-gray-400">Never</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <div>
+                            <div>{new Date(user.created_at).toLocaleDateString()}</div>
+                            <div className="text-xs text-gray-400">
+                              {new Date(user.created_at).toLocaleTimeString()}
+                            </div>
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex space-x-2">

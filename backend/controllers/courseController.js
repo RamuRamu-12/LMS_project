@@ -224,6 +224,35 @@ const getTopRatedCourses = async (req, res, next) => {
 };
 
 /**
+ * Get unique categories from courses
+ */
+const getCategories = async (req, res, next) => {
+  try {
+    const categories = await Course.findAll({
+      attributes: ['category'],
+      where: {
+        is_published: true
+      },
+      group: ['category'],
+      order: [['category', 'ASC']]
+    });
+
+    const categoryList = categories.map(course => course.category).filter(Boolean);
+
+    res.json({
+      success: true,
+      message: 'Categories retrieved successfully',
+      data: {
+        categories: categoryList
+      }
+    });
+  } catch (error) {
+    logger.error('Get categories error:', error);
+    next(error);
+  }
+};
+
+/**
  * Get course by ID
  */
 const getCourseById = async (req, res, next) => {
@@ -472,6 +501,140 @@ const uploadCourseFiles = async (req, res, next) => {
 };
 
 /**
+ * Upload course logo
+ */
+const uploadCourseLogo = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const course = await Course.findByPk(id);
+
+    if (!course) {
+      throw new AppError('Course not found', 404);
+    }
+
+    if (course.instructor_id !== req.user.id) {
+      throw new AppError('Access denied. You can only upload logos for your own courses.', 403);
+    }
+
+    if (!req.file) {
+      throw new AppError('No logo file provided', 400);
+    }
+
+    const logoFile = req.file;
+    const fs = require('fs');
+    const path = require('path');
+    
+    // Create uploads/logos directory if it doesn't exist
+    const uploadDir = path.join(__dirname, '../uploads/logos');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    
+    // Generate a unique filename
+    const fileExtension = logoFile.originalname.split('.').pop();
+    const fileName = `course-${id}-logo-${Date.now()}.${fileExtension}`;
+    const filePath = path.join(uploadDir, fileName);
+    
+    // Save file to disk
+    fs.writeFileSync(filePath, logoFile.buffer);
+    
+    // Create URL for the uploaded file
+    const logoUrl = `/uploads/logos/${fileName}`;
+    
+    // Update course with logo URL
+    await course.update({ logo: logoUrl });
+
+    logger.info(`Logo uploaded for course "${course.title}" by ${req.user.email}`);
+
+    res.json({
+      success: true,
+      message: 'Logo uploaded successfully',
+      data: {
+        logoUrl: logoUrl
+      }
+    });
+  } catch (error) {
+    logger.error('Upload course logo error:', error);
+    next(error);
+  }
+};
+
+const getCourseLogo = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    console.log(`API Logo request for course ID: ${id}`);
+    
+    const course = await Course.findByPk(id);
+
+    if (!course) {
+      console.log('Course not found');
+      throw new AppError('Course not found', 404);
+    }
+
+    if (!course.logo) {
+      console.log('No logo found for course');
+      throw new AppError('No logo found for this course', 404);
+    }
+
+    console.log('Course logo path:', course.logo);
+
+    const fs = require('fs');
+    const path = require('path');
+    
+    // Extract filename from logo URL
+    const logoPath = course.logo.startsWith('/') ? course.logo.substring(1) : course.logo;
+    const fullPath = path.join(__dirname, '..', logoPath);
+    
+    console.log('Full logo path:', fullPath);
+    
+    // Check if file exists
+    if (!fs.existsSync(fullPath)) {
+      console.log('Logo file not found at path:', fullPath);
+      throw new AppError('Logo file not found', 404);
+    }
+
+    console.log('Logo file exists, reading and converting to base64...');
+
+    // Read file and convert to base64
+    const fileBuffer = fs.readFileSync(fullPath);
+    const base64String = fileBuffer.toString('base64');
+    
+    // Determine MIME type based on file extension
+    const ext = path.extname(fullPath).toLowerCase();
+    let mimeType = 'image/jpeg';
+    if (ext === '.png') mimeType = 'image/png';
+    else if (ext === '.gif') mimeType = 'image/gif';
+    else if (ext === '.webp') mimeType = 'image/webp';
+    else if (ext === '.svg') mimeType = 'image/svg+xml';
+    
+    console.log('MIME type:', mimeType);
+    console.log('Base64 length:', base64String.length);
+    
+    // Return base64 data URL
+    const response = {
+      success: true,
+      data: {
+        logoUrl: `data:${mimeType};base64,${base64String}`
+      }
+    };
+    
+    console.log('Sending JSON response with base64 data URL');
+    
+    // Set cache-busting headers
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Content-Type', 'application/json');
+    
+    res.json(response);
+  } catch (error) {
+    console.error('Get course logo error:', error);
+    logger.error('Get course logo error:', error);
+    next(error);
+  }
+};
+
+/**
  * Delete course file
  */
 const deleteCourseFile = async (req, res, next) => {
@@ -487,6 +650,8 @@ const deleteCourseFile = async (req, res, next) => {
 const getCourseContent = async (req, res, next) => {
   try {
     const { id } = req.params;
+    
+    
     const course = await Course.findByPk(id, {
       include: [
         {
@@ -513,6 +678,7 @@ const getCourseContent = async (req, res, next) => {
       data: {
         course: course.getPublicInfo(),
         enrollment: {
+          id: req.enrollment.id,
           status: req.enrollment.status,
           progress: req.enrollment.progress,
           enrolled_at: req.enrollment.enrolled_at,
@@ -691,6 +857,7 @@ module.exports = {
   searchCourses,
   getPopularCourses,
   getTopRatedCourses,
+  getCategories,
   getCourseById,
   createCourse,
   updateCourse,
@@ -698,6 +865,8 @@ module.exports = {
   publishCourse,
   unpublishCourse,
   uploadCourseFiles,
+  uploadCourseLogo,
+  getCourseLogo,
   deleteCourseFile,
   getCourseContent,
   enrollInCourse,

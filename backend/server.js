@@ -83,6 +83,16 @@ app.use(compression());
 // Logging middleware
 app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
 
+// Serve static files for uploads with proper headers
+app.use('/uploads', express.static('uploads', {
+  setHeaders: (res, path) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
+  }
+}));
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({
@@ -92,6 +102,79 @@ app.get('/health', (req, res) => {
     environment: process.env.NODE_ENV
   });
 });
+
+// Test endpoint to check uploads directory
+app.get('/test-uploads', (req, res) => {
+  const fs = require('fs');
+  const path = require('path');
+  
+  const uploadsDir = path.join(__dirname, 'uploads');
+  const logosDir = path.join(uploadsDir, 'logos');
+  
+  try {
+    const files = fs.readdirSync(logosDir);
+    res.json({
+      success: true,
+      uploadsDir: uploadsDir,
+      logosDir: logosDir,
+      files: files,
+      message: 'Uploads directory is accessible'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      uploadsDir: uploadsDir,
+      logosDir: logosDir
+    });
+  }
+});
+
+// Test endpoint to verify logo API is working
+app.get('/test-logo-api/:courseId', async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    console.log(`Test logo API for course ID: ${courseId}`);
+    
+    // Import the course controller
+    const courseController = require('./controllers/courseController');
+    
+    // Create a mock request and response
+    const mockReq = { params: { id: courseId } };
+    const mockRes = {
+      json: (data) => {
+        console.log('Test API returning:', data);
+        res.json(data);
+      },
+      status: (code) => ({
+        json: (data) => {
+          console.log('Test API error:', code, data);
+          res.status(code).json(data);
+        }
+      })
+    };
+    
+    await courseController.getCourseLogo(mockReq, mockRes);
+  } catch (error) {
+    console.error('Test logo API error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Direct test endpoint for logo
+app.get('/test-logo-direct/:courseId', (req, res) => {
+  const { courseId } = req.params;
+  console.log(`Direct logo test for course ID: ${courseId}`);
+  
+  res.json({
+    success: true,
+    message: 'Direct test endpoint working',
+    courseId: courseId,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Removed conflicting logo proxy endpoints - using API endpoint instead
 
 // API routes
 app.use('/api/auth', authRoutes);

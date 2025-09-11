@@ -1,35 +1,38 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import useCourseLogo from '../../hooks/useCourseLogo'
 
 const CourseCard = ({ course, showInstructor = true, showRating = true }) => {
+  const { logoUrl, loading: logoLoading, error: logoError } = useCourseLogo(course.id, !!course.logo)
   return (
     <motion.div
-      whileHover={{ y: -4 }}
-      className="card hover:shadow-xl transition-all duration-300 overflow-hidden group"
+      whileHover={{ y: -8, scale: 1.02 }}
+      className="bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white/20 transition-all duration-300 overflow-hidden group border border-white/20 shadow-2xl hover:shadow-purple-500/20"
     >
       <Link to={`/courses/${course.id}`} className="block">
-        <div className="relative">
+        <div className="relative overflow-hidden">
           <img
             src={course.thumbnail || `https://via.placeholder.com/400x225/6366f1/ffffff?text=${course.title?.charAt(0)}`}
             alt={course.title}
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
           <div className="absolute top-4 right-4">
-            <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+            <span className={`px-3 py-1 text-xs font-bold rounded-full backdrop-blur-sm ${
               course.difficulty === 'beginner' 
-                ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                ? 'bg-green-500/80 text-white'
                 : course.difficulty === 'intermediate'
-                ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'
-                : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300'
+                ? 'bg-yellow-500/80 text-white'
+                : 'bg-red-500/80 text-white'
             }`}>
               {course.difficulty}
             </span>
           </div>
           <div className="absolute top-4 left-4">
-            <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+            <span className={`px-3 py-1 text-xs font-bold rounded-full backdrop-blur-sm ${
               course.is_published 
-                ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300'
-                : 'bg-gray-100 dark:bg-gray-700/50 text-gray-600 dark:text-gray-400'
+                ? 'bg-blue-500/80 text-white'
+                : 'bg-gray-500/80 text-white'
             }`}>
               {course.is_published ? 'Published' : 'Draft'}
             </span>
@@ -37,20 +40,44 @@ const CourseCard = ({ course, showInstructor = true, showRating = true }) => {
         </div>
         
         <div className="p-6">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-indigo-600 dark:text-indigo-400 font-medium">
-              {course.category}
-            </span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center space-x-3">
+              {course.logo && (
+                <>
+                  {logoLoading && (
+                    <div className="w-8 h-8 rounded-lg border border-white/20 bg-gray-600 animate-pulse flex items-center justify-center">
+                      <span className="text-xs text-white">...</span>
+                    </div>
+                  )}
+                  {logoUrl && !logoLoading && (
+                    <img
+                      src={logoUrl}
+                      alt={`${course.title} logo`}
+                      className="w-8 h-8 rounded-lg object-cover border border-white/20"
+                      onLoad={() => console.log('Logo loaded successfully for course:', course.title)}
+                    />
+                  )}
+                  {logoError && !logoLoading && (
+                    <div className="w-8 h-8 rounded-lg border border-white/20 bg-gray-600 flex items-center justify-center">
+                      <span className="text-xs text-white" title={`Logo error: ${logoError}`}>!</span>
+                    </div>
+                  )}
+                </>
+              )}
+              <span className="text-sm text-purple-400 font-semibold bg-purple-500/20 px-3 py-1 rounded-full">
+                {course.category}
+              </span>
+            </div>
+            <span className="text-sm text-gray-300 bg-white/10 px-3 py-1 rounded-full">
               {course.enrollment_count || 0} students
             </span>
           </div>
           
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+          <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-purple-300 transition-colors">
             {course.title}
           </h3>
           
-          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+          <p className="text-gray-300 text-sm mb-4 line-clamp-2">
             {course.description}
           </p>
           
@@ -59,9 +86,9 @@ const CourseCard = ({ course, showInstructor = true, showRating = true }) => {
               <img
                 src={course.instructor.avatar || `https://ui-avatars.com/api/?name=${course.instructor.name}&background=6366f1&color=fff`}
                 alt={course.instructor.name}
-                className="w-6 h-6 rounded-full mr-2"
+                className="w-8 h-8 rounded-full mr-3 border-2 border-white/20"
               />
-              <span className="text-sm text-gray-600 dark:text-gray-300">
+              <span className="text-sm text-gray-300">
                 {course.instructor.name}
               </span>
             </div>
@@ -80,7 +107,7 @@ const CourseCard = ({ course, showInstructor = true, showRating = true }) => {
                         className={`w-4 h-4 ${
                           i < Math.floor(numericRating)
                             ? 'text-yellow-400'
-                            : 'text-gray-300'
+                            : 'text-gray-500'
                         }`}
                         fill="currentColor"
                         viewBox="0 0 20 20"
@@ -89,7 +116,7 @@ const CourseCard = ({ course, showInstructor = true, showRating = true }) => {
                       </svg>
                     );
                   })}
-                  <span className="ml-1 text-sm text-gray-600 dark:text-gray-300">
+                  <span className="ml-2 text-sm text-gray-300 font-medium">
                     {(() => {
                       const rating = course.average_rating;
                       if (rating && typeof rating === 'number' && !isNaN(rating)) {
@@ -99,7 +126,7 @@ const CourseCard = ({ course, showInstructor = true, showRating = true }) => {
                     })()}
                   </span>
                 </div>
-                <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
+                <span className="text-sm text-gray-400 ml-3">
                   ({course.total_ratings || 0})
                 </span>
               </div>

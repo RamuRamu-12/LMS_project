@@ -14,10 +14,31 @@ const api = axios.create({
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+    // List of routes that don't need authentication
+    const publicRoutes = [
+      '/auth/register',
+      '/auth/login',
+      '/auth/google',
+      '/auth/google/callback',
+      '/auth/refresh',
+      '/courses/categories',
+      '/courses?', // Public course listing
+      '/courses/search',
+      '/courses/popular',
+      '/courses/top-rated'
+    ]
+    
+    // Check if this is a public route
+    const isPublicRoute = publicRoutes.some(route => config.url?.includes(route))
+    
+    // Only add token for non-public routes
+    if (!isPublicRoute) {
+      const token = localStorage.getItem('accessToken')
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
     }
+    
     return config
   },
   (error) => {

@@ -15,6 +15,7 @@ import AdminSidebar from '../components/admin/AdminSidebar'
 import DashboardOverview from '../components/admin/DashboardOverview'
 import CourseManagement from '../components/admin/CourseManagement'
 import UserManagement from '../components/admin/UserManagement'
+import UserAnalytics from '../components/admin/UserAnalytics'
 import CreateCourse from '../components/admin/CreateCourse'
 import EditCourse from '../components/admin/EditCourse'
 
@@ -61,6 +62,7 @@ const AdminDashboard = () => {
     { name: 'Courses', href: '/admin/courses', icon: 'courses', current: location.pathname.startsWith('/admin/courses') },
     { name: 'Create Course', href: '/admin/courses/create', icon: 'add', current: location.pathname === '/admin/courses/create' },
     { name: 'Users', href: '/admin/users', icon: 'users', current: location.pathname.startsWith('/admin/users') },
+    { name: 'User Analytics', href: '/admin/analytics', icon: 'analytics', current: location.pathname === '/admin/analytics' },
   ]
 
   const stats = [
@@ -220,6 +222,10 @@ const AdminDashboard = () => {
                       users={usersData?.data?.users || []}
                     />
                   } 
+                />
+                <Route 
+                  path="/analytics" 
+                  element={<UserAnalytics />} 
                 />
               </Routes>
             </div>
