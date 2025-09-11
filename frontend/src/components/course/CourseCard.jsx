@@ -4,6 +4,14 @@ import useCourseLogo from '../../hooks/useCourseLogo'
 
 const CourseCard = ({ course, showInstructor = true, showRating = true }) => {
   const { logoUrl, loading: logoLoading, error: logoError } = useCourseLogo(course.id, !!course.logo)
+  
+  // Debug logging
+  console.log(`CourseCard - Course ${course.id} (${course.title}):`, {
+    hasLogo: !!course.logo,
+    logoUrl,
+    logoLoading,
+    logoError
+  })
   return (
     <motion.div
       whileHover={{ y: -8, scale: 1.02 }}
@@ -11,11 +19,31 @@ const CourseCard = ({ course, showInstructor = true, showRating = true }) => {
     >
       <Link to={`/courses/${course.id}`} className="block">
         <div className="relative overflow-hidden">
-          <img
-            src={course.thumbnail || `https://via.placeholder.com/400x225/6366f1/ffffff?text=${course.title?.charAt(0)}`}
-            alt={course.title}
-            className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-          />
+          {course.logo && logoUrl ? (
+            <img
+              src={logoUrl}
+              alt={course.title}
+              className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+          ) : course.logo && logoLoading ? (
+            <div className="w-full h-48 bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center">
+              <div className="animate-pulse text-white text-2xl font-bold">
+                {course.title?.charAt(0)}
+              </div>
+            </div>
+          ) : course.logo && logoError ? (
+            <div className="w-full h-48 bg-gradient-to-br from-red-600 to-pink-600 flex items-center justify-center">
+              <div className="text-white text-2xl font-bold">
+                {course.title?.charAt(0)}
+              </div>
+            </div>
+          ) : (
+            <img
+              src={course.thumbnail || `https://via.placeholder.com/400x225/6366f1/ffffff?text=${course.title?.charAt(0)}`}
+              alt={course.title}
+              className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
           <div className="absolute top-4 right-4">
             <span className={`px-3 py-1 text-xs font-bold rounded-full backdrop-blur-sm ${

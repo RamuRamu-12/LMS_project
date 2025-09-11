@@ -7,6 +7,8 @@ import { enrollmentService } from '../services/enrollmentService'
 import Header from '../components/common/Header'
 import LoadingSpinner from '../components/common/LoadingSpinner'
 import AllCoursesModal from '../components/course/AllCoursesModal'
+import StudentCourseCard from '../components/course/StudentCourseCard'
+import EnrolledCourseCard from '../components/course/EnrolledCourseCard'
 import toast from 'react-hot-toast'
 
 const StudentDashboard = () => {
@@ -358,61 +360,12 @@ const StudentDashboard = () => {
                 
                 <div className="space-y-4">
                   {enrollments.slice(0, 3).map((enrollment, index) => (
-                    <motion.div
+                    <EnrolledCourseCard
                       key={enrollment.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                        className="group relative overflow-hidden bg-gradient-to-r from-gray-50 to-gray-100 hover:from-indigo-50 hover:to-purple-50 rounded-lg p-4 transition-all duration-300 hover:shadow-md border border-gray-200 hover:border-indigo-200"
-                    >
-                        <div className="flex items-center space-x-4">
-                          <div className="relative">
-                      <img
-                              src={enrollment.course?.thumbnail || `https://via.placeholder.com/60x45/6366f1/ffffff?text=${enrollment.course?.title?.charAt(0)}`}
-                        alt={enrollment.course?.title}
-                              className="w-15 h-12 rounded-lg object-cover shadow-sm group-hover:shadow-md transition-shadow duration-300"
-                            />
-                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-indigo-500 rounded-full flex items-center justify-center">
-                              <svg className="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                              </svg>
-                            </div>
-                          </div>
-                      <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-semibold text-gray-900 truncate group-hover:text-indigo-600 transition-colors duration-200">
-                          {enrollment.course?.title}
-                        </h4>
-                            <p className="text-xs text-gray-600 mb-2">
-                              by {enrollment.course?.instructor?.name}
-                            </p>
-                            <div className="space-y-1">
-                              <div className="flex items-center justify-between text-xs">
-                                <span className="text-gray-600">Progress</span>
-                                <span className="font-semibold text-indigo-600">{enrollment.progress || 0}%</span>
-                          </div>
-                              <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
-                            <div
-                                  className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500 ease-out"
-                              style={{ width: `${enrollment.progress || 0}%` }}
-                            />
-                          </div>
-                              <div className="flex items-center justify-between text-xs text-gray-500">
-                                <span>{enrollment.status === 'completed' ? 'Completed' : 'In Progress'}</span>
-                                <span>{enrollment.course?.estimated_duration || 0}h</span>
-                              </div>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={() => navigate(`/courses/${enrollment.course?.id}`)}
-                            className="inline-flex items-center px-3 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 text-xs"
-                      >
-                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        Continue
-                      </button>
-                        </div>
-                    </motion.div>
+                      enrollment={enrollment}
+                      index={index}
+                      onContinue={(courseId) => navigate(`/courses/${courseId}`)}
+                    />
                   ))}
                   
                   {enrollments.length === 0 && (
@@ -543,103 +496,18 @@ const StudentDashboard = () => {
                   </button>
                 </div>
                 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {courses.slice(0, 6).map((course, index) => (
-                    <motion.div
-                      key={course.id}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                        className="group relative overflow-hidden bg-gradient-to-r from-gray-50 to-gray-100 hover:from-green-50 hover:to-teal-50 rounded-lg p-4 transition-all duration-300 hover:shadow-md border border-gray-200 hover:border-green-200"
-                    >
-                        <div className="flex items-center space-x-6">
-                          <div className="relative">
-                      <img
-                              src={course.thumbnail || `https://via.placeholder.com/80x60/10b981/ffffff?text=${course.title?.charAt(0)}`}
-                        alt={course.title}
-                              className="w-20 h-16 rounded-xl object-cover shadow-md group-hover:shadow-lg transition-shadow duration-300"
-                            />
-                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                              <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                              </svg>
-                            </div>
-                          </div>
-                      <div className="flex-1 min-w-0">
-                            <h4 className="text-lg font-semibold text-gray-900 truncate group-hover:text-green-600 transition-colors duration-200">
-                          {course.title}
-                        </h4>
-                            <p className="text-sm text-gray-600 mb-3">
-                              by {course.instructor?.name}
-                        </p>
-                            <div className="flex items-center justify-between mb-3">
-                              <div className="flex items-center space-x-2">
-                          <div className="flex items-center">
-                            {[...Array(5)].map((_, i) => (
-                              <svg
-                                key={i}
-                                      className={`w-4 h-4 ${
-                                  i < Math.floor(course.average_rating || 0)
-                                    ? 'text-yellow-400'
-                                    : 'text-gray-300'
-                                }`}
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                              >
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                              </svg>
-                            ))}
-                                  <span className="text-sm text-gray-600 ml-1">
-                                    {course.average_rating || 0} ({course.total_ratings || 0})
-                            </span>
-                                </div>
-                              </div>
-                              <div className="flex items-center space-x-2 text-sm text-gray-500">
-                                <span className="px-2 py-1 bg-gray-200 rounded-full text-xs font-medium">
-                                  {course.difficulty}
-                                </span>
-                                <span>{course.estimated_duration || 0}h</span>
-                          </div>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={() => handleEnroll(course.id)}
-                        disabled={isEnrolled(course.id) || enrollingCourseId === course.id}
-                            className={`inline-flex items-center px-6 py-3 font-semibold rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 ${
-                          isEnrolled(course.id) 
-                                ? 'bg-green-600 text-white hover:bg-green-700' 
-                            : enrollingCourseId === course.id 
-                                  ? 'bg-gray-400 text-white cursor-not-allowed' 
-                                  : 'bg-green-600 text-white hover:bg-green-700'
-                            }`}
-                          >
-                            {isEnrolled(course.id) ? (
-                              <>
-                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                </svg>
-                                Enrolled
-                              </>
-                            ) : enrollingCourseId === course.id ? (
-                              <>
-                                <svg className="w-4 h-4 mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                </svg>
-                                Enrolling...
-                              </>
-                            ) : (
-                              <>
-                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                </svg>
-                                Enroll
-                              </>
-                            )}
-                      </button>
-                        </div>
-                    </motion.div>
-                  ))}
-                </div>
+                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                     {courses.slice(0, 6).map((course, index) => (
+                       <StudentCourseCard
+                         key={course.id}
+                         course={course}
+                         index={index}
+                         isEnrolled={isEnrolled(course.id)}
+                         enrollingCourseId={enrollingCourseId}
+                         onEnroll={handleEnroll}
+                       />
+                     ))}
+                   </div>
               </div>
               </motion.div>
             </div>

@@ -17,7 +17,7 @@ const getMyEnrollments = async (req, res, next) => {
         {
           model: Course,
           as: 'course',
-          attributes: ['id', 'title', 'description', 'thumbnail', 'category', 'difficulty', 'estimated_duration']
+          attributes: ['id', 'title', 'description', 'thumbnail', 'logo', 'category', 'difficulty', 'estimated_duration']
         }
       ],
       order: [['enrolled_at', 'DESC']],
@@ -145,7 +145,7 @@ const getMyCompletedCourses = async (req, res, next) => {
         {
           model: Course,
           as: 'course',
-          attributes: ['id', 'title', 'description', 'thumbnail', 'category', 'difficulty']
+          attributes: ['id', 'title', 'description', 'thumbnail', 'logo', 'category', 'difficulty']
         }
       ],
       order: [['completed_at', 'DESC']],
@@ -197,7 +197,7 @@ const getMyActiveCourses = async (req, res, next) => {
         {
           model: Course,
           as: 'course',
-          attributes: ['id', 'title', 'description', 'thumbnail', 'category', 'difficulty', 'estimated_duration']
+          attributes: ['id', 'title', 'description', 'thumbnail', 'logo', 'category', 'difficulty', 'estimated_duration']
         }
       ],
       order: [['last_accessed_at', 'DESC']],

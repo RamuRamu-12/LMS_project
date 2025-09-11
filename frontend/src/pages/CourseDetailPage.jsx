@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { courseService } from '../services/courseService'
 import { enrollmentService } from '../services/enrollmentService'
 import { useAuth } from '../context/AuthContext'
+import useCourseLogo from '../hooks/useCourseLogo'
 import Header from '../components/common/Header'
 import Footer from '../components/common/Footer'
 import LoadingSpinner from '../components/common/LoadingSpinner'
@@ -71,15 +72,8 @@ const CourseDetailPage = () => {
   const enrollment = courseData?.data?.enrollment // For enrolled students
   const chapters = course?.chapters || []
 
-  // Temporary debugging - remove after fixing
-  console.log('=== DEBUGGING ENROLLMENT ISSUE ===')
-  console.log('courseData:', courseData)
-  console.log('enrollment object:', enrollment)
-  console.log('enrollment.id:', enrollment?.id)
-  console.log('enrollment status:', enrollment?.status)
-  console.log('user role:', user?.role)
-  console.log('isAuthenticated:', isAuthenticated)
-  console.log('================================')
+  // Get course logo
+  const { logoUrl, loading: logoLoading, error: logoError } = useCourseLogo(course?.id, !!course?.logo)
 
 
   // Set first accessible chapter as selected when chapters are loaded
@@ -356,7 +350,58 @@ const CourseDetailPage = () => {
                     transition={{ delay: 0.3 }}
                     className="relative"
                   >
-                    {course.thumbnail ? (
+                    {course.logo && logoUrl ? (
+                      <div className="relative group">
+                        <img
+                          src={logoUrl}
+                          alt={course.title}
+                          className="w-full h-48 object-cover rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
+                        <div className="absolute bottom-3 left-3 right-3">
+                          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2">
+                            <div className="flex items-center space-x-1">
+                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                              <span className="text-xs font-medium text-gray-900">Live Course</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : course.logo && logoLoading ? (
+                      <div className="relative group">
+                        <div className="w-full h-48 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                          <div className="animate-pulse text-white text-4xl font-bold">
+                            {course.title.charAt(0)}
+                          </div>
+                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
+                        <div className="absolute bottom-3 left-3 right-3">
+                          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2">
+                            <div className="flex items-center space-x-1">
+                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                              <span className="text-xs font-medium text-gray-900">Live Course</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : course.logo && logoError ? (
+                      <div className="relative group">
+                        <div className="w-full h-48 bg-gradient-to-br from-red-500 via-pink-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                          <span className="text-white text-4xl font-bold">
+                            {course.title.charAt(0)}
+                          </span>
+                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
+                        <div className="absolute bottom-3 left-3 right-3">
+                          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2">
+                            <div className="flex items-center space-x-1">
+                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                              <span className="text-xs font-medium text-gray-900">Live Course</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : course.thumbnail ? (
                       <div className="relative group">
                         <img
                           src={course.thumbnail}

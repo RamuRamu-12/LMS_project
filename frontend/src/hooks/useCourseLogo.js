@@ -18,10 +18,7 @@ const useCourseLogo = (courseId, hasLogo) => {
       try {
         console.log(`Fetching logo for course ${courseId}`);
         const response = await fetch(`http://localhost:5000/api/courses/${courseId}/logo?t=${Date.now()}`, {
-          cache: 'no-cache',
-          headers: {
-            'Cache-Control': 'no-cache'
-          }
+          cache: 'no-cache'
         });
         
         console.log('Logo response status:', response.status);
