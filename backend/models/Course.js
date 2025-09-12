@@ -154,7 +154,8 @@ module.exports = (sequelize, DataTypes) => {
       learning_objectives: this.learning_objectives,
       is_published: this.is_published,
       instructor: this.instructor,
-      chapters: this.chapters,
+      // Exclude chapters from public info to prevent circular references
+      // chapters: this.chapters,
       created_at: this.created_at,
       updated_at: this.updated_at
     };

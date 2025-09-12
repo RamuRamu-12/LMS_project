@@ -61,13 +61,8 @@ const getCourses = async (req, res, next) => {
           model: User,
           as: 'instructor',
           attributes: ['id', 'name', 'avatar']
-        },
-        {
-          model: CourseChapter,
-          as: 'chapters',
-          attributes: ['id', 'title', 'description', 'video_url', 'pdf_url', 'chapter_order', 'duration_minutes', 'is_published'],
-          order: [['chapter_order', 'ASC']]
         }
+        // Removed chapters include to prevent circular references and improve performance
       ],
       order: [[sort, order.toUpperCase()]],
       limit: parseInt(limit),

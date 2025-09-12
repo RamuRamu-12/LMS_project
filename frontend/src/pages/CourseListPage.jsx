@@ -6,6 +6,7 @@ import Header from '../components/common/Header'
 import Footer from '../components/common/Footer'
 import CourseFilters from '../components/course/CourseFilters'
 import CourseList from '../components/course/CourseList'
+import ErrorBoundary from '../components/common/ErrorBoundary'
 
 const CourseListPage = () => {
   const [filters, setFilters] = useState({
@@ -62,51 +63,53 @@ const CourseListPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <Header />
-      
-      <main className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
-          >
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl blur-3xl opacity-20"></div>
-              <div className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
-                <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">
-                  Explore AI-Enhanced Courses
-                </h1>
-                <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                  Discover our comprehensive collection of AI-powered courses designed to accelerate your learning journey. 
-                  From beginner to advanced levels, experience personalized education like never before.
-                </p>
+    <ErrorBoundary>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <Header />
+        
+        <main className="py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center mb-12"
+            >
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl blur-3xl opacity-20"></div>
+                <div className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
+                  <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">
+                    Explore AI-Enhanced Courses
+                  </h1>
+                  <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                    Discover our comprehensive collection of AI-powered courses designed to accelerate your learning journey. 
+                    From beginner to advanced levels, experience personalized education like never before.
+                  </p>
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
 
-          {/* Filters */}
-          <CourseFilters 
-            onFilterChange={handleFilterChange}
-            filters={filters}
-            categories={categories}
-          />
+            {/* Filters */}
+            <CourseFilters 
+              onFilterChange={handleFilterChange}
+              filters={filters}
+              categories={categories}
+            />
 
-          {/* Courses List */}
-          <CourseList 
-            courses={courses}
-            isLoading={isLoading}
-            error={error}
-            showInstructor={true}
-            showRating={true}
-          />
-        </div>
-      </main>
+            {/* Courses List */}
+            <CourseList 
+              courses={courses}
+              isLoading={isLoading}
+              error={error}
+              showInstructor={true}
+              showRating={true}
+            />
+          </div>
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </ErrorBoundary>
   )
 }
 

@@ -1,13 +1,32 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
 const CourseFilters = ({ onFilterChange, filters = {}, categories = [] }) => {
   const [localFilters, setLocalFilters] = useState({
-    category: filters.category || '',
-    difficulty: filters.difficulty || '',
-    rating: filters.rating || '',
-    search: filters.search || ''
+    category: '',
+    difficulty: '',
+    rating: '',
+    search: ''
   })
+
+  // Sync local filters with parent filters
+  useEffect(() => {
+    setLocalFilters({
+      category: filters.category || '',
+      difficulty: filters.difficulty || '',
+      rating: filters.rating || '',
+      search: filters.search || ''
+    })
+  }, [filters])
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (handleFilterChange.searchTimeout) {
+        clearTimeout(handleFilterChange.searchTimeout)
+      }
+    }
+  }, [])
 
   // Add "All Categories" option to the beginning of the categories array
   const categoryOptions = ['All Categories', ...categories]
@@ -30,7 +49,16 @@ const CourseFilters = ({ onFilterChange, filters = {}, categories = [] }) => {
   const handleFilterChange = (key, value) => {
     const newFilters = { ...localFilters, [key]: value }
     setLocalFilters(newFilters)
-    onFilterChange(newFilters)
+    
+    // Debounce search input to prevent too many API calls
+    if (key === 'search') {
+      clearTimeout(handleFilterChange.searchTimeout)
+      handleFilterChange.searchTimeout = setTimeout(() => {
+        onFilterChange(newFilters)
+      }, 300) // 300ms delay for search
+    } else {
+      onFilterChange(newFilters)
+    }
   }
 
   const clearFilters = () => {
