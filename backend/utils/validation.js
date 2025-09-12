@@ -84,11 +84,6 @@ const enrollmentSchemas = {
     status: Joi.string().valid('enrolled', 'in-progress', 'completed', 'dropped').optional(),
     rating: Joi.number().integer().min(1).max(5).optional(),
     review: Joi.string().max(2000).optional()
-  }),
-
-  feedback: Joi.object({
-    rating: Joi.number().integer().min(1).max(5).required(),
-    review: Joi.string().max(2000).optional()
   })
 };
 

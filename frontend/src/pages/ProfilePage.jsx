@@ -138,7 +138,7 @@ const ProfilePage = () => {
                         <div className="w-2 h-2 bg-white rounded-full"></div>
                       </div>
                     </motion.div>
-                    <div>
+              <div>
                       <h1 className="text-3xl font-bold">{user.name}</h1>
                       <p className="text-indigo-100 text-lg">{user.email}</p>
                       <div className="flex items-center space-x-2 mt-2">
@@ -173,7 +173,7 @@ const ProfilePage = () => {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               <div className="flex space-x-0">
                 {tabs.map((tab) => (
-                  <button
+                <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={`flex-1 px-6 py-4 text-sm font-medium transition-all duration-300 ${
@@ -184,7 +184,7 @@ const ProfilePage = () => {
                   >
                     <span className="mr-2">{tab.icon}</span>
                     {tab.name}
-                  </button>
+                </button>
                 ))}
               </div>
             </div>
@@ -197,18 +197,18 @@ const ProfilePage = () => {
               transition={{ duration: 0.3 }}
             >
               {activeTab === 'profile' && (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {/* Profile Card */}
-                  <div className="lg:col-span-1">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Profile Card */}
+              <div className="lg:col-span-1">
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                      <div className="text-center">
+                  <div className="text-center">
                         <motion.div
                           whileHover={{ scale: 1.05 }}
                           className="relative inline-block"
                         >
-                          <img
-                            src={user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=6366f1&color=fff`}
-                            alt={user.name}
+                    <img
+                      src={user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=6366f1&color=fff`}
+                      alt={user.name}
                             className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-indigo-100"
                           />
                           <button className="absolute bottom-2 right-2 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center hover:bg-indigo-700 transition-colors">
@@ -231,119 +231,119 @@ const ProfilePage = () => {
                             {formData.location || 'Not provided'}
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Profile Form */}
-                  <div className="lg:col-span-2">
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-6">Personal Information</h3>
-                      <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Full Name
-                            </label>
-                            <input
-                              type="text"
-                              name="name"
-                              value={formData.name}
-                              onChange={handleInputChange}
-                              disabled={!isEditing}
-                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500 transition-colors"
-                              required
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Email
-                            </label>
-                            <input
-                              type="email"
-                              name="email"
-                              value={formData.email}
-                              onChange={handleInputChange}
-                              disabled={!isEditing}
-                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500 transition-colors"
-                              required
-                            />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Bio
-                          </label>
-                          <textarea
-                            name="bio"
-                            value={formData.bio}
-                            onChange={handleInputChange}
-                            disabled={!isEditing}
-                            rows={4}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500 transition-colors"
-                            placeholder="Tell us about yourself..."
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Phone
-                            </label>
-                            <input
-                              type="tel"
-                              name="phone"
-                              value={formData.phone}
-                              onChange={handleInputChange}
-                              disabled={!isEditing}
-                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500 transition-colors"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Location
-                            </label>
-                            <input
-                              type="text"
-                              name="location"
-                              value={formData.location}
-                              onChange={handleInputChange}
-                              disabled={!isEditing}
-                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500 transition-colors"
-                            />
-                          </div>
-                        </div>
-
-                        {isEditing && (
-                          <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-                            <button
-                              type="button"
-                              onClick={handleCancel}
-                              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                            >
-                              Cancel
-                            </button>
-                            <button
-                              type="submit"
-                              disabled={isLoading}
-                              className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
-                            >
-                              {isLoading ? (
-                                <div className="flex items-center">
-                                  <LoadingSpinner size="sm" />
-                                  <span className="ml-2">Saving...</span>
-                                </div>
-                              ) : (
-                                'Save Changes'
-                              )}
-                            </button>
-                          </div>
-                        )}
-                      </form>
-                    </div>
                   </div>
                 </div>
+              </div>
+
+              {/* Profile Form */}
+              <div className="lg:col-span-2">
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-6">Personal Information</h3>
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Full Name
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          disabled={!isEditing}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500 transition-colors"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          disabled={!isEditing}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500 transition-colors"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Bio
+                      </label>
+                      <textarea
+                        name="bio"
+                        value={formData.bio}
+                        onChange={handleInputChange}
+                        disabled={!isEditing}
+                        rows={4}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500 transition-colors"
+                        placeholder="Tell us about yourself..."
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Phone
+                        </label>
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          disabled={!isEditing}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500 transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Location
+                        </label>
+                        <input
+                          type="text"
+                          name="location"
+                          value={formData.location}
+                          onChange={handleInputChange}
+                          disabled={!isEditing}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500 transition-colors"
+                        />
+                      </div>
+                    </div>
+
+                    {isEditing && (
+                      <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                        <button
+                          type="button"
+                          onClick={handleCancel}
+                              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={isLoading}
+                              className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+                        >
+                          {isLoading ? (
+                            <div className="flex items-center">
+                              <LoadingSpinner size="sm" />
+                              <span className="ml-2">Saving...</span>
+                            </div>
+                          ) : (
+                            'Save Changes'
+                          )}
+                        </button>
+                      </div>
+                    )}
+                  </form>
+                </div>
+              </div>
+            </div>
               )}
 
               {activeTab === 'stats' && (
@@ -499,8 +499,8 @@ const ProfilePage = () => {
               {activeTab === 'settings' && (
                 <div className="space-y-6">
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Settings</h3>
-                    <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Settings</h3>
+              <div className="space-y-4">
                       <div className="flex items-center justify-between py-4 border-b border-gray-200">
                         <div className="flex items-center">
                           <div className="p-2 bg-blue-100 rounded-lg mr-4">
@@ -508,10 +508,10 @@ const ProfilePage = () => {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
                           </div>
-                          <div>
-                            <h4 className="text-sm font-medium text-gray-900">Change Password</h4>
-                            <p className="text-sm text-gray-500">Update your password to keep your account secure</p>
-                          </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-900">Change Password</h4>
+                    <p className="text-sm text-gray-500">Update your password to keep your account secure</p>
+                  </div>
                         </div>
                         <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                           Change
@@ -524,11 +524,11 @@ const ProfilePage = () => {
                             <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                             </svg>
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium text-gray-900">Two-Factor Authentication</h4>
-                            <p className="text-sm text-gray-500">Add an extra layer of security to your account</p>
-                          </div>
+                </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-900">Two-Factor Authentication</h4>
+                    <p className="text-sm text-gray-500">Add an extra layer of security to your account</p>
+                  </div>
                         </div>
                         <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                           Enable
@@ -541,19 +541,19 @@ const ProfilePage = () => {
                             <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium text-gray-900">Delete Account</h4>
-                            <p className="text-sm text-gray-500">Permanently delete your account and all data</p>
-                          </div>
+                </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-900">Delete Account</h4>
+                    <p className="text-sm text-gray-500">Permanently delete your account and all data</p>
+                  </div>
                         </div>
                         <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
                           Delete
                         </button>
                       </div>
-                    </div>
-                  </div>
                 </div>
+              </div>
+            </div>
               )}
             </motion.div>
           </motion.div>

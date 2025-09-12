@@ -74,7 +74,6 @@ router.post('/:enrollmentId/feedback',
   authenticate,
   requireStudent,
   validate(commonSchemas.id, 'params'),
-  validate(enrollmentSchemas.feedback, 'body'),
   enrollmentController.submitCourseFeedback
 );
 
