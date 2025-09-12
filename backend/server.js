@@ -163,6 +163,18 @@ app.get('/test-logo-api/:courseId', async (req, res) => {
   }
 });
 
+// Simple test endpoint for course logo
+app.get('/test-course-logo/:id', (req, res) => {
+  const { id } = req.params;
+  console.log(`Simple test for course logo ID: ${id}`);
+  res.json({
+    success: true,
+    message: 'Course logo test endpoint working',
+    courseId: id,
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Direct test endpoint for logo
 app.get('/test-logo-direct/:courseId', (req, res) => {
   const { courseId } = req.params;

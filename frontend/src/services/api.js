@@ -25,7 +25,9 @@ api.interceptors.request.use(
       '/courses?', // Public course listing
       '/courses/search',
       '/courses/popular',
-      '/courses/top-rated'
+      '/courses/top-rated',
+      '/courses/', // Course logo routes
+      '/courses/logo'
     ]
     
     // Check if this is a public route

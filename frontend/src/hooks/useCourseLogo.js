@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { api } from '../services/api';
 
 const useCourseLogo = (courseId, hasLogo) => {
   const [logoUrl, setLogoUrl] = useState(null);
@@ -17,23 +18,15 @@ const useCourseLogo = (courseId, hasLogo) => {
       
       try {
         console.log(`Fetching logo for course ${courseId}`);
-        const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-        const response = await fetch(`${apiBaseUrl}/api/courses/${courseId}/logo?t=${Date.now()}`, {
+        const response = await api.get(`/courses/${courseId}/logo?t=${Date.now()}`, {
           cache: 'no-cache'
         });
         
         console.log('Logo response status:', response.status);
-        console.log('Logo response headers:', response.headers.get('content-type'));
+        console.log('Logo response data:', response.data);
         
-        if (!response.ok) {
-          throw new Error(`Failed to fetch logo: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log('Logo response data:', data);
-        
-        if (data.success && data.data && data.data.logoUrl) {
-          setLogoUrl(data.data.logoUrl);
+        if (response.data.success && response.data.data && response.data.data.logoUrl) {
+          setLogoUrl(response.data.data.logoUrl);
         } else {
           throw new Error('Invalid response format');
         }

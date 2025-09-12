@@ -563,6 +563,9 @@ const getCourseLogo = async (req, res, next) => {
   try {
     const { id } = req.params;
     console.log(`API Logo request for course ID: ${id}`);
+    console.log('Request headers:', req.headers);
+    console.log('Request method:', req.method);
+    console.log('Request URL:', req.originalUrl);
     
     const course = await Course.findByPk(id);
 

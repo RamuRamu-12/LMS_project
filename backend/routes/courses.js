@@ -34,6 +34,22 @@ router.get('/categories',
   courseController.getCategories
 );
 
+// Get course logo (public route - no authentication required)
+// This must come before /:id route to avoid conflicts
+router.get('/:id/logo',
+  validate(commonSchemas.id, 'params'),
+  courseController.getCourseLogo
+);
+
+// Handle preflight OPTIONS request for logo
+router.options('/:id/logo', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'false');
+  res.status(200).end();
+});
+
 router.get('/:id', 
   optionalAuth,
   validate(commonSchemas.id, 'params'),
@@ -95,20 +111,6 @@ router.post('/:id/logo',
   courseController.uploadCourseLogo
 );
 
-// Get course logo
-router.get('/:id/logo',
-  validate(commonSchemas.id, 'params'),
-  courseController.getCourseLogo
-);
-
-// Handle preflight OPTIONS request for logo
-router.options('/:id/logo', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'false');
-  res.status(200).end();
-});
 
 router.delete('/:id/files/:fileId', 
   authenticate,
