@@ -12,8 +12,6 @@ const LandingPage = () => {
   const { isAuthenticated, user } = useAuth()
   const { theme } = useTheme()
   const navigate = useNavigate()
-  const [showLoginModal, setShowLoginModal] = useState(false)
-  const [loginType, setLoginType] = useState(null)
 
   const features = [
     {
@@ -128,24 +126,15 @@ const LandingPage = () => {
   ]
 
   const handleLoginClick = () => {
-    setShowLoginModal(true)
+    navigate('/login')
   }
 
-  const handleLoginTypeSelect = (type) => {
-    setLoginType(type)
-  }
-
-  const handleAdminLogin = () => {
-    navigate('/login', { state: { userType: 'admin' } })
-  }
-
-  const handleStudentLogin = () => {
-    navigate('/login', { state: { userType: 'student' } })
-  }
-
-  const handleCloseModal = () => {
-    setShowLoginModal(false)
-    setLoginType(null)
+  const handleProtectedClick = (path) => {
+    if (isAuthenticated) {
+      navigate(path)
+    } else {
+      navigate('/login')
+    }
   }
 
   return (
@@ -205,12 +194,12 @@ const LandingPage = () => {
                   Get Started
                 </button>
               )}
-              <Link
-                to="/courses"
+              <button
+                onClick={() => handleProtectedClick('/courses')}
                 className="px-8 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300"
               >
                 Explore Courses
-              </Link>
+              </button>
             </motion.div>
 
             {/* Stats */}
@@ -346,15 +335,15 @@ const LandingPage = () => {
             viewport={{ once: true }}
             className="text-center mt-12"
           >
-            <Link
-              to="/courses"
+            <button
+              onClick={() => handleProtectedClick('/courses')}
               className="inline-flex items-center px-8 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300"
             >
               View All Courses
               <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-            </Link>
+            </button>
           </motion.div>
         </div>
       </section>
@@ -396,100 +385,17 @@ const LandingPage = () => {
                   Start Learning Today
                 </button>
               )}
-              <Link
-                to="/courses"
+              <button
+                onClick={() => handleProtectedClick('/courses')}
                 className="px-8 py-4 border-2 border-white text-white font-semibold rounded-xl hover:bg-white/10 transition-all duration-300"
               >
                 Explore Courses
-              </Link>
+              </button>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Login Modal */}
-      {showLoginModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full shadow-2xl"
-          >
-            {!loginType ? (
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                  Choose Login Type
-                </h3>
-                <div className="space-y-4">
-                  <button
-                    onClick={handleStudentLogin}
-                    className="w-full p-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
-                  >
-                    Student Login
-                  </button>
-                  <button
-                    onClick={handleAdminLogin}
-                    className="w-full p-4 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all duration-300 transform hover:scale-105"
-                  >
-                    Admin Login
-                  </button>
-                </div>
-                <button
-                  onClick={handleCloseModal}
-                  className="mt-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                >
-                  Cancel
-                </button>
-              </div>
-            ) : (
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                  {loginType === 'student' ? 'Student Access' : 'Admin Access'}
-                </h3>
-                <div className="space-y-4">
-                  {loginType === 'student' ? (
-                    <>
-                      <Link
-                        to="/register"
-                        onClick={handleCloseModal}
-                        className="w-full p-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 block"
-                      >
-                        Create Account
-                      </Link>
-                      <button
-                        onClick={() => {
-                          handleCloseModal()
-                          handleStudentLogin()
-                        }}
-                        className="w-full p-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300"
-                      >
-                        Sign In
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        handleCloseModal()
-                        handleAdminLogin()
-                      }}
-                      className="w-full p-4 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all duration-300 transform hover:scale-105"
-                    >
-                      Admin Login
-                    </button>
-                  )}
-                </div>
-                <button
-                  onClick={() => setLoginType(null)}
-                  className="mt-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                >
-                  Back
-                </button>
-              </div>
-            )}
-          </motion.div>
-        </div>
-      )}
 
       <Footer />
     </div>

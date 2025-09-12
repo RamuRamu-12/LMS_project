@@ -16,10 +16,7 @@ module.exports = {
       idle: 10000
     },
     dialectOptions: {
-      ssl: {
-        require: false,
-        rejectUnauthorized: false
-      }
+      ssl: false
     }
   },
   test: {
@@ -37,10 +34,7 @@ module.exports = {
       idle: 10000
     },
     dialectOptions: {
-      ssl: {
-        require: false,
-        rejectUnauthorized: false
-      }
+      ssl: false
     }
   },
   production: {

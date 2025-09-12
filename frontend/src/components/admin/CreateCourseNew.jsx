@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useMutation, useQueryClient } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { courseService } from '../../services/courseService'
+import { api } from '../../services/api'
 import { analyzeUrl, getUrlTypeDisplayName, supportsEmbedding } from '../../utils/urlAnalyzer'
 import toast from 'react-hot-toast'
 import ChapterManagement from './ChapterManagement'
@@ -147,42 +148,32 @@ const CreateCourseNew = () => {
           
           console.log('Uploading logo for course:', courseId)
           
-          const logoResponse = await fetch(`http://localhost:5000/api/courses/${courseId}/logo`, {
-            method: 'POST',
+          const logoResponse = await api.post(`/courses/${courseId}/logo`, formData, {
             headers: {
-              'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-            },
-            body: formData
+              'Content-Type': 'multipart/form-data'
+            }
           })
           
           console.log('Logo upload response status:', logoResponse.status)
           
-          if (logoResponse.ok) {
-            const logoData = await logoResponse.json()
+          if (logoResponse.data) {
+            const logoData = logoResponse.data
             console.log('Logo upload response:', logoData)
             
             // Update course with logo URL
-            const updateResponse = await fetch(`http://localhost:5000/api/courses/${courseId}`, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-              },
-              body: JSON.stringify({
-                logo: logoData.data.logoUrl
-              })
+            const updateResponse = await api.put(`/courses/${courseId}`, {
+              logo: logoData.data.logoUrl
             })
             
-            if (updateResponse.ok) {
+            if (updateResponse.data) {
               toast.success('Course and logo uploaded successfully!')
             } else {
               console.error('Failed to update course with logo URL')
               toast.error('Course created but failed to update logo URL')
             }
           } else {
-            const errorData = await logoResponse.json()
-            console.error('Logo upload error response:', errorData)
-            throw new Error(errorData.message || 'Logo upload failed')
+            console.error('Logo upload error response:', logoResponse)
+            throw new Error('Logo upload failed')
           }
         } catch (logoError) {
           console.error('Logo upload error:', logoError)

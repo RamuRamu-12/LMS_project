@@ -14,6 +14,7 @@ import CreateCoursePage from './pages/CreateCoursePage'
 import UserManagementPage from './pages/UserManagementPage'
 import StudentListPage from './pages/StudentListPage'
 import ProfilePage from './pages/ProfilePage'
+import RealtimeProjectsPage from './pages/RealtimeProjectsPageSimple'
 import NotFoundPage from './pages/NotFoundPage'
 
 // Components
@@ -92,6 +93,16 @@ function App() {
             {/* Course Routes */}
             <Route path="/courses" element={<CourseListPage />} />
             <Route path="/courses/:id" element={<CourseDetailPage />} />
+            
+            {/* Realtime Projects Route */}
+            <Route
+              path="/realtime-projects"
+              element={
+                <ProtectedRoute>
+                  <RealtimeProjectsPage />
+                </ProtectedRoute>
+              }
+            />
             
             {/* Admin Routes */}
             <Route

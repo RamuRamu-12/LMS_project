@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import { courseService } from '../../services/courseService'
 import { chapterService } from '../../services/chapterService'
+import { api } from '../../services/api'
 import toast from 'react-hot-toast'
 import LoadingSpinner from '../common/LoadingSpinner'
 
@@ -250,32 +251,19 @@ const EditCourse = () => {
           const formData = new FormData()
           formData.append('logo', logoFile)
           
-          const logoResponse = await fetch(`http://localhost:5000/api/courses/${id}/logo`, {
-            method: 'POST',
+          const logoResponse = await api.post(`/courses/${id}/logo`, formData, {
             headers: {
-              'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-            },
-            body: formData
+              'Content-Type': 'multipart/form-data'
+            }
           })
           
-          if (logoResponse.ok) {
-            const logoData = await logoResponse.json()
+          if (logoResponse.data) {
             // Update course with logo URL
-            await fetch(`http://localhost:5000/api/courses/${id}`, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-              },
-              body: JSON.stringify({
-                logo: logoData.data.logoUrl
-              })
+            await api.put(`/courses/${id}`, {
+              logo: logoResponse.data.data.logoUrl
             })
             
             toast.success('Course and logo updated successfully!')
-          } else {
-            const errorData = await logoResponse.json()
-            throw new Error(errorData.message || 'Logo upload failed')
           }
         } catch (logoError) {
           console.error('Logo upload error:', logoError)
@@ -429,7 +417,7 @@ const EditCourse = () => {
                 <div className="mb-4">
                   <p className="text-sm text-gray-600 mb-2">Current Logo:</p>
                   <img
-                    src={`http://localhost:5000/logo/${courseData.data.course.id}`}
+                    src={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/logo/${courseData.data.course.id}`}
                     alt="Current course logo"
                     className="w-24 h-24 object-cover rounded-lg border-2 border-gray-300 shadow-sm"
                   />

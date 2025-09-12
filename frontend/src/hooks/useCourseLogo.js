@@ -17,7 +17,8 @@ const useCourseLogo = (courseId, hasLogo) => {
       
       try {
         console.log(`Fetching logo for course ${courseId}`);
-        const response = await fetch(`http://localhost:5000/api/courses/${courseId}/logo?t=${Date.now()}`, {
+        const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+        const response = await fetch(`${apiBaseUrl}/api/courses/${courseId}/logo?t=${Date.now()}`, {
           cache: 'no-cache'
         });
         

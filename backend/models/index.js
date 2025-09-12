@@ -32,6 +32,9 @@ const Enrollment = require('./Enrollment')(sequelize, Sequelize.DataTypes);
 const FileUpload = require('./FileUpload')(sequelize, Sequelize.DataTypes);
 const CourseChapter = require('./CourseChapter')(sequelize, Sequelize.DataTypes);
 const ChapterProgress = require('./ChapterProgress')(sequelize, Sequelize.DataTypes);
+const Project = require('./Project')(sequelize, Sequelize.DataTypes);
+const ProjectPhase = require('./ProjectPhase')(sequelize, Sequelize.DataTypes);
+const ProjectProgress = require('./ProjectProgress')(sequelize, Sequelize.DataTypes);
 
 // Define associations
 const defineAssociations = () => {
@@ -128,6 +131,54 @@ const defineAssociations = () => {
     onDelete: 'CASCADE'
   });
 
+  // Project associations
+  Project.hasMany(ProjectPhase, {
+    foreignKey: 'projectId',
+    as: 'phases',
+    onDelete: 'CASCADE'
+  });
+
+  Project.hasMany(ProjectProgress, {
+    foreignKey: 'projectId',
+    as: 'progress',
+    onDelete: 'CASCADE'
+  });
+
+  // ProjectPhase associations
+  ProjectPhase.belongsTo(Project, {
+    foreignKey: 'projectId',
+    as: 'project'
+  });
+
+  ProjectPhase.hasMany(ProjectProgress, {
+    foreignKey: 'phaseId',
+    as: 'progress',
+    onDelete: 'CASCADE'
+  });
+
+  // ProjectProgress associations
+  ProjectProgress.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'user'
+  });
+
+  ProjectProgress.belongsTo(Project, {
+    foreignKey: 'projectId',
+    as: 'project'
+  });
+
+  ProjectProgress.belongsTo(ProjectPhase, {
+    foreignKey: 'phaseId',
+    as: 'phase'
+  });
+
+  // User has many ProjectProgress
+  User.hasMany(ProjectProgress, {
+    foreignKey: 'userId',
+    as: 'projectProgress',
+    onDelete: 'CASCADE'
+  });
+
 };
 
 // Define associations
@@ -142,5 +193,8 @@ module.exports = {
   Enrollment,
   FileUpload,
   CourseChapter,
-  ChapterProgress
+  ChapterProgress,
+  Project,
+  ProjectPhase,
+  ProjectProgress
 };

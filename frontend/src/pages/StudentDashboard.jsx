@@ -7,6 +7,7 @@ import { enrollmentService } from '../services/enrollmentService'
 import Header from '../components/common/Header'
 import LoadingSpinner from '../components/common/LoadingSpinner'
 import AllCoursesModal from '../components/course/AllCoursesModal'
+import EnrolledCoursesModal from '../components/course/EnrolledCoursesModal'
 import StudentCourseCard from '../components/course/StudentCourseCard'
 import EnrolledCourseCard from '../components/course/EnrolledCourseCard'
 import toast from 'react-hot-toast'
@@ -63,6 +64,7 @@ const StudentDashboard = () => {
   
   // Modal state
   const [isAllCoursesModalOpen, setIsAllCoursesModalOpen] = useState(false)
+  const [isEnrolledCoursesModalOpen, setIsEnrolledCoursesModalOpen] = useState(false)
 
   const isLoading = coursesLoading || enrollmentsLoading
   const courses = coursesData?.data?.courses || []
@@ -348,7 +350,7 @@ const StudentDashboard = () => {
                       <p className="text-sm text-gray-600">Continue learning</p>
                     </div>
                   <button 
-                    onClick={() => setIsAllCoursesModalOpen(true)}
+                    onClick={() => setIsEnrolledCoursesModalOpen(true)}
                       className="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-600 rounded-lg hover:bg-indigo-200 transition-colors duration-200 font-medium text-sm"
                   >
                       <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -622,6 +624,12 @@ const StudentDashboard = () => {
       <AllCoursesModal 
         isOpen={isAllCoursesModalOpen}
         onClose={() => setIsAllCoursesModalOpen(false)}
+      />
+      
+      {/* Enrolled Courses Modal */}
+      <EnrolledCoursesModal 
+        isOpen={isEnrolledCoursesModalOpen}
+        onClose={() => setIsEnrolledCoursesModalOpen(false)}
       />
     </div>
   )

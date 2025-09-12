@@ -6,7 +6,7 @@ import { useTheme } from '../../context/ThemeContext'
 import ThemeToggle from './ThemeToggle'
 
 const Header = () => {
-  const { user, logout } = useAuth()
+  const { user, logout, isAuthenticated } = useAuth()
   const { theme, toggleTheme } = useTheme()
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -23,6 +23,14 @@ const Header = () => {
 
   const toggleProfile = () => {
     setIsProfileOpen(!isProfileOpen)
+  }
+
+  const handleProtectedClick = (path) => {
+    if (isAuthenticated) {
+      navigate(path)
+    } else {
+      navigate('/login')
+    }
   }
 
   return (
@@ -43,12 +51,18 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link
-              to="/courses"
+            <button
+              onClick={() => handleProtectedClick('/courses')}
               className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200"
             >
               Courses
-            </Link>
+            </button>
+            <button
+              onClick={() => handleProtectedClick('/realtime-projects')}
+              className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200"
+            >
+              Realtime Projects
+            </button>
             
             {user ? (
               <div className="flex items-center space-x-4">
@@ -164,13 +178,24 @@ const Header = () => {
               className="md:hidden border-t border-white/20"
             >
               <div className="py-4 space-y-2">
-                <Link
-                  to="/courses"
-                  className="block px-4 py-2 text-gray-700 hover:bg-white/20 rounded-lg transition-colors duration-200"
-                  onClick={() => setIsMenuOpen(false)}
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false)
+                    handleProtectedClick('/courses')
+                  }}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-white/20 rounded-lg transition-colors duration-200"
                 >
                   Courses
-                </Link>
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false)
+                    handleProtectedClick('/realtime-projects')
+                  }}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-white/20 rounded-lg transition-colors duration-200"
+                >
+                  Realtime Projects
+                </button>
                 
                 {user ? (
                   <>

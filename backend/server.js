@@ -15,6 +15,8 @@ const fileRoutes = require('./routes/files');
 const chapterRoutes = require('./routes/chapters');
 const chapterProgressRoutes = require('./routes/chapterProgress');
 const pdfRoutes = require('./routes/pdf');
+const projectRoutes = require('./routes/projects-simple');
+const progressRoutes = require('./routes/progress-simple');
 const { errorHandler } = require('./middleware/errorHandler');
 const logger = require('./utils/logger');
 
@@ -66,7 +68,7 @@ app.options('*', (req, res) => {
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 1000, // limit each IP to 1000 requests per windowMs (increased for development)
   message: 'Too many requests from this IP, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
@@ -185,6 +187,8 @@ app.use('/api/files', fileRoutes);
 app.use('/api', chapterRoutes);
 app.use('/api/progress', chapterProgressRoutes);
 app.use('/api/pdf', pdfRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api', progressRoutes);
 
 // Debug: Log all registered routes
 console.log('Registered routes:');
@@ -196,6 +200,7 @@ console.log('- /api/files');
 console.log('- /api/courses/:courseId/chapters');
 console.log('- /api/progress (chapter progress tracking)');
 console.log('- /api/pdf (PDF proxy for CORS)');
+console.log('- /api/projects (realtime projects)');
 
 // 404 handler
 app.use('*', (req, res) => {
