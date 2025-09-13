@@ -1,9 +1,11 @@
 const express = require('express');
 const { authenticate, requireAdmin, requireEnrollment, optionalAuth } = require('../middleware/auth');
 const { validate } = require('../utils/validation');
-const { uploadMultiple, uploadLogo, validateUploadedFiles } = require('../middleware/upload');
+const { uploadMultiple, uploadLogo, validateUploadedFiles, uploadSingle } = require('../middleware/upload');
 const courseController = require('../controllers/courseController');
+const chapterController = require('../controllers/chapterController');
 const { courseSchemas, commonSchemas } = require('../utils/validation');
+const { CourseChapter } = require('../models');
 
 const router = express.Router();
 
@@ -151,6 +153,74 @@ router.post('/:id/rate',
   requireEnrollment,
   validate(commonSchemas.id, 'params'),
   courseController.rateCourse
+);
+
+// Chapter routes
+router.post('/:courseId/chapters', 
+  authenticate,
+  requireAdmin, 
+  uploadSingle('file'), 
+  chapterController.createChapter
+);
+
+router.get('/:courseId/chapters', 
+  authenticate,
+  chapterController.getChapters
+);
+
+router.get('/:courseId/chapters/:chapterId', 
+  authenticate,
+  chapterController.getChapter
+);
+
+router.put('/:courseId/chapters/:chapterId', 
+  authenticate,
+  requireAdmin, 
+  uploadSingle('file'), 
+  chapterController.updateChapter
+);
+
+router.delete('/:courseId/chapters/:chapterId', 
+  authenticate,
+  requireAdmin, 
+  chapterController.deleteChapter
+);
+
+router.put('/:courseId/chapters/reorder', 
+  authenticate,
+  requireAdmin, 
+  chapterController.reorderChapters
+);
+
+router.patch('/:courseId/chapters/:chapterId/toggle-publish', 
+  authenticate,
+  requireAdmin, 
+  async (req, res, next) => {
+    try {
+      const { courseId, chapterId } = req.params;
+      const chapter = await CourseChapter.findOne({
+        where: { id: chapterId, course_id: courseId }
+      });
+
+      if (!chapter) {
+        return res.status(404).json({
+          success: false,
+          message: 'Chapter not found'
+        });
+      }
+
+      chapter.is_published = !chapter.is_published;
+      await chapter.save();
+
+      res.json({
+        success: true,
+        message: `Chapter ${chapter.is_published ? 'published' : 'unpublished'} successfully`,
+        data: { chapter: chapter.getPublicInfo() }
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 );
 
 module.exports = router;

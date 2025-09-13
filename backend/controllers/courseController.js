@@ -265,6 +265,8 @@ const getCourseById = async (req, res, next) => {
           model: CourseChapter,
           as: 'chapters',
           attributes: ['id', 'title', 'description', 'video_url', 'pdf_url', 'chapter_order', 'duration_minutes', 'is_published'],
+          where: { is_published: true },
+          required: false,
           order: [['chapter_order', 'ASC']]
         }
       ]
@@ -272,6 +274,16 @@ const getCourseById = async (req, res, next) => {
 
     if (!course) {
       throw new AppError('Course not found', 404);
+    }
+
+    // Debug: Log course and chapters data
+    console.log('=== BACKEND DEBUG - getCourseById ===');
+    console.log('Course ID:', id);
+    console.log('Course title:', course.title);
+    console.log('Course chapters:', course.chapters);
+    console.log('Chapters length:', course.chapters ? course.chapters.length : 0);
+    if (course.chapters && course.chapters.length > 0) {
+      console.log('Chapter details:', course.chapters.map(ch => ({ id: ch.id, title: ch.title, published: ch.is_published, order: ch.chapter_order })));
     }
 
     // Check if user is enrolled (if authenticated)
@@ -285,18 +297,28 @@ const getCourseById = async (req, res, next) => {
       });
     }
 
-    res.json({
+    const responseData = {
       success: true,
       message: 'Course retrieved successfully',
       data: {
-        course: course.getPublicInfo(),
+        course: {
+          ...course.getPublicInfo(),
+          chapters: course.chapters ? course.chapters.map(chapter => chapter.getPublicInfo()) : []
+        },
         enrollment: enrollment ? {
+          id: enrollment.id,
           status: enrollment.status,
           progress: enrollment.progress,
           enrolled_at: enrollment.enrolled_at
         } : null
       }
-    });
+    };
+
+    console.log('=== BACKEND RESPONSE DEBUG ===');
+    console.log('Response course chapters:', responseData.data.course.chapters);
+    console.log('Response chapters length:', responseData.data.course.chapters.length);
+
+    res.json(responseData);
   } catch (error) {
     logger.error('Get course by ID error:', error);
     next(error);
@@ -350,7 +372,8 @@ const updateCourse = async (req, res, next) => {
       throw new AppError('Course not found', 404);
     }
 
-    if (course.instructor_id !== req.user.id) {
+    // Check if user is admin or the course instructor
+    if (req.user.role !== 'admin' && course.instructor_id !== req.user.id) {
       throw new AppError('Access denied. You can only edit your own courses.', 403);
     }
 
@@ -400,7 +423,8 @@ const deleteCourse = async (req, res, next) => {
       throw new AppError('Course not found', 404);
     }
 
-    if (course.instructor_id !== req.user.id) {
+    // Check if user is admin or the course instructor
+    if (req.user.role !== 'admin' && course.instructor_id !== req.user.id) {
       throw new AppError('Access denied. You can only delete your own courses.', 403);
     }
 
@@ -431,7 +455,8 @@ const publishCourse = async (req, res, next) => {
       throw new AppError('Course not found', 404);
     }
 
-    if (course.instructor_id !== req.user.id) {
+    // Check if user is admin or the course instructor
+    if (req.user.role !== 'admin' && course.instructor_id !== req.user.id) {
       throw new AppError('Access denied. You can only publish your own courses.', 403);
     }
 
@@ -464,7 +489,8 @@ const unpublishCourse = async (req, res, next) => {
       throw new AppError('Course not found', 404);
     }
 
-    if (course.instructor_id !== req.user.id) {
+    // Check if user is admin or the course instructor
+    if (req.user.role !== 'admin' && course.instructor_id !== req.user.id) {
       throw new AppError('Access denied. You can only unpublish your own courses.', 403);
     }
 
@@ -507,7 +533,8 @@ const uploadCourseLogo = async (req, res, next) => {
       throw new AppError('Course not found', 404);
     }
 
-    if (course.instructor_id !== req.user.id) {
+    // Check if user is admin or the course instructor
+    if (req.user.role !== 'admin' && course.instructor_id !== req.user.id) {
       throw new AppError('Access denied. You can only upload logos for your own courses.', 403);
     }
 
@@ -661,6 +688,8 @@ const getCourseContent = async (req, res, next) => {
           model: CourseChapter,
           as: 'chapters',
           attributes: ['id', 'title', 'description', 'video_url', 'pdf_url', 'chapter_order', 'duration_minutes', 'is_published'],
+          where: { is_published: true },
+          required: false,
           order: [['chapter_order', 'ASC']]
         }
       ]
@@ -674,7 +703,10 @@ const getCourseContent = async (req, res, next) => {
       success: true,
       message: 'Course content retrieved successfully',
       data: {
-        course: course.getPublicInfo(),
+        course: {
+          ...course.getPublicInfo(),
+          chapters: course.chapters ? course.chapters.map(chapter => chapter.getPublicInfo()) : []
+        },
         enrollment: {
           id: req.enrollment.id,
           status: req.enrollment.status,

@@ -2,6 +2,13 @@ const express = require('express');
 const { body } = require('express-validator');
 const router = express.Router();
 
+// In-memory storage for project video URLs (in a real app, this would be in a database)
+let projectVideoUrls = {
+  1: null,
+  2: null,
+  3: null
+};
+
 // Simple project routes without complex model dependencies
 router.get('/', async (req, res) => {
   try {
@@ -12,7 +19,7 @@ router.get('/', async (req, res) => {
         title: 'E-Commerce Web Application',
         description: 'Build a complete e-commerce platform with modern technologies including React, Node.js, and PostgreSQL.',
         shortDescription: 'Full-stack e-commerce platform with React, Node.js, and PostgreSQL',
-        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        videoUrl: projectVideoUrls[1],
         difficulty: 'intermediate',
         estimatedDuration: 40,
         isActive: true,
@@ -70,7 +77,7 @@ router.get('/', async (req, res) => {
         title: 'Data Analytics Dashboard',
         description: 'Create an interactive data analytics dashboard using modern visualization libraries and real-time data processing.',
         shortDescription: 'Interactive data analytics dashboard with real-time visualization',
-        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        videoUrl: projectVideoUrls[2],
         difficulty: 'intermediate',
         estimatedDuration: 35,
         isActive: true,
@@ -128,7 +135,7 @@ router.get('/', async (req, res) => {
         title: 'AI-Powered Learning Assistant',
         description: 'Develop an intelligent learning assistant using AI and machine learning technologies.',
         shortDescription: 'Intelligent learning assistant with AI and machine learning',
-        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        videoUrl: projectVideoUrls[3],
         difficulty: 'advanced',
         estimatedDuration: 45,
         isActive: true,
@@ -209,7 +216,7 @@ router.get('/:id', async (req, res) => {
         title: 'E-Commerce Web Application',
         description: 'Build a complete e-commerce platform with modern technologies including React, Node.js, and PostgreSQL. Learn full-stack development through hands-on project experience.',
         shortDescription: 'Full-stack e-commerce platform with React, Node.js, and PostgreSQL',
-        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        videoUrl: projectVideoUrls[1],
         readmeContent: `# E-Commerce Web Application
 
 ## Project Overview
@@ -240,7 +247,7 @@ The project is divided into 5 phases, each building upon the previous one.`,
         title: 'Data Analytics Dashboard',
         description: 'Create an interactive data analytics dashboard using modern visualization libraries and real-time data processing. Learn data science and visualization techniques.',
         shortDescription: 'Interactive data analytics dashboard with real-time visualization',
-        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        videoUrl: projectVideoUrls[2],
         readmeContent: `# Data Analytics Dashboard
 
 ## Project Overview
@@ -263,7 +270,7 @@ Build a comprehensive data analytics dashboard that processes and visualizes dat
         title: 'AI-Powered Learning Assistant',
         description: 'Develop an intelligent learning assistant using AI and machine learning technologies. Learn about natural language processing and AI integration.',
         shortDescription: 'Intelligent learning assistant with AI and machine learning',
-        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        videoUrl: projectVideoUrls[3],
         readmeContent: `# AI-Powered Learning Assistant
 
 ## Project Overview
@@ -304,6 +311,51 @@ Build an intelligent learning assistant that helps students learn more effective
     res.status(500).json({
       success: false,
       message: 'Failed to fetch project',
+      error: error.message
+    });
+  }
+});
+
+// Update project video URL (Admin only)
+router.put('/:id/video', [
+  body('videoUrl').isURL().withMessage('Valid video URL is required')
+], async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { videoUrl } = req.body;
+    const projectId = parseInt(id);
+
+    if (!videoUrl || typeof videoUrl !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'Valid video URL is required'
+      });
+    }
+
+    // Check if project exists
+    if (![1, 2, 3].includes(projectId)) {
+      return res.status(404).json({
+        success: false,
+        message: 'Project not found'
+      });
+    }
+
+    // Update the video URL in memory
+    projectVideoUrls[projectId] = videoUrl;
+
+    res.json({
+      success: true,
+      data: {
+        id: projectId,
+        videoUrl: videoUrl
+      },
+      message: 'Project video URL updated successfully'
+    });
+  } catch (error) {
+    console.error('Error updating project video URL:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update project video URL',
       error: error.message
     });
   }

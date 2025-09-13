@@ -78,22 +78,23 @@ api.interceptors.request.use(
       '/auth/google/callback',
       '/auth/refresh',
       '/courses/categories',
-      '/courses?', // Public course listing
       '/courses/search',
       '/courses/popular',
-      '/courses/top-rated',
-      '/courses/', // Course logo routes
-      '/courses/logo'
+      '/courses/top-rated'
     ]
     
-    // Check if this is a public route
-    const isPublicRoute = publicRoutes.some(route => config.url?.includes(route))
+    // Check if this is a public route (GET requests only for course listing)
+    const isPublicRoute = publicRoutes.some(route => config.url?.includes(route)) ||
+      (config.method === 'get' && config.url?.includes('/courses') && !config.url?.includes('/admin'))
     
     // Only add token for non-public routes
     if (!isPublicRoute) {
       const token = localStorage.getItem('accessToken')
       if (token) {
         config.headers.Authorization = `Bearer ${token}`
+      } else {
+        console.warn('No access token found for protected route:', config.url)
+        // Don't block the request, let the backend handle it
       }
     }
     

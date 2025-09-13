@@ -58,6 +58,11 @@ router.put('/:id', projectValidation, projectController.updateProject);
 router.delete('/:id', projectController.deleteProject);
 router.get('/:id/analytics', projectController.getProjectAnalytics);
 
+// Video management routes
+router.put('/:id/video', [
+  body('videoUrl').isURL().withMessage('Valid video URL is required')
+], projectController.updateProjectVideoUrl);
+
 // Phase routes (Admin only)
 router.post('/phases', phaseValidation, phaseController.createPhase);
 router.get('/phases/:id', phaseController.getPhaseById);

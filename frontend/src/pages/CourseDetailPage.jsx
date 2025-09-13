@@ -22,28 +22,22 @@ const CourseDetailPage = () => {
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [chapterProgression, setChapterProgression] = useState(null)
 
-  // Use course content endpoint for students, general endpoint for others
+  // Use general endpoint for all users - content endpoint requires enrollment
   const { data: courseData, isLoading, error } = useQuery(
     ['course', id],
-    () => {
-      if (user?.role === 'student') {
-        return courseService.getCourseContent(id)
-      } else {
-        return courseService.getCourseById(id)
-      }
-    },
+    () => courseService.getCourseById(id),
     {
       enabled: !!id,
       refetchOnWindowFocus: false
     }
   )
-
-  // Get chapter progression for students
+  console.log(courseData)
+  // Get chapter progression for students (only if enrolled)
   const { data: progressionData } = useQuery(
     ['chapterProgression', courseData?.data?.enrollment?.id],
     () => enrollmentService.getChapterProgression(courseData.data.enrollment.id),
     {
-      enabled: !!courseData?.data?.enrollment?.id && user?.role === 'student',
+      enabled: !!courseData?.data?.enrollment?.id && user?.role === 'student' && courseData?.data?.enrollment?.status === 'enrolled',
       refetchOnWindowFocus: false
     }
   )
@@ -71,6 +65,16 @@ const CourseDetailPage = () => {
   const course = courseData?.data?.course
   const enrollment = courseData?.data?.enrollment // For enrolled students
   const chapters = course?.chapters || []
+  
+  // Debug enrollment data
+  console.log('=== ENROLLMENT DEBUG ===')
+  console.log('User:', user)
+  console.log('User role:', user?.role)
+  console.log('Is authenticated:', isAuthenticated)
+  console.log('Course data:', courseData)
+  console.log('Enrollment data:', enrollment)
+  console.log('Progress condition:', user?.role === 'student' && enrollment)
+  console.log('========================')
 
   // Get course logo
   const { logoUrl, loading: logoLoading, error: logoError } = useCourseLogo(course?.id, !!course?.logo)
@@ -119,15 +123,23 @@ const CourseDetailPage = () => {
     )
   }
 
-  // Handle enrollment error
-  if (error && error.message?.includes('enrolled')) {
+  // Handle API errors
+  if (error) {
+    console.error('Course loading error:', error)
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
         <Header />
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Enrollment Required</h1>
-            <p className="text-gray-600 mb-6">You must be enrolled in this course to access its content.</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Error Loading Course</h1>
+            <p className="text-gray-600 mb-6">
+              {error.message?.includes('401') 
+                ? 'Authentication required. Please log in to view this course.'
+                : error.message?.includes('404')
+                ? 'Course not found.'
+                : 'Unable to load course content. Please try again later.'
+              }
+            </p>
             <button 
               onClick={() => window.history.back()}
               className="btn-primary"
@@ -303,6 +315,21 @@ const CourseDetailPage = () => {
                           <div className="text-xs text-gray-600">Rating</div>
                         </div>
                       </div>
+                      
+                      {/* Course Progress - Show for all students (enrolled or not) */}
+                      {user?.role === 'student' && (
+                        <div className="flex items-center space-x-2">
+                          <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg shadow-md">
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <div className="text-lg font-bold text-gray-900">{enrollment?.progress || 0}%</div>
+                            <div className="text-xs text-gray-600">Progress</div>
+                          </div>
+                        </div>
+                      )}
                     </motion.div>
 
                     {/* Compact Enrollment Status for Students */}
@@ -457,8 +484,9 @@ const CourseDetailPage = () => {
                     />
                   </div>
                   
-                  {/* Large Chapter Content Area */}
-                  <div className="flex-1 flex flex-col bg-gradient-to-br from-white to-gray-50">
+                    {/* Large Chapter Content Area */}
+                    <div className="flex-1 flex flex-col bg-gradient-to-br from-white to-gray-50">
+                    
                     {/* Video/Content Area - Fixed height, no scrolling */}
                     <div className="flex-1 flex flex-col">
                       <StudentChapterView 

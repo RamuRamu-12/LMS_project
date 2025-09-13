@@ -33,8 +33,15 @@ const StudentChapterView = ({ chapter, enrollmentId, chapters = [], onChapterCha
       onSuccess: (data) => {
         toast.success('Course completed successfully!')
         setShowFeedback(true) // Show feedback modal after completion
+        // Invalidate all relevant queries to ensure UI updates
         queryClient.invalidateQueries(['course', chapter.course_id])
+        queryClient.invalidateQueries(['course'])
         queryClient.invalidateQueries(['enrollment', enrollmentId])
+        queryClient.invalidateQueries(['enrollment'])
+        queryClient.invalidateQueries(['chapterProgression', enrollmentId])
+        queryClient.invalidateQueries(['chapterProgression'])
+        // Force refetch of course data to get updated progress
+        queryClient.refetchQueries(['course', chapter.course_id])
       },
       onError: (error) => {
         console.error('Complete course error:', error)
@@ -75,9 +82,15 @@ const StudentChapterView = ({ chapter, enrollmentId, chapters = [], onChapterCha
     {
       onSuccess: (data) => {
         toast.success('Chapter completed!')
+        // Invalidate all relevant queries to ensure UI updates
         queryClient.invalidateQueries(['course', chapter.course_id])
+        queryClient.invalidateQueries(['course'])
         queryClient.invalidateQueries(['enrollment', enrollmentId])
+        queryClient.invalidateQueries(['enrollment'])
         queryClient.invalidateQueries(['chapterProgression', enrollmentId])
+        queryClient.invalidateQueries(['chapterProgression'])
+        // Force refetch of course data to get updated progress
+        queryClient.refetchQueries(['course', chapter.course_id])
       },
       onError: (error) => {
         console.error('Complete chapter error:', error)

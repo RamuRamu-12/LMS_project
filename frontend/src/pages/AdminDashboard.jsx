@@ -18,6 +18,7 @@ import UserManagement from '../components/admin/UserManagement'
 import UserAnalytics from '../components/admin/UserAnalytics'
 import CreateCourse from '../components/admin/CreateCourse'
 import EditCourse from '../components/admin/EditCourse'
+import AdminProjectsPage from './AdminProjectsPage'
 
 const AdminDashboard = () => {
   const { user, isAuthenticated } = useAuth()
@@ -61,6 +62,7 @@ const AdminDashboard = () => {
     { name: 'Dashboard', href: '/admin', icon: 'dashboard', current: location.pathname === '/admin' },
     { name: 'Courses', href: '/admin/courses', icon: 'courses', current: location.pathname.startsWith('/admin/courses') },
     { name: 'Create Course', href: '/admin/courses/create', icon: 'add', current: location.pathname === '/admin/courses/create' },
+    { name: 'Realtime Projects', href: '/admin/projects', icon: 'projects', current: location.pathname.startsWith('/admin/projects') },
     { name: 'Users', href: '/admin/users', icon: 'users', current: location.pathname.startsWith('/admin/users') },
     { name: 'User Analytics', href: '/admin/analytics', icon: 'analytics', current: location.pathname === '/admin/analytics' },
   ]
@@ -226,6 +228,10 @@ const AdminDashboard = () => {
                 <Route 
                   path="/analytics" 
                   element={<UserAnalytics />} 
+                />
+                <Route 
+                  path="/projects" 
+                  element={<AdminProjectsPage />} 
                 />
               </Routes>
             </div>

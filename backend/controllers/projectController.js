@@ -239,11 +239,51 @@ const getProjectAnalytics = async (req, res) => {
   }
 };
 
+// Update project video URL (Admin only)
+const updateProjectVideoUrl = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { videoUrl } = req.body;
+
+    if (!videoUrl || typeof videoUrl !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'Valid video URL is required'
+      });
+    }
+
+    const project = await Project.findByPk(id);
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: 'Project not found'
+      });
+    }
+
+    // Update the video URL
+    await project.update({ videoUrl });
+
+    res.json({
+      success: true,
+      data: project,
+      message: 'Project video URL updated successfully'
+    });
+  } catch (error) {
+    logger.error('Error updating project video URL:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update project video URL',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   getAllProjects,
   getProjectById,
   createProject,
   updateProject,
   deleteProject,
-  getProjectAnalytics
+  getProjectAnalytics,
+  updateProjectVideoUrl
 };

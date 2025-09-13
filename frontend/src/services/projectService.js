@@ -87,5 +87,17 @@ export const projectService = {
       console.error('Error fetching project leaderboard:', error);
       throw error;
     }
+  },
+
+
+  // Update project video URL (Admin only)
+  updateProjectVideoUrl: async (projectId, videoUrl) => {
+    try {
+      const response = await api.put(`/projects/${projectId}/video`, { videoUrl });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating project video URL:', error);
+      throw error;
+    }
   }
 };

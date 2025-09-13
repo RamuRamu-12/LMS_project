@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import Header from '../components/common/Header';
+import Footer from '../components/common/Footer';
 
 const RealtimeProjectsPageSimple = () => {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Mock data for testing
@@ -14,7 +18,7 @@ const RealtimeProjectsPageSimple = () => {
         title: 'E-Commerce Web Application',
         description: 'Build a complete e-commerce platform with modern technologies including React, Node.js, and PostgreSQL.',
         shortDescription: 'Full-stack e-commerce platform with React, Node.js, and PostgreSQL',
-        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        videoUrl: null,
         difficulty: 'intermediate',
         estimatedDuration: 40,
         isActive: true,
@@ -72,7 +76,7 @@ const RealtimeProjectsPageSimple = () => {
         title: 'Data Analytics Dashboard',
         description: 'Create an interactive data analytics dashboard using modern visualization libraries and real-time data processing.',
         shortDescription: 'Interactive data analytics dashboard with real-time visualization',
-        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        videoUrl: null,
         difficulty: 'intermediate',
         estimatedDuration: 35,
         isActive: true,
@@ -130,7 +134,7 @@ const RealtimeProjectsPageSimple = () => {
         title: 'AI-Powered Learning Assistant',
         description: 'Develop an intelligent learning assistant using AI and machine learning technologies.',
         shortDescription: 'Intelligent learning assistant with AI and machine learning',
-        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        videoUrl: null,
         difficulty: 'advanced',
         estimatedDuration: 45,
         isActive: true,
@@ -196,6 +200,12 @@ const RealtimeProjectsPageSimple = () => {
     setSelectedProject(project);
   };
 
+  const handleBeginJourney = () => {
+    if (selectedProject) {
+      navigate(`/realtime-projects/${selectedProject.id}/brd`);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -209,6 +219,7 @@ const RealtimeProjectsPageSimple = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <Header />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <motion.div
@@ -308,59 +319,83 @@ const RealtimeProjectsPageSimple = () => {
               </div>
             </div>
 
-            {/* Project Phases */}
+            {/* Project Video Section */}
             <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden">
               <div className="p-8">
-                <h3 className="text-2xl font-bold text-gray-800 mb-6">Project Phases</h3>
+                <h3 className="text-2xl font-bold text-gray-800 mb-6">Project Overview Video</h3>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {selectedProject.phases?.map((phase, index) => (
-                    <motion.div
-                      key={phase.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: index * 0.1 }}
-                      whileHover={{ scale: 1.02, y: -5 }}
-                      className="group cursor-pointer"
-                    >
-                      <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group-hover:border-blue-200">
-                        {/* Phase Header */}
-                        <div className="flex items-center gap-4 mb-4">
-                          <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white text-xl font-bold shadow-lg">
-                            {phase.phaseNumber}
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-bold text-gray-800 text-lg group-hover:text-blue-600 transition-colors">
-                              {phase.title}
-                            </h4>
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className="text-2xl">🚀</span>
-                              <span className="text-sm text-gray-500 font-medium">{phase.phaseType}</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Phase Description */}
-                        <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                          {phase.description}
-                        </p>
-
-                        {/* Phase Stats */}
-                        <div className="flex items-center justify-between text-xs text-gray-500">
-                          <span>Duration: {phase.estimatedDuration}h</span>
-                          <span className="px-2 py-1 bg-gray-100 rounded-full">
-                            Phase {phase.phaseNumber}
-                          </span>
+                {/* Video Display Area */}
+                <div className="mb-8">
+                  <div className="aspect-video bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl overflow-hidden shadow-2xl relative">
+                    {selectedProject.videoUrl ? (
+                      <iframe
+                        src={selectedProject.videoUrl.replace('watch?v=', 'embed/')}
+                        className="w-full h-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-white">
+                        <div className="text-center">
+                          <div className="text-8xl mb-6">🎥</div>
+                          <h4 className="text-2xl font-bold mb-3">Project Overview Video</h4>
+                          <p className="text-gray-300 text-lg max-w-md">
+                            Watch this video to understand the complete project journey and get comprehensive knowledge about what you'll build.
+                          </p>
                         </div>
                       </div>
-                    </motion.div>
-                  ))}
+                    )}
+                  </div>
+                </div>
+
+                {/* Video Description */}
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-100 mb-8">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl">
+                      📺
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-semibold text-gray-800 mb-2">
+                        {selectedProject.title} - Complete Overview
+                      </h4>
+                      <p className="text-gray-600 leading-relaxed">
+                        This comprehensive video covers the entire project from start to finish. You'll learn about the technologies used, 
+                        the development process, key features, and the skills you'll gain by completing this project.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Begin Journey Button */}
+                <div className="text-center">
+                  <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleBeginJourney}
+                    className="
+                      inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 
+                      text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-xl 
+                      transition-all duration-300 hover:from-blue-700 hover:to-purple-700
+                    "
+                  >
+                    <span className="text-2xl">🚀</span>
+                    <span>Begin Your Journey</span>
+                    <span className="text-2xl">→</span>
+                  </motion.button>
+                  
+                  <p className="text-gray-500 text-sm mt-3">
+                    Start with Phase 1 - BRD (Business Requirements Document)
+                  </p>
                 </div>
               </div>
             </div>
           </motion.div>
         )}
       </div>
+      <Footer />
     </div>
   );
 };

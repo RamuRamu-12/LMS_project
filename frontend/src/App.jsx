@@ -15,6 +15,8 @@ import UserManagementPage from './pages/UserManagementPage'
 import StudentListPage from './pages/StudentListPage'
 import ProfilePage from './pages/ProfilePage'
 import RealtimeProjectsPage from './pages/RealtimeProjectsPageSimple'
+import BRDPhasePage from './pages/BRDPhasePage'
+import AdminProjectsPage from './pages/AdminProjectsPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 // Components
@@ -100,6 +102,16 @@ function App() {
               element={
                 <ProtectedRoute>
                   <RealtimeProjectsPage />
+                </ProtectedRoute>
+              }
+            />
+            
+            {/* BRD Phase Route */}
+            <Route
+              path="/realtime-projects/:projectId/brd"
+              element={
+                <ProtectedRoute>
+                  <BRDPhasePage />
                 </ProtectedRoute>
               }
             />

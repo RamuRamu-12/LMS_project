@@ -196,7 +196,7 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/enrollments', enrollmentRoutes);
 app.use('/api/files', fileRoutes);
-app.use('/api', chapterRoutes);
+// app.use('/api/chapters', chapterRoutes);
 app.use('/api/progress', chapterProgressRoutes);
 app.use('/api/pdf', pdfRoutes);
 app.use('/api/projects', projectRoutes);
