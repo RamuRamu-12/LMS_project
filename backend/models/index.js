@@ -33,6 +33,8 @@ const FileUpload = require('./FileUpload')(sequelize, Sequelize.DataTypes);
 const CourseChapter = require('./CourseChapter')(sequelize, Sequelize.DataTypes);
 const ChapterProgress = require('./ChapterProgress')(sequelize, Sequelize.DataTypes);
 const Project = require('./Project')(sequelize, Sequelize.DataTypes);
+const Document = require('./Document')(sequelize, Sequelize.DataTypes);
+const Video = require('./Video')(sequelize, Sequelize.DataTypes);
 const ProjectPhase = require('./ProjectPhase')(sequelize, Sequelize.DataTypes);
 const ProjectProgress = require('./ProjectProgress')(sequelize, Sequelize.DataTypes);
 
@@ -132,9 +134,19 @@ const defineAssociations = () => {
   });
 
   // Project associations
+  Project.belongsTo(User, {
+    foreignKey: 'createdBy',
+    as: 'creator'
+  });
+  
+  Project.belongsTo(User, {
+    foreignKey: 'updatedBy',
+    as: 'updater'
+  });
+
   Project.hasMany(ProjectPhase, {
     foreignKey: 'projectId',
-    as: 'phases',
+    as: 'projectPhases',
     onDelete: 'CASCADE'
   });
 
@@ -142,6 +154,50 @@ const defineAssociations = () => {
     foreignKey: 'projectId',
     as: 'progress',
     onDelete: 'CASCADE'
+  });
+
+  Project.hasMany(Document, {
+    foreignKey: 'projectId',
+    as: 'documents',
+    onDelete: 'CASCADE'
+  });
+
+  Project.hasMany(Video, {
+    foreignKey: 'projectId',
+    as: 'videos',
+    onDelete: 'CASCADE'
+  });
+
+  // Document associations
+  Document.belongsTo(Project, {
+    foreignKey: 'projectId',
+    as: 'project'
+  });
+  
+  Document.belongsTo(User, {
+    foreignKey: 'uploadedBy',
+    as: 'uploader'
+  });
+  
+  Document.belongsTo(User, {
+    foreignKey: 'updatedBy',
+    as: 'updater'
+  });
+
+  // Video associations
+  Video.belongsTo(Project, {
+    foreignKey: 'projectId',
+    as: 'project'
+  });
+  
+  Video.belongsTo(User, {
+    foreignKey: 'uploadedBy',
+    as: 'uploader'
+  });
+  
+  Video.belongsTo(User, {
+    foreignKey: 'updatedBy',
+    as: 'updater'
   });
 
   // ProjectPhase associations
@@ -195,6 +251,8 @@ module.exports = {
   CourseChapter,
   ChapterProgress,
   Project,
+  Document,
+  Video,
   ProjectPhase,
   ProjectProgress
 };

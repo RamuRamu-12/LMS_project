@@ -16,7 +16,14 @@ import StudentListPage from './pages/StudentListPage'
 import ProfilePage from './pages/ProfilePage'
 import RealtimeProjectsPage from './pages/RealtimeProjectsPageSimple'
 import BRDPhasePage from './pages/BRDPhasePage'
+import UIUXPhasePage from './pages/UIUXPhasePage'
+import ArchitecturalDesignPhasePage from './pages/ArchitecturalDesignPhasePage'
+import CodeDevelopmentPhasePage from './pages/CodeDevelopmentPhasePage'
+import TestingPhasePage from './pages/TestingPhasePage'
+import DeploymentPhasePage from './pages/DeploymentPhasePage'
 import AdminProjectsPage from './pages/AdminProjectsPage'
+import AdminProjectManagementPage from './pages/AdminProjectManagementPage'
+import ProjectManagementDetailPage from './pages/ProjectManagementDetailPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 // Components
@@ -116,6 +123,56 @@ function App() {
               }
             />
             
+            {/* UI/UX Phase Route */}
+            <Route
+              path="/realtime-projects/:projectId/uiux"
+              element={
+                <ProtectedRoute>
+                  <UIUXPhasePage />
+                </ProtectedRoute>
+              }
+            />
+            
+            {/* Architectural Design Phase Route */}
+            <Route
+              path="/realtime-projects/:projectId/architectural"
+              element={
+                <ProtectedRoute>
+                  <ArchitecturalDesignPhasePage />
+                </ProtectedRoute>
+              }
+            />
+            
+            {/* Code Development Phase Route */}
+            <Route
+              path="/realtime-projects/:projectId/code-development"
+              element={
+                <ProtectedRoute>
+                  <CodeDevelopmentPhasePage />
+                </ProtectedRoute>
+              }
+            />
+            
+            {/* Testing Phase Route */}
+            <Route
+              path="/realtime-projects/:projectId/testing"
+              element={
+                <ProtectedRoute>
+                  <TestingPhasePage />
+                </ProtectedRoute>
+              }
+            />
+            
+            {/* Deployment Phase Route */}
+            <Route
+              path="/realtime-projects/:projectId/deployment"
+              element={
+                <ProtectedRoute>
+                  <DeploymentPhasePage />
+                </ProtectedRoute>
+              }
+            />
+            
             {/* Admin Routes */}
             <Route
               path="/admin/courses/create"
@@ -140,6 +197,42 @@ function App() {
               element={
                 <ProtectedRoute requiredRole="admin">
                   <StudentListPage />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/admin/projects"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminProjectManagementPage />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/admin/project-management"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminProjectManagementPage />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/admin/projects/:projectId"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <ProjectManagementDetailPage />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/admin/project-management/:projectId"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <ProjectManagementDetailPage />
                 </ProtectedRoute>
               }
             />

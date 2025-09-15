@@ -147,6 +147,31 @@ const BRDPhasePage = () => {
         return (
           <div className="space-y-6">
             <h3 className="text-2xl font-bold text-gray-800 mb-4">Project Overview</h3>
+            
+            {/* Video Section */}
+            <div className="mb-8">
+              <div className="bg-gray-900 rounded-lg overflow-hidden shadow-lg">
+                <div className="aspect-video w-full">
+                  <video
+                    className="w-full h-full object-cover"
+                    controls
+                    poster="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=450&fit=crop"
+                    preload="metadata"
+                  >
+                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
+                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+                <div className="p-4 bg-gray-800 text-white">
+                  <h4 className="text-lg font-semibold mb-2">BRD Phase Overview Video</h4>
+                  <p className="text-sm text-gray-300">
+                    Watch this comprehensive overview of the Business Requirements Document phase for the {project.title} project.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="prose prose-lg max-w-none">
               <p className="text-gray-600 leading-relaxed mb-6">
                 This phase focuses on creating a comprehensive Business Requirements Document (BRD) for the {project.title}. 
@@ -411,7 +436,10 @@ const BRDPhasePage = () => {
                   any section of this document as needed.
                 </p>
                 <div className="flex gap-4">
-                  <button className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                  <button 
+                    onClick={() => navigate(`/realtime-projects/${projectId}/uiux`)}
+                    className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                  >
                     Continue to UI/UX Phase
                   </button>
                   <button className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">

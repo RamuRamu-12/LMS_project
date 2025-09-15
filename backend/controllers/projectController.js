@@ -1,53 +1,94 @@
-const { Project, ProjectPhase, ProjectProgress, User } = require('../models');
-const { validationResult } = require('express-validator');
+const { Project, Document, User } = require('../models');
+const { Op } = require('sequelize');
 const logger = require('../utils/logger');
 
 // Get all projects
 const getAllProjects = async (req, res) => {
   try {
-    const projects = await Project.findAll({
-      where: { isActive: true },
+    const { status, difficulty, category, isPublished, page = 1, limit = 10 } = req.query;
+    
+    const whereClause = {};
+    
+    if (status) whereClause.status = status;
+    if (difficulty) whereClause.difficulty = difficulty;
+    if (category) whereClause.category = category;
+    if (isPublished !== undefined) whereClause.isPublished = isPublished === 'true';
+
+    const offset = (page - 1) * limit;
+    
+    const projects = await Project.findAndCountAll({
+      where: whereClause,
       include: [
         {
-          model: ProjectPhase,
-          as: 'phases',
-          where: { isActive: true },
-          required: false,
-          order: [['phaseNumber', 'ASC']]
+          model: User,
+          as: 'creator',
+          attributes: ['id', 'firstName', 'lastName', 'email']
+        },
+        {
+          model: User,
+          as: 'updater',
+          attributes: ['id', 'firstName', 'lastName', 'email']
+        },
+        {
+          model: Document,
+          as: 'documents',
+          attributes: ['id', 'title', 'documentType', 'phase', 'fileUrl', 'downloadCount'],
+          where: { isPublic: true },
+          required: false
         }
       ],
-      order: [['order', 'ASC']]
+      order: [['createdAt', 'DESC']],
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+      distinct: true
     });
 
     res.json({
       success: true,
-      data: projects
+      data: {
+        projects: projects.rows,
+        pagination: {
+          total: projects.count,
+          page: parseInt(page),
+          limit: parseInt(limit),
+          pages: Math.ceil(projects.count / limit)
+        }
+      }
     });
   } catch (error) {
     logger.error('Error fetching projects:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch projects',
+      message: 'Error fetching projects',
       error: error.message
     });
   }
 };
 
-// Get single project by ID
+// Get project by ID
 const getProjectById = async (req, res) => {
   try {
     const { id } = req.params;
-    const userId = req.user?.id;
-
-    const project = await Project.findOne({
-      where: { id, isActive: true },
+    
+    const project = await Project.findByPk(id, {
       include: [
         {
-          model: ProjectPhase,
-          as: 'phases',
-          where: { isActive: true },
+          model: User,
+          as: 'creator',
+          attributes: ['id', 'firstName', 'lastName', 'email']
+        },
+        {
+          model: User,
+          as: 'updater',
+          attributes: ['id', 'firstName', 'lastName', 'email']
+        },
+        {
+          model: Document,
+          as: 'documents',
+          attributes: ['id', 'title', 'description', 'documentType', 'phase', 'fileUrl', 'fileSize', 'mimeType', 'downloadCount', 'createdAt'],
+          where: { isPublic: true },
           required: false,
-          order: [['phaseNumber', 'ASC']]
+          order: [['createdAt', 'DESC']]
         }
       ]
     });
@@ -59,32 +100,15 @@ const getProjectById = async (req, res) => {
       });
     }
 
-    // Get user progress if user is authenticated
-    let userProgress = null;
-    if (userId) {
-      userProgress = await ProjectProgress.findAll({
-        where: { userId, projectId: id },
-        include: [
-          {
-            model: ProjectPhase,
-            as: 'phase'
-          }
-        ]
-      });
-    }
-
     res.json({
       success: true,
-      data: {
-        project,
-        userProgress
-      }
+      data: project
     });
   } catch (error) {
     logger.error('Error fetching project:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch project',
+      message: 'Error fetching project',
       error: error.message
     });
   }
@@ -93,28 +117,53 @@ const getProjectById = async (req, res) => {
 // Create new project (Admin only)
 const createProject = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: 'Validation failed',
-        errors: errors.array()
-      });
-    }
+    const {
+      title,
+      description,
+      difficulty,
+      estimatedDuration,
+      category,
+      technologies,
+      phases,
+      thumbnail,
+      logo
+    } = req.body;
 
-    const projectData = req.body;
-    const project = await Project.create(projectData);
+    const project = await Project.create({
+      title,
+      description,
+      difficulty,
+      estimatedDuration,
+      category,
+      technologies,
+      phases,
+      thumbnail,
+      logo,
+      createdBy: req.user.id,
+      updatedBy: req.user.id
+    });
+
+    // Fetch the created project with associations
+    const createdProject = await Project.findByPk(project.id, {
+      include: [
+        {
+          model: User,
+          as: 'creator',
+          attributes: ['id', 'firstName', 'lastName', 'email']
+        }
+      ]
+    });
 
     res.status(201).json({
       success: true,
-      data: project,
-      message: 'Project created successfully'
+      message: 'Project created successfully',
+      data: createdProject
     });
   } catch (error) {
     logger.error('Error creating project:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to create project',
+      message: 'Error creating project',
       error: error.message
     });
   }
@@ -123,38 +172,49 @@ const createProject = async (req, res) => {
 // Update project (Admin only)
 const updateProject = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: 'Validation failed',
-        errors: errors.array()
-      });
-    }
-
     const { id } = req.params;
     const updateData = req.body;
+    
+    // Add updatedBy to the update data
+    updateData.updatedBy = req.user.id;
 
-    const project = await Project.findByPk(id);
-    if (!project) {
+    const [updatedRowsCount] = await Project.update(updateData, {
+      where: { id }
+    });
+
+    if (updatedRowsCount === 0) {
       return res.status(404).json({
         success: false,
         message: 'Project not found'
       });
     }
 
-    await project.update(updateData);
+    // Fetch the updated project
+    const updatedProject = await Project.findByPk(id, {
+      include: [
+        {
+          model: User,
+          as: 'creator',
+          attributes: ['id', 'firstName', 'lastName', 'email']
+        },
+        {
+          model: User,
+          as: 'updater',
+          attributes: ['id', 'firstName', 'lastName', 'email']
+        }
+      ]
+    });
 
     res.json({
       success: true,
-      data: project,
-      message: 'Project updated successfully'
+      message: 'Project updated successfully',
+      data: updatedProject
     });
   } catch (error) {
     logger.error('Error updating project:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update project',
+      message: 'Error updating project',
       error: error.message
     });
   }
@@ -164,16 +224,17 @@ const updateProject = async (req, res) => {
 const deleteProject = async (req, res) => {
   try {
     const { id } = req.params;
+    
+    const deletedRowsCount = await Project.destroy({
+      where: { id }
+    });
 
-    const project = await Project.findByPk(id);
-    if (!project) {
+    if (deletedRowsCount === 0) {
       return res.status(404).json({
         success: false,
         message: 'Project not found'
       });
     }
-
-    await project.update({ isActive: false });
 
     res.json({
       success: true,
@@ -183,33 +244,20 @@ const deleteProject = async (req, res) => {
     logger.error('Error deleting project:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to delete project',
+      message: 'Error deleting project',
       error: error.message
     });
   }
 };
 
-// Get project analytics (Admin only)
-const getProjectAnalytics = async (req, res) => {
+// Publish/Unpublish project (Admin only)
+const toggleProjectStatus = async (req, res) => {
   try {
     const { id } = req.params;
-
-    const project = await Project.findByPk(id, {
-      include: [
-        {
-          model: ProjectProgress,
-          as: 'progress',
-          include: [
-            {
-              model: User,
-              as: 'user',
-              attributes: ['id', 'name', 'email']
-            }
-          ]
-        }
-      ]
-    });
-
+    const { isPublished } = req.body;
+    
+    const project = await Project.findByPk(id);
+    
     if (!project) {
       return res.status(404).json({
         success: false,
@@ -217,62 +265,73 @@ const getProjectAnalytics = async (req, res) => {
       });
     }
 
-    const analytics = {
-      totalUsers: project.progress.length,
-      completedUsers: project.progress.filter(p => p.status === 'completed').length,
-      inProgressUsers: project.progress.filter(p => p.status === 'in_progress').length,
-      averageProgress: project.progress.reduce((acc, p) => acc + p.progressPercentage, 0) / project.progress.length || 0,
-      totalTimeSpent: project.progress.reduce((acc, p) => acc + p.timeSpent, 0)
+    const updateData = {
+      isPublished,
+      updatedBy: req.user.id
     };
 
+    if (isPublished && !project.publishedAt) {
+      updateData.publishedAt = new Date();
+    }
+
+    await Project.update(updateData, {
+      where: { id }
+    });
+
     res.json({
       success: true,
-      data: analytics
+      message: `Project ${isPublished ? 'published' : 'unpublished'} successfully`
     });
   } catch (error) {
-    logger.error('Error fetching project analytics:', error);
+    logger.error('Error toggling project status:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch project analytics',
+      message: 'Error updating project status',
       error: error.message
     });
   }
 };
 
-// Update project video URL (Admin only)
-const updateProjectVideoUrl = async (req, res) => {
+// Get project statistics (Admin only)
+const getProjectStats = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { videoUrl } = req.body;
+    const totalProjects = await Project.count();
+    const publishedProjects = await Project.count({ where: { isPublished: true } });
+    const activeProjects = await Project.count({ where: { status: 'active' } });
+    
+    const projectsByDifficulty = await Project.findAll({
+      attributes: [
+        'difficulty',
+        [Project.sequelize.fn('COUNT', Project.sequelize.col('id')), 'count']
+      ],
+      group: ['difficulty'],
+      raw: true
+    });
 
-    if (!videoUrl || typeof videoUrl !== 'string') {
-      return res.status(400).json({
-        success: false,
-        message: 'Valid video URL is required'
-      });
-    }
-
-    const project = await Project.findByPk(id);
-    if (!project) {
-      return res.status(404).json({
-        success: false,
-        message: 'Project not found'
-      });
-    }
-
-    // Update the video URL
-    await project.update({ videoUrl });
+    const projectsByCategory = await Project.findAll({
+      attributes: [
+        'category',
+        [Project.sequelize.fn('COUNT', Project.sequelize.col('id')), 'count']
+      ],
+      group: ['category'],
+      raw: true
+    });
 
     res.json({
       success: true,
-      data: project,
-      message: 'Project video URL updated successfully'
+      data: {
+        totalProjects,
+        publishedProjects,
+        activeProjects,
+        projectsByDifficulty,
+        projectsByCategory
+      }
     });
   } catch (error) {
-    logger.error('Error updating project video URL:', error);
+    logger.error('Error fetching project statistics:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update project video URL',
+      message: 'Error fetching project statistics',
       error: error.message
     });
   }
@@ -284,6 +343,6 @@ module.exports = {
   createProject,
   updateProject,
   deleteProject,
-  getProjectAnalytics,
-  updateProjectVideoUrl
+  toggleProjectStatus,
+  getProjectStats
 };

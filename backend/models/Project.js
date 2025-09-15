@@ -1,3 +1,5 @@
+const { DataTypes } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   const Project = sequelize.define('Project', {
   id: {
@@ -15,65 +17,121 @@ module.exports = (sequelize, DataTypes) => {
   },
   description: {
     type: DataTypes.TEXT,
-    allowNull: true
-  },
-  shortDescription: {
-    type: DataTypes.STRING(500),
-    allowNull: true
-  },
-  videoUrl: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-    validate: {
-      isUrl: true
-    }
-  },
-  readmeContent: {
-    type: DataTypes.TEXT,
-    allowNull: true
+    allowNull: false
   },
   difficulty: {
     type: DataTypes.ENUM('beginner', 'intermediate', 'advanced'),
-    defaultValue: 'beginner'
+    allowNull: false,
+    defaultValue: 'intermediate'
   },
   estimatedDuration: {
     type: DataTypes.INTEGER,
-    defaultValue: 0, // in hours
-    validate: {
-      min: 0
-    }
+    allowNull: false,
+    comment: 'Duration in hours'
+  },
+  status: {
+    type: DataTypes.ENUM('active', 'inactive', 'archived'),
+    allowNull: false,
+    defaultValue: 'active'
   },
   thumbnail: {
-    type: DataTypes.TEXT,
+    type: DataTypes.STRING(500),
+    allowNull: true,
+    comment: 'URL to project thumbnail image'
+  },
+  logo: {
+    type: DataTypes.STRING(500),
+    allowNull: true,
+    comment: 'URL to project logo image'
+  },
+  overviewVideoUrl: {
+    type: DataTypes.STRING(500),
+    allowNull: true,
+    comment: 'URL to project overview video'
+  },
+  category: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    comment: 'Project category (e.g., Web Development, Data Science)'
+  },
+  technologies: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    comment: 'Array of technologies used in the project'
+  },
+  phases: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    comment: 'Array of project phases with their details'
+  },
+  isPublished: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  publishedAt: {
+    type: DataTypes.DATE,
     allowNull: true
   },
-  isActive: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true
-  },
-  order: {
+  createdBy: {
     type: DataTypes.INTEGER,
-    defaultValue: 0
+    allowNull: false,
+    references: {
+      model: 'Users',
+      key: 'id'
+    }
   },
-  metadata: {
-    type: DataTypes.JSONB,
-    defaultValue: {}
+  updatedBy: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'Users',
+      key: 'id'
+    }
   }
 }, {
   tableName: 'projects',
   timestamps: true,
   indexes: [
     {
-      fields: ['isActive']
-    },
-    {
-      fields: ['order']
+      fields: ['status']
     },
     {
       fields: ['difficulty']
+    },
+    {
+      fields: ['category']
+    },
+    {
+      fields: ['isPublished']
+    },
+    {
+      fields: ['createdBy']
     }
   ]
 });
+
+  // Define associations
+  Project.associate = (models) => {
+    // Project belongs to User (creator)
+    Project.belongsTo(models.User, {
+      foreignKey: 'createdBy',
+      as: 'creator'
+    });
+    
+    // Project belongs to User (updater)
+    Project.belongsTo(models.User, {
+      foreignKey: 'updatedBy',
+      as: 'updater'
+    });
+    
+    // Project has many Documents
+    Project.hasMany(models.Document, {
+      foreignKey: 'projectId',
+      as: 'documents',
+      onDelete: 'CASCADE'
+    });
+  };
 
   return Project;
 };
