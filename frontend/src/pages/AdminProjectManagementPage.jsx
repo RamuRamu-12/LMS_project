@@ -1,42 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useQuery } from 'react-query';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import { projectService } from '../services/projectService';
 
 const AdminProjectManagementPage = () => {
   const navigate = useNavigate();
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
-  const fetchProjects = async () => {
-    try {
-      console.log('Fetching projects...');
-      const response = await fetch('/api/projects', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      console.log('Response status:', response.status);
-      const data = await response.json();
-      console.log('Response data:', data);
-      if (data.success) {
-        setProjects(data.data.projects || data.data);
-        console.log('Projects set:', data.data.projects || data.data);
-      } else {
-        console.error('API returned error:', data.message);
-      }
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-    } finally {
-      setLoading(false);
+  // Use React Query to fetch projects
+  const { data: projectsData, isLoading: loading, error } = useQuery(
+    'admin-projects',
+    () => projectService.getProjects(),
+    {
+      refetchOnWindowFocus: false,
+      retry: 3
     }
-  };
+  );
+
+  const projects = projectsData?.data?.projects || projectsData?.data || [];
 
   const handleProjectSelect = (project) => {
     navigate(`/admin/projects/${project.id}`);
@@ -57,15 +41,36 @@ const AdminProjectManagementPage = () => {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Project Management</h1>
-          <p className="text-gray-600">Manage projects and upload downloadable documents</p>
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Project Management</h1>
+              <p className="text-gray-600">Manage projects and upload downloadable documents</p>
+            </div>
+            {projects.length === 0 && (
+              <button
+                onClick={() => {
+                  // This would typically call a seeding endpoint
+                  alert('Please run: cd backend && node run-project-seeding.js');
+                }}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Seed Projects
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Debug Info */}
         <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
           <p className="text-sm text-yellow-800">
             Debug Info: Loading: {loading.toString()}, Projects Count: {projects.length}
+            {error && <span className="text-red-600 ml-2">Error: {error.message}</span>}
           </p>
+          {projectsData && (
+            <p className="text-sm text-blue-800 mt-1">
+              Raw API Response: {JSON.stringify(projectsData, null, 2)}
+            </p>
+          )}
         </div>
 
         {/* Projects Grid */}

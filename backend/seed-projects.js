@@ -1,8 +1,20 @@
-const { Project, ProjectPhase } = require('./models');
+const { Project, ProjectPhase, User } = require('./models');
 
 const seedProjects = async () => {
   try {
     console.log('Starting project seeding...');
+
+    // Get or create a default admin user for projects
+    let adminUser = await User.findOne({ where: { role: 'admin' } });
+    if (!adminUser) {
+      // Create a default admin user if none exists
+      adminUser = await User.create({
+        name: 'System Admin',
+        email: 'admin@system.com',
+        role: 'admin',
+        password: 'admin123' // This should be hashed in a real scenario
+      });
+    }
 
     // Create Project 1: E-Commerce Web Application
     const project1 = await Project.create({
@@ -33,7 +45,8 @@ The project is divided into 5 phases, each building upon the previous one.`,
       difficulty: 'intermediate',
       estimatedDuration: 40,
       order: 1,
-      isActive: true
+      isActive: true,
+      createdBy: adminUser.id
     });
 
     // Create phases for Project 1
@@ -128,7 +141,8 @@ The project is divided into 5 phases focusing on data collection, processing, vi
       difficulty: 'intermediate',
       estimatedDuration: 35,
       order: 2,
-      isActive: true
+      isActive: true,
+      createdBy: adminUser.id
     });
 
     // Create phases for Project 2
@@ -223,7 +237,8 @@ The project is divided into 5 phases covering AI integration, learning algorithm
       difficulty: 'advanced',
       estimatedDuration: 45,
       order: 3,
-      isActive: true
+      isActive: true,
+      createdBy: adminUser.id
     });
 
     // Create phases for Project 3

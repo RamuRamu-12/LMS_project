@@ -22,13 +22,23 @@ const CourseDetailPage = () => {
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [chapterProgression, setChapterProgression] = useState(null)
 
-  // Use general endpoint for all users - content endpoint requires enrollment
+  // Use content endpoint for enrolled students to get enrollment data
   const { data: courseData, isLoading, error } = useQuery(
     ['course', id],
-    () => courseService.getCourseById(id),
+    () => {
+      // Try to get course content first (includes enrollment data)
+      return courseService.getCourseContent(id)
+    },
     {
       enabled: !!id,
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
+      retry: (failureCount, error) => {
+        // If content endpoint fails (user not enrolled), fall back to general course info
+        if (error?.response?.status === 403 || error?.response?.status === 401) {
+          return false // Don't retry, we'll handle this in the component
+        }
+        return failureCount < 3
+      }
     }
   )
   console.log(courseData)
@@ -44,7 +54,7 @@ const CourseDetailPage = () => {
 
   // Mutation for updating progress
   const updateProgressMutation = useMutation(
-    (progress) => enrollmentService.updateMyProgress(id, { progress }),
+    (progress) => enrollmentService.updateMyProgress(enrollment?.id, { progress }),
     {
       onSuccess: () => {
         // Refetch course data to get updated progress
@@ -65,6 +75,9 @@ const CourseDetailPage = () => {
   const course = courseData?.data?.course
   const enrollment = courseData?.data?.enrollment // For enrolled students
   const chapters = course?.chapters || []
+  
+  // Check if user has enrollment data (means they're enrolled)
+  const isEnrolled = !!enrollment?.id
   
   // Debug enrollment data
   console.log('=== ENROLLMENT DEBUG ===')
@@ -107,9 +120,18 @@ const CourseDetailPage = () => {
   }, [progressionData])
 
   // Handle chapter change
-  const handleChapterChange = (chapter) => {
-    if (chapter) {
-      setSelectedChapter(chapter)
+  const handleChapterChange = (chapterOrId) => {
+    if (chapterOrId) {
+      // If it's a chapter object, use it directly
+      if (typeof chapterOrId === 'object') {
+        setSelectedChapter(chapterOrId)
+      } else {
+        // If it's a chapter ID, find the chapter in the chapters array
+        const chapter = chapters.find(ch => ch.id === chapterOrId)
+        if (chapter) {
+          setSelectedChapter(chapter)
+        }
+      }
     }
   }
 
@@ -316,20 +338,6 @@ const CourseDetailPage = () => {
                         </div>
                       </div>
                       
-                      {/* Course Progress - Show for all students (enrolled or not) */}
-                      {user?.role === 'student' && (
-                        <div className="flex items-center space-x-2">
-                          <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg shadow-md">
-                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                          </div>
-                          <div>
-                            <div className="text-lg font-bold text-gray-900">{enrollment?.progress || 0}%</div>
-                            <div className="text-xs text-gray-600">Progress</div>
-                          </div>
-                        </div>
-                      )}
                     </motion.div>
 
                     {/* Compact Enrollment Status for Students */}
@@ -385,14 +393,6 @@ const CourseDetailPage = () => {
                           className="w-full h-48 object-cover rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
-                        <div className="absolute bottom-3 left-3 right-3">
-                          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2">
-                            <div className="flex items-center space-x-1">
-                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                              <span className="text-xs font-medium text-gray-900">Live Course</span>
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     ) : course.logo && logoLoading ? (
                       <div className="relative group">
@@ -402,14 +402,6 @@ const CourseDetailPage = () => {
                           </div>
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
-                        <div className="absolute bottom-3 left-3 right-3">
-                          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2">
-                            <div className="flex items-center space-x-1">
-                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                              <span className="text-xs font-medium text-gray-900">Live Course</span>
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     ) : course.logo && logoError ? (
                       <div className="relative group">
@@ -419,14 +411,6 @@ const CourseDetailPage = () => {
                           </span>
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
-                        <div className="absolute bottom-3 left-3 right-3">
-                          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2">
-                            <div className="flex items-center space-x-1">
-                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                              <span className="text-xs font-medium text-gray-900">Live Course</span>
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     ) : course.thumbnail ? (
                       <div className="relative group">
@@ -436,14 +420,6 @@ const CourseDetailPage = () => {
                           className="w-full h-48 object-cover rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
-                        <div className="absolute bottom-3 left-3 right-3">
-                          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2">
-                            <div className="flex items-center space-x-1">
-                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                              <span className="text-xs font-medium text-gray-900">Live Course</span>
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     ) : (
                       <div className="relative group">
@@ -453,14 +429,6 @@ const CourseDetailPage = () => {
                           </span>
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
-                        <div className="absolute bottom-3 left-3 right-3">
-                          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2">
-                            <div className="flex items-center space-x-1">
-                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                              <span className="text-xs font-medium text-gray-900">Live Course</span>
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     )}
                   </motion.div>
@@ -491,7 +459,7 @@ const CourseDetailPage = () => {
                     <div className="flex-1 flex flex-col">
                       <StudentChapterView 
                         chapter={selectedChapter}
-                        enrollmentId={enrollment?.id}
+                        enrollmentId={isEnrolled ? enrollment.id : null}
                         chapters={chapters}
                         onChapterChange={handleChapterChange}
                         showNavigation={false}

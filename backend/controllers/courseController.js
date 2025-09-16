@@ -20,42 +20,51 @@ const getCourses = async (req, res, next) => {
 
     const offset = (page - 1) * limit;
     
-    // If user is authenticated, show their unpublished courses too
-    // Otherwise, only show published courses
-    const whereClause = req.user 
-      ? { 
-          [Op.or]: [
-            { is_published: true },
-            { instructor_id: req.user.id }
-          ]
-        }
-      : { is_published: true };
+    // Debug logging
+    console.log('=== COURSE FILTERING DEBUG ===');
+    console.log('req.user:', req.user ? { id: req.user.id, role: req.user.role, name: req.user.name } : 'No user');
+    console.log('req.headers.authorization:', req.headers.authorization ? 'Token present' : 'No token');
 
-    // Apply filters
-    if (category) whereClause.category = category;
-    if (difficulty) whereClause.difficulty = difficulty;
+    // Apply filters - build conditions array to avoid circular references
+    const conditions = [];
+    
+    // Base condition for published courses or admin access
+    if (req.user && req.user.role === 'admin') {
+      // Admin sees all courses - no base condition needed
+    } else {
+      conditions.push({ is_published: true });
+    }
+    
+    // Add category filter
+    if (category) {
+      conditions.push({ category: category });
+    }
+    
+    // Add difficulty filter
+    if (difficulty) {
+      conditions.push({ difficulty: difficulty });
+    }
+    
+    // Add search condition
     if (q) {
-      const searchCondition = {
+      conditions.push({
         [Op.or]: [
           { title: { [Op.iLike]: `%${q}%` } },
           { description: { [Op.iLike]: `%${q}%` } },
           { tags: { [Op.contains]: [q] } }
         ]
-      };
-      
-      if (whereClause[Op.or]) {
-        whereClause[Op.and] = [
-          whereClause,
-          searchCondition
-        ];
-        delete whereClause[Op.or];
-      } else {
-        Object.assign(whereClause, searchCondition);
-      }
+      });
     }
+    
+    // Build final where clause
+    const finalWhereClause = conditions.length > 0 ? { [Op.and]: conditions } : {};
+    
+    console.log('conditions:', conditions);
+    console.log('finalWhereClause:', JSON.stringify(finalWhereClause, null, 2));
+    console.log('==============================');
 
     const { count, rows: courses } = await Course.findAndCountAll({
-      where: whereClause,
+      where: finalWhereClause,
       include: [
         {
           model: User,

@@ -144,10 +144,11 @@ const RegisterPage = () => {
           {/* Header */}
           <div className="text-center mb-8">
             <Link to="/" className="flex items-center justify-center space-x-2 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-lg">AI</span>
-              </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Gnanam AI</span>
+              <img 
+                src="/src/assets/gnanam-ai-logo.svg" 
+                alt="GNANAM AI" 
+                className="h-12 w-auto"
+              />
             </Link>
             
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
@@ -281,38 +282,6 @@ const RegisterPage = () => {
             </div>
           </motion.form>
 
-          {/* Features */}
-          <div className="mt-8 space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 text-center">
-              What you'll get:
-            </h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li className="flex items-center">
-                <svg className="w-4 h-4 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Access to all courses and learning materials
-              </li>
-              <li className="flex items-center">
-                <svg className="w-4 h-4 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Track your learning progress and achievements
-              </li>
-              <li className="flex items-center">
-                <svg className="w-4 h-4 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Personalized learning recommendations
-              </li>
-              <li className="flex items-center">
-                <svg className="w-4 h-4 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Mobile-responsive design for learning anywhere
-              </li>
-            </ul>
-          </div>
 
           {/* Footer */}
           <div className="mt-8 text-center">
@@ -322,7 +291,7 @@ const RegisterPage = () => {
                 to="/login"
                 className="text-indigo-600 hover:text-indigo-500 font-medium"
               >
-                Sign in here
+                Sign in
               </Link>
             </p>
             <Link

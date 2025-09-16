@@ -175,11 +175,6 @@ const AdminDashboard = () => {
                         <p className="text-3xl font-bold text-indigo-600">
                           {stat.value}
                         </p>
-                        <p className={`text-sm font-medium ${
-                          stat.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
-                        }`}>
-                          {stat.change} from last month
-                        </p>
                       </div>
                       <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
                         {stat.icon}

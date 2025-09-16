@@ -13,10 +13,11 @@ const Footer = () => {
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <Link to="/" className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">LMS</span>
-              </div>
-              <span className="text-xl font-bold">Aishani</span>
+              <img 
+                src="/src/assets/gnanam-ai-logo.svg" 
+                alt="GNANAM AI" 
+                className="h-8 w-auto"
+              />
             </Link>
             <p className="text-gray-300 mb-6 max-w-md">
               Empowering digital learning with our comprehensive Learning Management System. 

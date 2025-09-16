@@ -1,16 +1,11 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { useTheme } from '../context/ThemeContext'
 import Header from '../components/common/Header'
 import Footer from '../components/common/Footer'
-import ThemeToggle from '../components/common/ThemeToggle'
-import CourseLogo from '../components/course/CourseLogo'
 
 const LandingPage = () => {
   const { isAuthenticated, user } = useAuth()
-  const { theme } = useTheme()
   const navigate = useNavigate()
 
   const features = [
@@ -50,80 +45,6 @@ const LandingPage = () => {
     { number: '24/7', label: 'AI Support' }
   ]
 
-  const courses = [
-    {
-      id: 1,
-      title: 'Introduction to Artificial Intelligence',
-      category: 'AI & Machine Learning',
-      difficulty: 'Beginner',
-      thumbnail: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=250&fit=crop',
-      logo: 'https://cdn-icons-png.flaticon.com/512/2103/2103633.png'
-    },
-    {
-      id: 2,
-      title: 'Machine Learning Fundamentals',
-      category: 'AI & Machine Learning',
-      difficulty: 'Intermediate',
-      thumbnail: 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400&h=250&fit=crop',
-      logo: 'https://cdn-icons-png.flaticon.com/512/2103/2103633.png'
-    },
-    {
-      id: 3,
-      title: 'Neural Networks & Deep Learning',
-      category: 'AI & Machine Learning',
-      difficulty: 'Advanced',
-      thumbnail: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=250&fit=crop',
-      logo: 'https://cdn-icons-png.flaticon.com/512/2103/2103633.png'
-    },
-    {
-      id: 4,
-      title: 'Natural Language Processing',
-      category: 'AI & Machine Learning',
-      difficulty: 'Intermediate',
-      thumbnail: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&h=250&fit=crop',
-      logo: 'https://cdn-icons-png.flaticon.com/512/2103/2103633.png'
-    },
-    {
-      id: 5,
-      title: 'Computer Vision & Image Processing',
-      category: 'AI & Machine Learning',
-      difficulty: 'Advanced',
-      thumbnail: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=250&fit=crop',
-      logo: 'https://cdn-icons-png.flaticon.com/512/2103/2103633.png'
-    },
-    {
-      id: 6,
-      title: 'Cloud Computing & AWS',
-      category: 'Cloud Technology',
-      difficulty: 'Intermediate',
-      thumbnail: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=250&fit=crop',
-      logo: 'https://cdn-icons-png.flaticon.com/512/2103/2103633.png'
-    },
-    {
-      id: 7,
-      title: 'Azure Cloud Services',
-      category: 'Cloud Technology',
-      difficulty: 'Intermediate',
-      thumbnail: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=250&fit=crop',
-      logo: 'https://cdn-icons-png.flaticon.com/512/2103/2103633.png'
-    },
-    {
-      id: 8,
-      title: 'Google Cloud Platform',
-      category: 'Cloud Technology',
-      difficulty: 'Intermediate',
-      thumbnail: 'https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=400&h=250&fit=crop',
-      logo: 'https://cdn-icons-png.flaticon.com/512/2103/2103633.png'
-    },
-    {
-      id: 9,
-      title: 'AI in Cloud Computing',
-      category: 'AI & Cloud Integration',
-      difficulty: 'Advanced',
-      thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop',
-      logo: 'https://cdn-icons-png.flaticon.com/512/2103/2103633.png'
-    }
-  ]
 
   const handleLoginClick = () => {
     navigate('/login')
@@ -135,6 +56,11 @@ const LandingPage = () => {
     } else {
       navigate('/login')
     }
+  }
+
+  const handleExploreCourses = () => {
+    // Show course cards only, not accessible
+    navigate('/courses')
   }
 
   return (
@@ -162,7 +88,7 @@ const LandingPage = () => {
               className="mb-8"
             >
               <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-6">
-                Gnanam AI
+                GNANAM AI
               </h1>
               <p className="text-2xl md:text-3xl text-gray-700 dark:text-gray-300 mb-4">
                 The Future of Learning is Here
@@ -195,7 +121,7 @@ const LandingPage = () => {
                 </button>
               )}
               <button
-                onClick={() => handleProtectedClick('/courses')}
+                onClick={handleExploreCourses}
                 className="px-8 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300"
               >
                 Explore Courses
@@ -235,7 +161,7 @@ const LandingPage = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-              Why Choose Gnanam AI?
+              Why Choose GNANAM AI?
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
               Experience the future of online learning with our cutting-edge AI technology and intuitive design.
@@ -267,86 +193,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Featured Courses Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-              Course Offerings
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-              Explore our specialized courses in AI & Machine Learning and Cloud Technology. Master the latest technologies that are shaping the future.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {courses.map((course, index) => (
-              <motion.div
-                key={course.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden"
-              >
-                <div className="relative">
-                  <img
-                    src={course.thumbnail}
-                    alt={course.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="absolute top-4 right-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      course.difficulty === 'Beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                      course.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                      'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                    }`}>
-                      {course.difficulty}
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-3">
-                      <CourseLogo course={course} className="w-6 h-6 rounded object-cover" />
-                      <span className="text-sm text-blue-600 dark:text-blue-400 font-semibold">
-                        {course.category}
-                      </span>
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    {course.title}
-                  </h3>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
-            className="text-center mt-12"
-          >
-            <button
-              onClick={() => handleProtectedClick('/courses')}
-              className="inline-flex items-center px-8 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300"
-            >
-              View All Courses
-              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </motion.div>
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white relative overflow-hidden">
@@ -367,9 +213,9 @@ const LandingPage = () => {
               Ready to Transform Your Learning?
             </h2>
             <p className="text-xl mb-8 opacity-90">
-              Join thousands of learners who are already experiencing the future of education with Gnanam AI.
+              Join thousands of learners who are already experiencing the future of education with GNANAM AI.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex justify-center">
               {isAuthenticated ? (
                 <Link
                   to={user.role === 'admin' ? '/admin' : '/student'}
@@ -382,15 +228,9 @@ const LandingPage = () => {
                   onClick={handleLoginClick}
                   className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
                 >
-                  Start Learning Today
+                  Start Your Journey
                 </button>
               )}
-              <button
-                onClick={() => handleProtectedClick('/courses')}
-                className="px-8 py-4 border-2 border-white text-white font-semibold rounded-xl hover:bg-white/10 transition-all duration-300"
-              >
-                Explore Courses
-              </button>
             </div>
           </motion.div>
         </div>

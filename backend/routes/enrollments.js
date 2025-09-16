@@ -73,7 +73,8 @@ router.get('/:enrollmentId/progression',
 router.post('/:enrollmentId/feedback', 
   authenticate,
   requireStudent,
-  validate(commonSchemas.id, 'params'),
+  validate(commonSchemas.enrollmentId, 'params'),
+  validate(enrollmentSchemas.feedback, 'body'),
   enrollmentController.submitCourseFeedback
 );
 

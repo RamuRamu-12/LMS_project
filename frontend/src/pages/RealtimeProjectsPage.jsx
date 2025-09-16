@@ -73,7 +73,7 @@ const RealtimeProjectsPage = () => {
   return (
     <>
       <Helmet>
-        <title>Realtime Projects - Gnanam AI</title>
+        <title>Realtime Projects - GNANAM AI</title>
         <meta name="description" content="Learn by doing with hands-on realtime projects" />
       </Helmet>
 

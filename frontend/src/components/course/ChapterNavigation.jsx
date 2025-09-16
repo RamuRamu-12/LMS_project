@@ -46,7 +46,11 @@ const ChapterNavigation = ({
       onSuccess: () => {
         toast.success('Thank you for your feedback!')
         setShowFeedback(false)
+        // Invalidate all course-related queries to update ratings everywhere
         queryClient.invalidateQueries(['course', currentChapter.course_id])
+        queryClient.invalidateQueries(['courses'])
+        queryClient.invalidateQueries(['student-enrollments'])
+        queryClient.invalidateQueries(['my-completed-courses'])
       },
       onError: (error) => {
         toast.error(error.message)

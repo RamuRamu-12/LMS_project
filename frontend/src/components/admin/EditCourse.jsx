@@ -47,8 +47,6 @@ const EditCourse = () => {
      defaultValues: {
        title: '',
        description: '',
-       video_url: '',
-       pdf_url: '',
        category: 'other',
        difficulty: 'beginner',
        estimated_duration: 0,
@@ -91,8 +89,6 @@ const EditCourse = () => {
        reset({
          title: course.title || '',
          description: course.description || '',
-         video_url: course.video_url || '',
-         pdf_url: course.pdf_url || '',
          category: course.category || 'other',
          difficulty: course.difficulty || 'beginner',
          estimated_duration: course.estimated_duration || 0,
@@ -445,35 +441,6 @@ const EditCourse = () => {
               )}
             </div>
 
-             <div className="mt-6">
-               <label className="block text-sm font-medium text-gray-700 mb-2">
-                 Video URL
-               </label>
-               <input
-                 type="url"
-                 {...register('video_url')}
-                 className="input w-full"
-                 placeholder="https://youtube.com/watch?v=..."
-               />
-               <p className="mt-1 text-sm text-gray-500">
-                 Add a YouTube or Vimeo video URL for course introduction
-               </p>
-             </div>
-
-             <div className="mt-6">
-               <label className="block text-sm font-medium text-gray-700 mb-2">
-                 PDF URL
-               </label>
-               <input
-                 type="url"
-                 {...register('pdf_url')}
-                 className="input w-full"
-                 placeholder="https://drive.google.com/file/d/..."
-               />
-               <p className="mt-1 text-sm text-gray-500">
-                 Add a Google Drive PDF URL for course introduction
-               </p>
-             </div>
            </div>
 
           {/* Learning Objectives */}

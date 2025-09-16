@@ -153,16 +153,45 @@ const analyzeGoogleDriveUrl = (url, urlObj) => {
   
   // If no ID in query params, try to extract from path
   if (!fileId) {
-    const pathMatch = urlObj.pathname.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)
-    if (pathMatch) {
-      fileId = pathMatch[1]
+    // Try multiple patterns for Google Drive URLs
+    const patterns = [
+      /\/file\/d\/([a-zA-Z0-9_-]+)/,           // /file/d/FILE_ID/
+      /\/file\/d\/([a-zA-Z0-9_-]+)\/view/,     // /file/d/FILE_ID/view
+      /\/file\/d\/([a-zA-Z0-9_-]+)\/edit/,     // /file/d/FILE_ID/edit
+      /\/open\?id=([a-zA-Z0-9_-]+)/,           // /open?id=FILE_ID
+      /\/drive\/folders\/([a-zA-Z0-9_-]+)/,    // /drive/folders/FOLDER_ID
+    ]
+    
+    for (const pattern of patterns) {
+      const match = urlObj.pathname.match(pattern)
+      if (match) {
+        fileId = match[1]
+        break
+      }
+    }
+    
+    // Also check the full URL for patterns that might not be in pathname
+    if (!fileId) {
+      const fullUrlPatterns = [
+        /\/d\/([a-zA-Z0-9_-]+)\//,             // /d/FILE_ID/
+        /id=([a-zA-Z0-9_-]+)/,                 // id=FILE_ID
+      ]
+      
+      for (const pattern of fullUrlPatterns) {
+        const match = url.match(pattern)
+        if (match) {
+          fileId = match[1]
+          break
+        }
+      }
     }
   }
   
   if (fileId) {
-    // For Google Drive files, use direct access format for PDFs
-    const embedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`
+    // For Google Drive files, use preview format for embedding (works with public sharing)
+    const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`
     const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`
+    const viewUrl = `https://drive.google.com/file/d/${fileId}/view`
     
     return {
       type: URL_TYPES.GOOGLE_DRIVE,
@@ -170,6 +199,7 @@ const analyzeGoogleDriveUrl = (url, urlObj) => {
       originalUrl: url,
       embedUrl,
       downloadUrl,
+      viewUrl,
       fileId,
       thumbnail: null,
       title: null,

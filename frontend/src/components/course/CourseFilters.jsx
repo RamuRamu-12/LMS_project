@@ -5,7 +5,6 @@ const CourseFilters = ({ onFilterChange, filters = {}, categories = [] }) => {
   const [localFilters, setLocalFilters] = useState({
     category: '',
     difficulty: '',
-    rating: '',
     search: ''
   })
 
@@ -14,7 +13,6 @@ const CourseFilters = ({ onFilterChange, filters = {}, categories = [] }) => {
     setLocalFilters({
       category: filters.category || '',
       difficulty: filters.difficulty || '',
-      rating: filters.rating || '',
       search: filters.search || ''
     })
   }, [filters])
@@ -38,13 +36,6 @@ const CourseFilters = ({ onFilterChange, filters = {}, categories = [] }) => {
     'Advanced'
   ]
 
-  const ratings = [
-    'All Ratings',
-    '4.5 & up',
-    '4.0 & up',
-    '3.5 & up',
-    '3.0 & up'
-  ]
 
   const handleFilterChange = (key, value) => {
     const newFilters = { ...localFilters, [key]: value }
@@ -65,7 +56,6 @@ const CourseFilters = ({ onFilterChange, filters = {}, categories = [] }) => {
     const clearedFilters = {
       category: '',
       difficulty: '',
-      rating: '',
       search: ''
     }
     setLocalFilters(clearedFilters)
@@ -106,7 +96,7 @@ const CourseFilters = ({ onFilterChange, filters = {}, categories = [] }) => {
         </div>
 
         {/* Filters Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Category Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-3">
@@ -143,23 +133,6 @@ const CourseFilters = ({ onFilterChange, filters = {}, categories = [] }) => {
             </select>
           </div>
 
-          {/* Rating Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-3">
-              Rating
-            </label>
-            <select
-              value={localFilters.rating}
-              onChange={(e) => handleFilterChange('rating', e.target.value)}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-sm"
-            >
-              {ratings.map((rating) => (
-                <option key={rating} value={rating === 'All Ratings' ? '' : rating} className="bg-gray-800 text-white">
-                  {rating}
-                </option>
-              ))}
-            </select>
-          </div>
         </div>
 
         {/* Filter Actions */}
@@ -179,11 +152,6 @@ const CourseFilters = ({ onFilterChange, filters = {}, categories = [] }) => {
               {localFilters.difficulty && (
                 <span className="px-3 py-1 text-xs font-medium bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full">
                   {localFilters.difficulty}
-                </span>
-              )}
-              {localFilters.rating && (
-                <span className="px-3 py-1 text-xs font-medium bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full">
-                  {localFilters.rating}
                 </span>
               )}
               {localFilters.search && (

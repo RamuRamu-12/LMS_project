@@ -18,6 +18,7 @@ const StudentChapterView = ({ chapter, enrollmentId, chapters = [], onChapterCha
   console.log('=== StudentChapterView DEBUG ===')
   console.log('enrollmentId received:', enrollmentId)
   console.log('chapter received:', chapter)
+  console.log('chapters array:', chapters)
   console.log('================================')
 
 
@@ -62,7 +63,11 @@ const StudentChapterView = ({ chapter, enrollmentId, chapters = [], onChapterCha
       onSuccess: () => {
         toast.success('Thank you for your feedback!')
         setShowFeedback(false)
+        // Invalidate all course-related queries to update ratings everywhere
         queryClient.invalidateQueries(['course', chapter.course_id])
+        queryClient.invalidateQueries(['courses'])
+        queryClient.invalidateQueries(['student-enrollments'])
+        queryClient.invalidateQueries(['my-completed-courses'])
       },
       onError: (error) => {
         console.error('Submit feedback error:', error)
@@ -144,7 +149,7 @@ const StudentChapterView = ({ chapter, enrollmentId, chapters = [], onChapterCha
                 onClick={() => {
                   const currentIndex = chapters.findIndex(ch => ch.id === chapter.id)
                   if (currentIndex > 0) {
-                    onChapterChange(chapters[currentIndex - 1])
+                    onChapterChange(chapters[currentIndex - 1].id)
                   }
                 }}
                 disabled={chapters.findIndex(ch => ch.id === chapter.id) === 0}
@@ -243,33 +248,44 @@ const StudentChapterView = ({ chapter, enrollmentId, chapters = [], onChapterCha
             {chapters.length > 0 && (
               <>
                 {chapters.findIndex(ch => ch.id === chapter.id) === chapters.length - 1 ? (
-                  // Last chapter - Show Complete Course button
-                  <button
-                    onClick={() => completeCourseMutation.mutate()}
-                    disabled={completeCourseMutation.isLoading}
-                    className="flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-green-100 hover:bg-green-200 text-green-700 disabled:opacity-50"
-                  >
-                    {completeCourseMutation.isLoading ? (
-                      <div className="w-3 h-3 border-2 border-green-700 border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    )}
-                    <span>{completeCourseMutation.isLoading ? 'Completing...' : 'Complete Course'}</span>
-                  </button>
+                  // Last chapter - Show Complete Course button only if enrolled
+                  enrollmentId ? (
+                    <button
+                      onClick={() => completeCourseMutation.mutate()}
+                      disabled={completeCourseMutation.isLoading}
+                      className="flex items-center space-x-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-md hover:shadow-lg disabled:opacity-50"
+                    >
+                      {completeCourseMutation.isLoading ? (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                      <span>{completeCourseMutation.isLoading ? 'Completing Course...' : 'Complete Course'}</span>
+                    </button>
+                  ) : (
+                    <div className="flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-500">
+                      <span>Course Preview</span>
+                    </div>
+                  )
                 ) : (
                   // Not last chapter - Show Next button
                   <button
                     onClick={() => {
                       const currentIndex = chapters.findIndex(ch => ch.id === chapter.id)
                       if (currentIndex < chapters.length - 1) {
-                        // Complete current chapter first, then navigate
-                        completeChapterMutation.mutate(undefined, {
-                          onSuccess: () => {
-                            onChapterChange(chapters[currentIndex + 1])
-                          }
-                        })
+                        if (enrollmentId) {
+                          // Complete current chapter first, then navigate
+                          completeChapterMutation.mutate(undefined, {
+                            onSuccess: () => {
+                              onChapterChange(chapters[currentIndex + 1].id)
+                            }
+                          })
+                        } else {
+                          // Just navigate without completion tracking
+                          onChapterChange(chapters[currentIndex + 1].id)
+                        }
                       }
                     }}
                     disabled={completeChapterMutation.isLoading}

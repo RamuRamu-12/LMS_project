@@ -58,8 +58,8 @@ function App() {
     return (
       <ErrorBoundary>
         <Helmet>
-          <title>Gnanam AI - AI-Powered Learning Platform</title>
-          <meta name="description" content="Experience the future of education with Gnanam AI - your intelligent learning companion" />
+          <title>GNANAM AI - AI-Powered Learning Platform</title>
+          <meta name="description" content="Experience the future of education with GNANAM AI - your intelligent learning companion" />
         </Helmet>
         
         <AnimatePresence mode="wait">

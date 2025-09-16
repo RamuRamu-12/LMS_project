@@ -12,14 +12,13 @@ const CourseListPage = () => {
   const [filters, setFilters] = useState({
     search: '',
     category: '',
-    difficulty: '',
-    rating: ''
+    difficulty: ''
   })
 
   const { data: coursesData, isLoading, error } = useQuery(
     ['courses', filters],
     () => {
-      // Filter out empty parameters
+      // Only add parameters if they have values
       const params = {
         limit: 20
       }
@@ -27,14 +26,11 @@ const CourseListPage = () => {
       if (filters.search && filters.search.trim()) {
         params.q = filters.search
       }
-      if (filters.category) {
+      if (filters.category && filters.category !== '') {
         params.category = filters.category
       }
-      if (filters.difficulty) {
+      if (filters.difficulty && filters.difficulty !== '') {
         params.difficulty = filters.difficulty
-      }
-      if (filters.rating) {
-        params.rating = filters.rating
       }
       
       return courseService.getCourses(params)

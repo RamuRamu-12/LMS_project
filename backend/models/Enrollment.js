@@ -43,6 +43,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('enrolled', 'completed', 'dropped'),
       defaultValue: 'enrolled'
     },
+    rating: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      validate: {
+        min: 1,
+        max: 5
+      }
+    },
+    review: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
   }, {
     tableName: 'enrollments',
     indexes: [

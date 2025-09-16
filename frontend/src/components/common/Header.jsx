@@ -43,20 +43,21 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">AI</span>
-            </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-blue-400 dark:via-purple-400 dark:to-pink-400">Gnanam AI</span>
+            <img 
+              src="/src/assets/gnanam-ai-logo.svg" 
+              alt="GNANAM AI" 
+              className="h-8 w-auto"
+            />
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <button
-              onClick={() => handleProtectedClick('/courses')}
+            <Link
+              to="/courses"
               className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200"
             >
               Courses
-            </button>
+            </Link>
             <button
               onClick={() => handleProtectedClick('/realtime-projects')}
               className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200"
@@ -138,12 +139,6 @@ const Header = () => {
                 </button>
                 <div className="flex items-center space-x-3">
                   <Link
-                    to="/register"
-                    className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium rounded-lg hover:from-green-700 hover:to-emerald-700 transition-colors duration-200"
-                  >
-                    Sign Up
-                  </Link>
-                  <Link
                     to="/login"
                     className="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200"
                   >
@@ -178,15 +173,13 @@ const Header = () => {
               className="md:hidden border-t border-white/20"
             >
               <div className="py-4 space-y-2">
-                <button
-                  onClick={() => {
-                    setIsMenuOpen(false)
-                    handleProtectedClick('/courses')
-                  }}
-                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-white/20 rounded-lg transition-colors duration-200"
+                <Link
+                  to="/courses"
+                  className="block px-4 py-2 text-gray-700 hover:bg-white/20 rounded-lg transition-colors duration-200"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Courses
-                </button>
+                </Link>
                 <button
                   onClick={() => {
                     setIsMenuOpen(false)
@@ -225,13 +218,6 @@ const Header = () => {
                   </>
                 ) : (
                   <>
-                    <Link
-                      to="/register"
-                      className="block px-4 py-2 text-gray-700 hover:bg-white/20 rounded-lg transition-colors duration-200"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Sign Up
-                    </Link>
                     <Link
                       to="/login"
                       className="block px-4 py-2 text-gray-700 hover:bg-white/20 rounded-lg transition-colors duration-200"

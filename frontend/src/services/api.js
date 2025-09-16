@@ -83,18 +83,16 @@ api.interceptors.request.use(
       '/courses/top-rated'
     ]
     
-    // Check if this is a public route (GET requests only for course listing)
-    const isPublicRoute = publicRoutes.some(route => config.url?.includes(route)) ||
-      (config.method === 'get' && config.url?.includes('/courses') && !config.url?.includes('/admin'))
-    
-    // Only add token for non-public routes
-    if (!isPublicRoute) {
-      const token = localStorage.getItem('accessToken')
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`
-      } else {
+    // Always add token if available (let backend decide what's public)
+    const token = localStorage.getItem('accessToken')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    } else {
+      // Only warn for routes that definitely need authentication
+      const protectedRoutes = ['/admin', '/users', '/enrollments']
+      const needsAuth = protectedRoutes.some(route => config.url?.includes(route))
+      if (needsAuth) {
         console.warn('No access token found for protected route:', config.url)
-        // Don't block the request, let the backend handle it
       }
     }
     
