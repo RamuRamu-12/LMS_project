@@ -3,6 +3,9 @@ import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import PhaseNavigationBar from '../components/projects/PhaseNavigationBar';
+import NextButton from '../components/projects/NextButton';
+import { useProjectProgress } from '../context/ProjectProgressContext';
 
 const ArchitecturalDesignPhasePage = () => {
   const { projectId } = useParams();
@@ -10,6 +13,7 @@ const ArchitecturalDesignPhasePage = () => {
   const [selectedTab, setSelectedTab] = useState('overview');
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { isModuleUnlocked, unlockNextPhase } = useProjectProgress();
 
   useEffect(() => {
     // Mock data for testing - in real app, fetch based on projectId
@@ -744,7 +748,10 @@ const ArchitecturalDesignPhasePage = () => {
                 </p>
                 <div className="flex gap-4">
                   <button 
-                    onClick={() => navigate(`/realtime-projects/${projectId}/code-development`)}
+                    onClick={() => {
+                      unlockNextPhase(projectId, 'architectural');
+                      navigate(`/realtime-projects/${projectId}/code-development`);
+                    }}
                     className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                   >
                     Continue to Code Development
@@ -766,6 +773,14 @@ const ArchitecturalDesignPhasePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <Header />
+      
+      {/* Phase Navigation Bar - Top Level */}
+      <div className="bg-white/90 backdrop-blur-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 py-1">
+          <PhaseNavigationBar currentPhase="architectural" />
+        </div>
+      </div>
+      
       <div className="flex h-screen">
         {/* Left Sidebar */}
         <div className="w-80 bg-white/90 backdrop-blur-sm shadow-xl border-r border-gray-200 overflow-y-auto">
@@ -785,28 +800,38 @@ const ArchitecturalDesignPhasePage = () => {
           {/* Navigation Tabs */}
           <div className="p-4">
             <nav className="space-y-2">
-              {architecturalTabs.map((tab, index) => (
-                <motion.button
-                  key={tab.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                  onClick={() => setSelectedTab(tab.id)}
-                  className={`
-                    w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200
-                    ${selectedTab === tab.id
-                      ? 'bg-indigo-100 text-indigo-700 shadow-sm'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
-                    }
-                  `}
-                >
-                  <span className="text-lg">{tab.icon}</span>
-                  <div className="flex-1">
-                    <div className="font-medium">{tab.label}</div>
-                    <div className="text-xs text-gray-500">{tab.description}</div>
-                  </div>
-                </motion.button>
-              ))}
+              {architecturalTabs.map((tab, index) => {
+                const isUnlocked = isModuleUnlocked(projectId, 'architectural', tab.id);
+                return (
+                  <motion.button
+                    key={tab.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    onClick={() => isUnlocked && setSelectedTab(tab.id)}
+                    disabled={!isUnlocked}
+                    className={`
+                      w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200
+                      ${isUnlocked
+                        ? selectedTab === tab.id
+                          ? 'bg-indigo-100 text-indigo-700 shadow-sm'
+                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
+                        : 'text-gray-400 bg-gray-100 cursor-not-allowed'
+                      }
+                    `}
+                  >
+                    <span className="text-lg">
+                      {isUnlocked ? tab.icon : '🔒'}
+                    </span>
+                    <div className="flex-1">
+                      <div className="font-medium">{tab.label}</div>
+                      <div className="text-xs text-gray-500">
+                        {isUnlocked ? tab.description : 'Complete previous modules to unlock'}
+                      </div>
+                    </div>
+                  </motion.button>
+                );
+              })}
             </nav>
           </div>
 
@@ -834,7 +859,7 @@ const ArchitecturalDesignPhasePage = () => {
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto">
-          <div className="max-w-4xl mx-auto p-8">
+          <div className="max-w-4xl mx-auto p-8 relative">
             <motion.div
               key={selectedTab}
               initial={{ opacity: 0, y: 20 }}
@@ -843,6 +868,27 @@ const ArchitecturalDesignPhasePage = () => {
             >
               {renderTabContent()}
             </motion.div>
+            
+            {/* Next Button - positioned relative to module content */}
+            <NextButton 
+              currentPhase="architectural" 
+              currentModule={selectedTab}
+              onNext={() => {
+                // Auto-advance to next module
+                const architecturalTabs = [
+                  { id: 'overview' },
+                  { id: 'system-architecture' },
+                  { id: 'database-design' },
+                  { id: 'api-design' },
+                  { id: 'security-considerations' },
+                  { id: 'conclusion' }
+                ];
+                const currentIndex = architecturalTabs.findIndex(tab => tab.id === selectedTab);
+                if (currentIndex < architecturalTabs.length - 1) {
+                  setSelectedTab(architecturalTabs[currentIndex + 1].id);
+                }
+              }}
+            />
           </div>
         </div>
       </div>

@@ -443,11 +443,13 @@ const completeChapter = async (req, res, next) => {
             {
               model: CourseChapter,
               as: 'chapters',
-              attributes: ['id', 'title', 'chapter_order'],
-              order: [['chapter_order', 'ASC']]
+              attributes: ['id', 'title', 'chapter_order']
             }
           ]
         }
+      ],
+      order: [
+        [{ model: Course, as: 'course' }, { model: CourseChapter, as: 'chapters' }, 'chapter_order', 'ASC']
       ]
     });
 
@@ -588,11 +590,13 @@ const getChapterProgression = async (req, res, next) => {
             {
               model: CourseChapter,
               as: 'chapters',
-              attributes: ['id', 'title', 'chapter_order', 'description'],
-              order: [['chapter_order', 'ASC']]
+              attributes: ['id', 'title', 'chapter_order', 'description']
             }
           ]
         }
+      ],
+      order: [
+        [{ model: Course, as: 'course' }, { model: CourseChapter, as: 'chapters' }, 'chapter_order', 'ASC']
       ]
     });
 

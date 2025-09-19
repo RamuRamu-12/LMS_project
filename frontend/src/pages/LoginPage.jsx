@@ -148,7 +148,7 @@ const LoginPage = () => {
           <div className="text-center mb-8">
             <Link to="/" className="flex items-center justify-center space-x-2 mb-6">
               <img 
-                src="/src/assets/gnanam-ai-logo.svg" 
+                src="/lms_logo.svg" 
                 alt="GNANAM AI" 
                 className="h-12 w-auto"
               />

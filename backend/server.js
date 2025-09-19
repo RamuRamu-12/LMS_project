@@ -17,6 +17,7 @@ const chapterProgressRoutes = require('./routes/chapterProgress');
 const pdfRoutes = require('./routes/pdf');
 const projectRoutes = require('./routes/projects');
 const progressRoutes = require('./routes/progress-simple');
+const realtimeProjectsRoutes = require('./routes/realtimeProjects');
 const { errorHandler } = require('./middleware/errorHandler');
 const logger = require('./utils/logger');
 
@@ -200,6 +201,7 @@ app.use('/api/files', fileRoutes);
 app.use('/api/progress', chapterProgressRoutes);
 app.use('/api/pdf', pdfRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/realtime-projects', realtimeProjectsRoutes);
 app.use('/api', progressRoutes);
 
 // Debug: Log all registered routes

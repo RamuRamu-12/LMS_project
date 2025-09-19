@@ -275,9 +275,11 @@ const getCourseById = async (req, res, next) => {
           as: 'chapters',
           attributes: ['id', 'title', 'description', 'video_url', 'pdf_url', 'chapter_order', 'duration_minutes', 'is_published'],
           where: { is_published: true },
-          required: false,
-          order: [['chapter_order', 'ASC']]
+          required: false
         }
+      ],
+      order: [
+        [{ model: CourseChapter, as: 'chapters' }, 'chapter_order', 'ASC']
       ]
     });
 
@@ -685,7 +687,6 @@ const getCourseContent = async (req, res, next) => {
   try {
     const { id } = req.params;
     
-    
     const course = await Course.findByPk(id, {
       include: [
         {
@@ -698,9 +699,11 @@ const getCourseContent = async (req, res, next) => {
           as: 'chapters',
           attributes: ['id', 'title', 'description', 'video_url', 'pdf_url', 'chapter_order', 'duration_minutes', 'is_published'],
           where: { is_published: true },
-          required: false,
-          order: [['chapter_order', 'ASC']]
+          required: false
         }
+      ],
+      order: [
+        [{ model: CourseChapter, as: 'chapters' }, 'chapter_order', 'ASC']
       ]
     });
 
@@ -716,13 +719,13 @@ const getCourseContent = async (req, res, next) => {
           ...course.getPublicInfo(),
           chapters: course.chapters ? course.chapters.map(chapter => chapter.getPublicInfo()) : []
         },
-        enrollment: {
+        enrollment: req.enrollment ? {
           id: req.enrollment.id,
           status: req.enrollment.status,
           progress: req.enrollment.progress,
           enrolled_at: req.enrollment.enrolled_at,
           last_accessed_at: req.enrollment.last_accessed_at
-        }
+        } : null
       }
     });
   } catch (error) {

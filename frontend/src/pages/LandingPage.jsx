@@ -64,7 +64,7 @@ const LandingPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-blue-900 dark:to-indigo-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <Header />
       
       {/* Hero Section */}
@@ -90,10 +90,10 @@ const LandingPage = () => {
               <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-6">
                 GNANAM AI
               </h1>
-              <p className="text-2xl md:text-3xl text-gray-700 dark:text-gray-300 mb-4">
+              <p className="text-2xl md:text-3xl text-gray-700 mb-4">
                 The Future of Learning is Here
               </p>
-              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
                 Experience the next generation of education with AI-powered personalized learning, 
                 interactive courses, and intelligent progress tracking.
               </p>
@@ -122,7 +122,7 @@ const LandingPage = () => {
               )}
               <button
                 onClick={handleExploreCourses}
-                className="px-8 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300"
+                className="px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-300"
               >
                 Explore Courses
               </button>
@@ -137,10 +137,10 @@ const LandingPage = () => {
             >
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
-                  <div className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                  <div className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
                     {stat.number}
                   </div>
-                  <div className="text-gray-600 dark:text-gray-400">
+                  <div className="text-gray-600">
                     {stat.label}
                   </div>
                 </div>
@@ -151,7 +151,7 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+      <section className="py-20 bg-white/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -160,10 +160,10 @@ const LandingPage = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               Why Choose GNANAM AI?
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Experience the future of online learning with our cutting-edge AI technology and intuitive design.
             </p>
           </motion.div>
@@ -176,15 +176,15 @@ const LandingPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+                className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
               >
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white mb-6">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-gray-600">
                   {feature.description}
                 </p>
               </motion.div>

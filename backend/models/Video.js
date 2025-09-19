@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    projectId: {
+    project_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -28,17 +28,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    videoUrl: {
+    video_url: {
       type: DataTypes.STRING(500),
       allowNull: false,
       comment: 'Drive URL or video URL'
     },
-    thumbnailUrl: {
+    thumbnail_url: {
       type: DataTypes.STRING(500),
       allowNull: true,
       comment: 'Thumbnail image URL'
     },
-    videoType: {
+    video_type: {
       type: DataTypes.ENUM('overview', 'phase'),
       allowNull: false,
       comment: 'Type of video: overview or phase-specific'
@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       comment: 'Phase name for phase-specific videos (e.g., BRD, UI/UX, etc.)'
     },
-    phaseNumber: {
+    phase_number: {
       type: DataTypes.INTEGER,
       allowNull: true,
       comment: 'Phase number for phase-specific videos'
@@ -58,13 +58,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       comment: 'Video duration in seconds'
     },
-    isPublic: {
+    is_public: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
       comment: 'Whether video is publicly accessible'
     },
-    viewCount: {
+    view_count: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
@@ -75,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       comment: 'Array of tags for categorization'
     },
-    uploadedBy: {
+    uploaded_by: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -83,7 +83,7 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id'
       }
     },
-    updatedBy: {
+    updated_by: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -120,19 +120,19 @@ module.exports = (sequelize, DataTypes) => {
   Video.associate = (models) => {
     // Video belongs to Project
     Video.belongsTo(models.Project, {
-      foreignKey: 'projectId',
+      foreignKey: 'project_id',
       as: 'project'
     });
     
     // Video belongs to User (uploader)
     Video.belongsTo(models.User, {
-      foreignKey: 'uploadedBy',
+      foreignKey: 'uploaded_by',
       as: 'uploader'
     });
     
     // Video belongs to User (updater)
     Video.belongsTo(models.User, {
-      foreignKey: 'updatedBy',
+      foreignKey: 'updated_by',
       as: 'updater'
     });
   };

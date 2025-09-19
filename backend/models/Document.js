@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     primaryKey: true,
     autoIncrement: true
   },
-  projectId: {
+  project_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
@@ -28,37 +28,37 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.TEXT,
     allowNull: true
   },
-  fileName: {
+  file_name: {
     type: DataTypes.STRING(255),
     allowNull: false,
     comment: 'Original filename'
   },
-  filePath: {
+  file_path: {
     type: DataTypes.STRING(500),
     allowNull: false,
     comment: 'Path to the uploaded file'
   },
-  fileUrl: {
+  file_url: {
     type: DataTypes.STRING(500),
     allowNull: false,
     comment: 'Public URL to access the file'
   },
-  fileSize: {
+  file_size: {
     type: DataTypes.BIGINT,
     allowNull: false,
     comment: 'File size in bytes'
   },
-  mimeType: {
+  mime_type: {
     type: DataTypes.STRING(100),
     allowNull: false,
     comment: 'MIME type of the file'
   },
-  fileExtension: {
+  file_extension: {
     type: DataTypes.STRING(10),
     allowNull: false,
     comment: 'File extension (e.g., pdf, docx, zip)'
   },
-  documentType: {
+  document_type: {
     type: DataTypes.ENUM('brd', 'uiux', 'architecture', 'code', 'testing', 'deployment', 'other'),
     allowNull: false,
     comment: 'Type of document based on project phase'
@@ -74,13 +74,13 @@ module.exports = (sequelize, DataTypes) => {
     defaultValue: '1.0',
     comment: 'Document version'
   },
-  isPublic: {
+  is_public: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: true,
     comment: 'Whether document is publicly accessible'
   },
-  downloadCount: {
+  download_count: {
     type: DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 0,
@@ -91,7 +91,7 @@ module.exports = (sequelize, DataTypes) => {
     allowNull: true,
     comment: 'Array of tags for categorization'
   },
-  uploadedBy: {
+  uploaded_by: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
@@ -99,7 +99,7 @@ module.exports = (sequelize, DataTypes) => {
       key: 'id'
     }
   },
-  updatedBy: {
+  updated_by: {
     type: DataTypes.INTEGER,
     allowNull: true,
     references: {
@@ -136,19 +136,19 @@ module.exports = (sequelize, DataTypes) => {
   Document.associate = (models) => {
     // Document belongs to Project
     Document.belongsTo(models.Project, {
-      foreignKey: 'projectId',
+      foreignKey: 'project_id',
       as: 'project'
     });
     
     // Document belongs to User (uploader)
     Document.belongsTo(models.User, {
-      foreignKey: 'uploadedBy',
+      foreignKey: 'uploaded_by',
       as: 'uploader'
     });
     
     // Document belongs to User (updater)
     Document.belongsTo(models.User, {
-      foreignKey: 'updatedBy',
+      foreignKey: 'updated_by',
       as: 'updater'
     });
   };

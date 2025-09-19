@@ -3,6 +3,9 @@ import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import PhaseNavigationBar from '../components/projects/PhaseNavigationBar';
+import NextButton from '../components/projects/NextButton';
+import { useProjectProgress } from '../context/ProjectProgressContext';
 
 const CodeDevelopmentPhasePage = () => {
   const { projectId } = useParams();
@@ -10,6 +13,7 @@ const CodeDevelopmentPhasePage = () => {
   const [selectedTab, setSelectedTab] = useState('overview');
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { isModuleUnlocked, unlockNextPhase } = useProjectProgress();
 
   useEffect(() => {
     // Mock data for testing - in real app, fetch based on projectId
@@ -795,7 +799,10 @@ const CodeDevelopmentPhasePage = () => {
                 </p>
                 <div className="flex gap-4">
                   <button 
-                    onClick={() => navigate(`/realtime-projects/${projectId}/testing`)}
+                    onClick={() => {
+                      unlockNextPhase(projectId, 'code-development');
+                      navigate(`/realtime-projects/${projectId}/testing`);
+                    }}
                     className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                   >
                     Continue to Testing Phase
@@ -817,6 +824,14 @@ const CodeDevelopmentPhasePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <Header />
+      
+      {/* Phase Navigation Bar - Top Level */}
+      <div className="bg-white/90 backdrop-blur-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 py-1">
+          <PhaseNavigationBar currentPhase="code-development" />
+        </div>
+      </div>
+      
       <div className="flex h-screen">
         {/* Left Sidebar */}
         <div className="w-80 bg-white/90 backdrop-blur-sm shadow-xl border-r border-gray-200 overflow-y-auto">
@@ -836,28 +851,38 @@ const CodeDevelopmentPhasePage = () => {
           {/* Navigation Tabs */}
           <div className="p-4">
             <nav className="space-y-2">
-              {codeDevTabs.map((tab, index) => (
-                <motion.button
-                  key={tab.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                  onClick={() => setSelectedTab(tab.id)}
-                  className={`
-                    w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200
-                    ${selectedTab === tab.id
-                      ? 'bg-emerald-100 text-emerald-700 shadow-sm'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
-                    }
-                  `}
-                >
-                  <span className="text-lg">{tab.icon}</span>
-                  <div className="flex-1">
-                    <div className="font-medium">{tab.label}</div>
-                    <div className="text-xs text-gray-500">{tab.description}</div>
-                  </div>
-                </motion.button>
-              ))}
+              {codeDevTabs.map((tab, index) => {
+                const isUnlocked = isModuleUnlocked(projectId, 'code-development', tab.id);
+                return (
+                  <motion.button
+                    key={tab.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    onClick={() => isUnlocked && setSelectedTab(tab.id)}
+                    disabled={!isUnlocked}
+                    className={`
+                      w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200
+                      ${isUnlocked
+                        ? selectedTab === tab.id
+                          ? 'bg-emerald-100 text-emerald-700 shadow-sm'
+                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
+                        : 'text-gray-400 bg-gray-100 cursor-not-allowed'
+                      }
+                    `}
+                  >
+                    <span className="text-lg">
+                      {isUnlocked ? tab.icon : '🔒'}
+                    </span>
+                    <div className="flex-1">
+                      <div className="font-medium">{tab.label}</div>
+                      <div className="text-xs text-gray-500">
+                        {isUnlocked ? tab.description : 'Complete previous modules to unlock'}
+                      </div>
+                    </div>
+                  </motion.button>
+                );
+              })}
             </nav>
           </div>
 
@@ -885,7 +910,7 @@ const CodeDevelopmentPhasePage = () => {
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto">
-          <div className="max-w-4xl mx-auto p-8">
+          <div className="max-w-4xl mx-auto p-8 relative">
             <motion.div
               key={selectedTab}
               initial={{ opacity: 0, y: 20 }}
@@ -894,6 +919,27 @@ const CodeDevelopmentPhasePage = () => {
             >
               {renderTabContent()}
             </motion.div>
+            
+            {/* Next Button - positioned relative to module content */}
+            <NextButton 
+              currentPhase="code-development" 
+              currentModule={selectedTab}
+              onNext={() => {
+                // Auto-advance to next module
+                const codeDevTabs = [
+                  { id: 'overview' },
+                  { id: 'environment-setup' },
+                  { id: 'frontend-development' },
+                  { id: 'backend-development' },
+                  { id: 'integration' },
+                  { id: 'conclusion' }
+                ];
+                const currentIndex = codeDevTabs.findIndex(tab => tab.id === selectedTab);
+                if (currentIndex < codeDevTabs.length - 1) {
+                  setSelectedTab(codeDevTabs[currentIndex + 1].id);
+                }
+              }}
+            />
           </div>
         </div>
       </div>

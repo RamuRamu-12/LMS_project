@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import { chapterService } from '../../services/chapterService'
-import { fileService } from '../../services/fileService'
 import toast from 'react-hot-toast'
 import LoadingSpinner from '../common/LoadingSpinner'
 
@@ -129,24 +128,6 @@ const ChapterManagement = ({ courseId, courseTitle }) => {
     setDraggedChapter(null)
   }
 
-  // Handle file upload for PDF chapters
-  const handleFileUpload = async (file, chapterId) => {
-    try {
-      const formData = new FormData()
-      formData.append('file', file)
-      
-      const response = await fileService.uploadFile(courseId, formData)
-      const fileId = response.data.file.id
-      
-      // Update chapter with PDF file ID
-      updateChapterMutation.mutate({
-        chapterId,
-        chapterData: { file_id: fileId }
-      })
-    } catch (error) {
-      toast.error('Failed to upload PDF file')
-    }
-  }
 
   if (isLoading) {
     return (
@@ -326,11 +307,20 @@ const ChapterManagement = ({ courseId, courseTitle }) => {
 
 // Chapter Form Component
 const ChapterForm = ({ courseId, chapter, onClose, onSubmit, isSubmitting }) => {
+  // Determine content type based on existing URLs
+  const getContentType = (chapter) => {
+    if (chapter?.video_url && chapter?.pdf_url) return 'both'
+    if (chapter?.video_url) return 'video'
+    if (chapter?.pdf_url) return 'pdf'
+    return 'video' // default
+  }
+
   const [formData, setFormData] = useState({
     title: chapter?.title || '',
     description: chapter?.description || '',
-    content_type: chapter?.content_type || 'video',
+    content_type: getContentType(chapter),
     video_url: chapter?.video_url || '',
+    pdf_url: chapter?.pdf_url || '',
     external_url: chapter?.external_url || '',
     duration_minutes: chapter?.duration_minutes || '',
     is_published: chapter?.is_published ?? true
@@ -344,26 +334,23 @@ const ChapterForm = ({ courseId, chapter, onClose, onSubmit, isSubmitting }) => 
       toast.error('Video URL is required for video content')
       return
     }
-    if (formData.content_type === 'pdf' && !formData.file_id) {
-      toast.error('PDF file is required for PDF content')
+    if (formData.content_type === 'pdf' && !formData.pdf_url) {
+      toast.error('PDF URL is required for PDF content')
       return
     }
     if (formData.content_type === 'url' && !formData.external_url) {
       toast.error('External URL is required for URL content')
       return
     }
+    if (formData.content_type === 'both' && !formData.video_url && !formData.pdf_url) {
+      toast.error('At least one URL (video or PDF) is required')
+      return
+    }
 
     const submitData = { ...formData }
     
-    // Map frontend field names to backend field names
-    if (formData.content_type === 'video' && formData.video_url) {
-      submitData.content_url = formData.video_url
-    } else if (formData.content_type === 'url' && formData.external_url) {
-      submitData.content_url = formData.external_url
-    }
-    
-    // Remove frontend-specific fields
-    delete submitData.video_url
+    // Remove frontend-specific fields that don't exist in backend
+    delete submitData.content_type
     delete submitData.external_url
     
     if (formData.duration_minutes) {
@@ -373,36 +360,6 @@ const ChapterForm = ({ courseId, chapter, onClose, onSubmit, isSubmitting }) => 
     onSubmit(submitData)
   }
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0]
-    if (file && file.type === 'application/pdf') {
-      // Handle PDF upload
-      handleFileUpload(file)
-    } else {
-      toast.error('Please select a PDF file')
-    }
-  }
-
-  const handleFileUpload = async (file) => {
-    try {
-      const formData = new FormData()
-      formData.append('file', file)
-      
-      const response = await fileService.uploadFile(courseId, formData)
-      const fileId = response.data.file.id
-      
-      // Update form data with PDF file ID
-      setFormData(prev => ({
-        ...prev,
-        file_id: fileId
-      }))
-      
-      toast.success('PDF uploaded successfully!')
-    } catch (error) {
-      console.error('File upload error:', error)
-      toast.error('Failed to upload PDF file')
-    }
-  }
 
   return (
     <motion.div
@@ -473,6 +430,7 @@ const ChapterForm = ({ courseId, chapter, onClose, onSubmit, isSubmitting }) => 
               >
                 <option value="video">Video</option>
                 <option value="pdf">PDF Document</option>
+                <option value="both">Both Video and PDF</option>
                 <option value="url">External URL</option>
               </select>
             </div>
@@ -495,17 +453,44 @@ const ChapterForm = ({ courseId, chapter, onClose, onSubmit, isSubmitting }) => 
             {formData.content_type === 'pdf' && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  PDF File
+                  PDF URL *
                 </label>
                 <input
-                  type="file"
-                  accept=".pdf"
-                  onChange={handleFileChange}
+                  type="url"
+                  value={formData.pdf_url}
+                  onChange={(e) => setFormData(prev => ({ ...prev, pdf_url: e.target.value }))}
                   className="input w-full"
+                  placeholder="https://example.com/document.pdf"
                 />
-                <p className="mt-1 text-sm text-gray-500">
-                  Upload a PDF document for this chapter
-                </p>
+              </div>
+            )}
+
+            {formData.content_type === 'both' && (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Video URL *
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.video_url}
+                    onChange={(e) => setFormData(prev => ({ ...prev, video_url: e.target.value }))}
+                    className="input w-full"
+                    placeholder="https://youtube.com/watch?v=..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    PDF URL *
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.pdf_url}
+                    onChange={(e) => setFormData(prev => ({ ...prev, pdf_url: e.target.value }))}
+                    className="input w-full"
+                    placeholder="https://example.com/document.pdf"
+                  />
+                </div>
               </div>
             )}
 

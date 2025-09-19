@@ -79,7 +79,7 @@ const AdminSidebar = ({ navigation, sidebarOpen, setSidebarOpen }) => {
           <div className="flex items-center justify-between h-16 px-6 border-b border-white/20">
             <div className="flex items-center space-x-2">
               <img 
-                src="/src/assets/gnanam-ai-logo.svg" 
+                src="/lms_logo.svg" 
                 alt="GNANAM AI" 
                 className="h-8 w-auto"
               />

@@ -12,7 +12,7 @@ const getAllProjects = async (req, res) => {
     if (status) whereClause.status = status;
     if (difficulty) whereClause.difficulty = difficulty;
     if (category) whereClause.category = category;
-    if (isPublished !== undefined) whereClause.isPublished = isPublished === 'true';
+    if (isPublished !== undefined) whereClause.is_published = isPublished === 'true';
 
     const offset = (page - 1) * limit;
     
@@ -22,22 +22,22 @@ const getAllProjects = async (req, res) => {
         {
           model: User,
           as: 'creator',
-          attributes: ['id', 'firstName', 'lastName', 'email']
+          attributes: ['id', 'name', 'email']
         },
         {
           model: User,
           as: 'updater',
-          attributes: ['id', 'firstName', 'lastName', 'email']
+          attributes: ['id', 'name', 'email']
         },
         {
           model: Document,
           as: 'documents',
-          attributes: ['id', 'title', 'documentType', 'phase', 'fileUrl', 'downloadCount'],
-          where: { isPublic: true },
+          attributes: ['id', 'title', 'document_type', 'phase', 'file_url', 'download_count'],
+          where: { is_public: true },
           required: false
         }
       ],
-      order: [['createdAt', 'DESC']],
+      order: [['created_at', 'DESC']],
       limit: parseInt(limit),
       offset: parseInt(offset),
       distinct: true
@@ -75,18 +75,18 @@ const getProjectById = async (req, res) => {
         {
           model: User,
           as: 'creator',
-          attributes: ['id', 'firstName', 'lastName', 'email']
+          attributes: ['id', 'name', 'email']
         },
         {
           model: User,
           as: 'updater',
-          attributes: ['id', 'firstName', 'lastName', 'email']
+          attributes: ['id', 'name', 'email']
         },
         {
           model: Document,
           as: 'documents',
-          attributes: ['id', 'title', 'description', 'documentType', 'phase', 'fileUrl', 'fileSize', 'mimeType', 'downloadCount', 'createdAt'],
-          where: { isPublic: true },
+          attributes: ['id', 'title', 'description', 'document_type', 'phase', 'file_url', 'file_size', 'mime_type', 'download_count', 'created_at'],
+          where: { is_public: true },
           required: false,
           order: [['createdAt', 'DESC']]
         }
@@ -149,7 +149,7 @@ const createProject = async (req, res) => {
         {
           model: User,
           as: 'creator',
-          attributes: ['id', 'firstName', 'lastName', 'email']
+          attributes: ['id', 'name', 'email']
         }
       ]
     });
@@ -195,12 +195,12 @@ const updateProject = async (req, res) => {
         {
           model: User,
           as: 'creator',
-          attributes: ['id', 'firstName', 'lastName', 'email']
+          attributes: ['id', 'name', 'email']
         },
         {
           model: User,
           as: 'updater',
-          attributes: ['id', 'firstName', 'lastName', 'email']
+          attributes: ['id', 'name', 'email']
         }
       ]
     });
@@ -254,7 +254,7 @@ const deleteProject = async (req, res) => {
 const toggleProjectStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { isPublished } = req.body;
+    const { is_published } = req.body;
     
     const project = await Project.findByPk(id);
     
@@ -266,12 +266,12 @@ const toggleProjectStatus = async (req, res) => {
     }
 
     const updateData = {
-      isPublished,
-      updatedBy: req.user.id
+      is_published,
+      updated_by: req.user.id
     };
 
-    if (isPublished && !project.publishedAt) {
-      updateData.publishedAt = new Date();
+    if (is_published && !project.published_at) {
+      updateData.published_at = new Date();
     }
 
     await Project.update(updateData, {
@@ -280,7 +280,7 @@ const toggleProjectStatus = async (req, res) => {
 
     res.json({
       success: true,
-      message: `Project ${isPublished ? 'published' : 'unpublished'} successfully`
+      message: `Project ${is_published ? 'published' : 'unpublished'} successfully`
     });
   } catch (error) {
     logger.error('Error toggling project status:', error);
@@ -296,7 +296,7 @@ const toggleProjectStatus = async (req, res) => {
 const getProjectStats = async (req, res) => {
   try {
     const totalProjects = await Project.count();
-    const publishedProjects = await Project.count({ where: { isPublished: true } });
+    const publishedProjects = await Project.count({ where: { is_published: true } });
     const activeProjects = await Project.count({ where: { status: 'active' } });
     
     const projectsByDifficulty = await Project.findAll({

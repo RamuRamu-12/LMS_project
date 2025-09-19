@@ -1,4 +1,4 @@
-const { CourseChapter, Course, FileUpload } = require('../models');
+const { CourseChapter, Course } = require('../models');
 const { AppError } = require('../middleware/errorHandler');
 const logger = require('../utils/logger');
 const { uploadFile } = require('../utils/s3Client');
@@ -18,7 +18,7 @@ const createChapter = async (req, res, next) => {
       throw new AppError('Course not found', 404);
     }
 
-    if (course.instructor_id !== req.user.id) {
+    if (course.instructor_id !== req.user.id && req.user.role !== 'admin') {
       throw new AppError('Access denied. You can only add chapters to your own courses.', 403);
     }
 
@@ -119,14 +119,7 @@ const getChapter = async (req, res, next) => {
       where: {
         id: chapterId,
         course_id: courseId
-      },
-      include: [
-        {
-          model: FileUpload,
-          as: 'file',
-          attributes: ['id', 'original_name', 'url', 'file_type', 'size']
-        }
-      ]
+      }
     });
 
     if (!chapter) {
@@ -164,9 +157,9 @@ const updateChapter = async (req, res, next) => {
       throw new AppError('Chapter not found', 404);
     }
 
-    // Verify course ownership
+    // Verify course ownership or admin role
     const course = await Course.findByPk(courseId);
-    if (course.instructor_id !== req.user.id) {
+    if (course.instructor_id !== req.user.id && req.user.role !== 'admin') {
       throw new AppError('Access denied. You can only edit chapters in your own courses.', 403);
     }
 
@@ -193,16 +186,8 @@ const updateChapter = async (req, res, next) => {
 
     await chapter.update(updateData);
 
-    // Fetch updated chapter with associations
-    const updatedChapter = await CourseChapter.findByPk(chapterId, {
-      include: [
-        {
-          model: FileUpload,
-          as: 'file',
-          attributes: ['id', 'original_name', 'url', 'file_type', 'size']
-        }
-      ]
-    });
+    // Fetch updated chapter
+    const updatedChapter = await CourseChapter.findByPk(chapterId);
 
     res.json({
       success: true,
@@ -235,9 +220,9 @@ const deleteChapter = async (req, res, next) => {
       throw new AppError('Chapter not found', 404);
     }
 
-    // Verify course ownership
+    // Verify course ownership or admin role
     const course = await Course.findByPk(courseId);
-    if (course.instructor_id !== req.user.id) {
+    if (course.instructor_id !== req.user.id && req.user.role !== 'admin') {
       throw new AppError('Access denied. You can only delete chapters from your own courses.', 403);
     }
 
@@ -261,9 +246,9 @@ const reorderChapters = async (req, res, next) => {
     const { courseId } = req.params;
     const { chapterOrders } = req.body;
 
-    // Verify course ownership
+    // Verify course ownership or admin role
     const course = await Course.findByPk(courseId);
-    if (course.instructor_id !== req.user.id) {
+    if (course.instructor_id !== req.user.id && req.user.role !== 'admin') {
       throw new AppError('Access denied. You can only reorder chapters in your own courses.', 403);
     }
 

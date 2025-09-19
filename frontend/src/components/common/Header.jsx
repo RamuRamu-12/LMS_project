@@ -2,12 +2,9 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../../context/AuthContext'
-import { useTheme } from '../../context/ThemeContext'
-import ThemeToggle from './ThemeToggle'
 
 const Header = () => {
   const { user, logout, isAuthenticated } = useAuth()
-  const { theme, toggleTheme } = useTheme()
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
@@ -37,14 +34,14 @@ const Header = () => {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-700"
+      className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-200"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <img 
-              src="/src/assets/gnanam-ai-logo.svg" 
+                src="/lms_logo.svg"
               alt="GNANAM AI" 
               className="h-8 w-auto"
             />
@@ -54,13 +51,13 @@ const Header = () => {
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               to="/courses"
-              className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200"
+              className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200"
             >
               Courses
             </Link>
             <button
               onClick={() => handleProtectedClick('/realtime-projects')}
-              className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200"
+              className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200"
             >
               Realtime Projects
             </button>
@@ -69,13 +66,10 @@ const Header = () => {
               <div className="flex items-center space-x-4">
                 <Link
                   to={user.role === 'admin' ? '/admin' : '/student'}
-                  className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors duration-200"
+                  className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200"
                 >
                   Dashboard
                 </Link>
-                
-                {/* Theme Toggle */}
-                <ThemeToggle />
 
                 {/* Profile Dropdown */}
                 <div className="relative">
@@ -121,30 +115,13 @@ const Header = () => {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={toggleTheme}
-                  className="p-2 rounded-lg hover:bg-white/20 transition-colors duration-200"
-                  aria-label="Toggle theme"
+              <div className="flex items-center space-x-3">
+                <Link
+                  to="/login"
+                  className="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200"
                 >
-                  {theme === 'light' ? (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                    </svg>
-                  ) : (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                  )}
-                </button>
-                <div className="flex items-center space-x-3">
-                  <Link
-                    to="/login"
-                    className="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200"
-                  >
-                    Login
-                  </Link>
-                </div>
+                  Login
+                </Link>
               </div>
             )}
           </nav>

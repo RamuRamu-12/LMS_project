@@ -3,12 +3,14 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
+import { useProjectProgress } from '../context/ProjectProgressContext';
 
 const RealtimeProjectsPageSimple = () => {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { initializeProject } = useProjectProgress();
 
   useEffect(() => {
     // Mock data for testing
@@ -202,6 +204,7 @@ const RealtimeProjectsPageSimple = () => {
 
   const handleBeginJourney = () => {
     if (selectedProject) {
+      initializeProject(selectedProject.id);
       navigate(`/realtime-projects/${selectedProject.id}/brd`);
     }
   };

@@ -14,7 +14,7 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <Link to="/" className="flex items-center space-x-2 mb-4">
               <img 
-                src="/src/assets/gnanam-ai-logo.svg" 
+                src="/lms_logo.svg" 
                 alt="GNANAM AI" 
                 className="h-8 w-auto"
               />

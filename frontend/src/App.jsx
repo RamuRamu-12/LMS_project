@@ -33,6 +33,7 @@ import ErrorBoundary from './components/common/ErrorBoundary'
 
 // Hooks
 import { useAuth } from './context/AuthContext'
+import { ProjectProgressProvider } from './context/ProjectProgressContext'
 
 function App() {
   console.log('App component is rendering')
@@ -57,13 +58,14 @@ function App() {
 
     return (
       <ErrorBoundary>
-        <Helmet>
-          <title>GNANAM AI - AI-Powered Learning Platform</title>
-          <meta name="description" content="Experience the future of education with GNANAM AI - your intelligent learning companion" />
-        </Helmet>
-        
-        <AnimatePresence mode="wait">
-          <Routes>
+        <ProjectProgressProvider>
+          <Helmet>
+            <title>GNANAM AI - AI-Powered Learning Platform</title>
+            <meta name="description" content="Experience the future of education with GNANAM AI - your intelligent learning companion" />
+          </Helmet>
+          
+          <AnimatePresence mode="wait">
+            <Routes>
             {/* Public Routes */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -251,6 +253,7 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </AnimatePresence>
+        </ProjectProgressProvider>
       </ErrorBoundary>
     )
   } catch (error) {

@@ -135,102 +135,102 @@ const defineAssociations = () => {
 
   // Project associations
   Project.belongsTo(User, {
-    foreignKey: 'createdBy',
+    foreignKey: 'created_by',
     as: 'creator'
   });
   
   Project.belongsTo(User, {
-    foreignKey: 'updatedBy',
+    foreignKey: 'updated_by',
     as: 'updater'
   });
 
   Project.hasMany(ProjectPhase, {
-    foreignKey: 'projectId',
+    foreignKey: 'project_id',
     as: 'projectPhases',
     onDelete: 'CASCADE'
   });
 
   Project.hasMany(ProjectProgress, {
-    foreignKey: 'projectId',
+    foreignKey: 'project_id',
     as: 'progress',
     onDelete: 'CASCADE'
   });
 
   Project.hasMany(Document, {
-    foreignKey: 'projectId',
+    foreignKey: 'project_id',
     as: 'documents',
     onDelete: 'CASCADE'
   });
 
   Project.hasMany(Video, {
-    foreignKey: 'projectId',
+    foreignKey: 'project_id',
     as: 'videos',
     onDelete: 'CASCADE'
   });
 
   // Document associations
   Document.belongsTo(Project, {
-    foreignKey: 'projectId',
+    foreignKey: 'project_id',
     as: 'project'
   });
   
   Document.belongsTo(User, {
-    foreignKey: 'uploadedBy',
+    foreignKey: 'uploaded_by',
     as: 'uploader'
   });
   
   Document.belongsTo(User, {
-    foreignKey: 'updatedBy',
+    foreignKey: 'updated_by',
     as: 'updater'
   });
 
   // Video associations
   Video.belongsTo(Project, {
-    foreignKey: 'projectId',
+    foreignKey: 'project_id',
     as: 'project'
   });
   
   Video.belongsTo(User, {
-    foreignKey: 'uploadedBy',
+    foreignKey: 'uploaded_by',
     as: 'uploader'
   });
   
   Video.belongsTo(User, {
-    foreignKey: 'updatedBy',
+    foreignKey: 'updated_by',
     as: 'updater'
   });
 
   // ProjectPhase associations
   ProjectPhase.belongsTo(Project, {
-    foreignKey: 'projectId',
+    foreignKey: 'project_id',
     as: 'project'
   });
 
   ProjectPhase.hasMany(ProjectProgress, {
-    foreignKey: 'phaseId',
+    foreignKey: 'phase_id',
     as: 'progress',
     onDelete: 'CASCADE'
   });
 
   // ProjectProgress associations
   ProjectProgress.belongsTo(User, {
-    foreignKey: 'userId',
+    foreignKey: 'user_id',
     as: 'user'
   });
 
   ProjectProgress.belongsTo(Project, {
-    foreignKey: 'projectId',
+    foreignKey: 'project_id',
     as: 'project'
   });
 
   ProjectProgress.belongsTo(ProjectPhase, {
-    foreignKey: 'phaseId',
+    foreignKey: 'phase_id',
     as: 'phase'
   });
 
   // User has many ProjectProgress
   User.hasMany(ProjectProgress, {
-    foreignKey: 'userId',
+    foreignKey: 'user_id',
     as: 'projectProgress',
     onDelete: 'CASCADE'
   });

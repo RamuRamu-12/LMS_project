@@ -94,16 +94,16 @@ const AllCoursesModal = ({ isOpen, onClose }) => {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full"
+            className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full"
           >
-            <div className="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                <h3 className="text-2xl font-bold text-gray-900">
                   All Available Courses
                 </h3>
                 <button
                   onClick={onClose}
-                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -134,10 +134,10 @@ const AllCoursesModal = ({ isOpen, onClose }) => {
                         <div className="absolute top-2 right-2">
                           <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                             course.difficulty === 'beginner' 
-                              ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                              ? 'bg-green-100 text-green-800'
                               : course.difficulty === 'intermediate'
-                              ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'
-                              : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300'
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-red-100 text-red-800'
                           }`}>
                             {course.difficulty}
                           </span>
@@ -146,19 +146,19 @@ const AllCoursesModal = ({ isOpen, onClose }) => {
                       
                       <div className="p-4">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm text-indigo-600 dark:text-indigo-400 font-medium">
+                          <span className="text-sm text-indigo-600 font-medium">
                             {course.category}
                           </span>
-                          <span className="text-sm text-gray-500 dark:text-gray-400">
+                          <span className="text-sm text-gray-500">
                             {course.enrollment_count || 0} students
                           </span>
                         </div>
                         
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2">
+                        <h4 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
                           {course.title}
                         </h4>
                         
-                        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+                        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                           {course.description}
                         </p>
                         
@@ -169,7 +169,7 @@ const AllCoursesModal = ({ isOpen, onClose }) => {
                               alt={course.instructor.name}
                               className="w-5 h-5 rounded-full mr-2"
                             />
-                            <span className="text-sm text-gray-600 dark:text-gray-300">
+                            <span className="text-sm text-gray-600">
                               {course.instructor.name}
                             </span>
                           </div>
@@ -196,7 +196,7 @@ const AllCoursesModal = ({ isOpen, onClose }) => {
                                   </svg>
                                 );
                               })}
-                              <span className="ml-1 text-xs text-gray-600 dark:text-gray-300">
+                              <span className="ml-1 text-xs text-gray-600">
                                 {(() => {
                                   const rating = course.average_rating;
                                   if (rating && typeof rating === 'number' && !isNaN(rating)) {
@@ -206,7 +206,7 @@ const AllCoursesModal = ({ isOpen, onClose }) => {
                                 })()}
                               </span>
                             </div>
-                            <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
+                            <span className="text-xs text-gray-500 ml-2">
                               ({course.total_ratings || 0})
                             </span>
                           </div>

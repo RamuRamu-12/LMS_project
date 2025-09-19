@@ -60,18 +60,6 @@ const AdminProjectManagementPage = () => {
           </div>
         </div>
 
-        {/* Debug Info */}
-        <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-          <p className="text-sm text-yellow-800">
-            Debug Info: Loading: {loading.toString()}, Projects Count: {projects.length}
-            {error && <span className="text-red-600 ml-2">Error: {error.message}</span>}
-          </p>
-          {projectsData && (
-            <p className="text-sm text-blue-800 mt-1">
-              Raw API Response: {JSON.stringify(projectsData, null, 2)}
-            </p>
-          )}
-        </div>
 
         {/* Projects Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

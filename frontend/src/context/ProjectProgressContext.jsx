@@ -1,0 +1,166 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
+
+const ProjectProgressContext = createContext();
+
+export const useProjectProgress = () => {
+  const context = useContext(ProjectProgressContext);
+  if (!context) {
+    throw new Error('useProjectProgress must be used within a ProjectProgressProvider');
+  }
+  return context;
+};
+
+export const ProjectProgressProvider = ({ children }) => {
+  const [progress, setProgress] = useState({});
+
+  // Load progress from localStorage on mount
+  useEffect(() => {
+    const savedProgress = localStorage.getItem('projectProgress');
+    if (savedProgress) {
+      try {
+        setProgress(JSON.parse(savedProgress));
+      } catch (error) {
+        console.error('Error loading project progress:', error);
+      }
+    }
+  }, []);
+
+  // Save progress to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('projectProgress', JSON.stringify(progress));
+  }, [progress]);
+
+  const initializeProject = (projectId) => {
+    if (!progress[projectId]) {
+      setProgress(prev => ({
+        ...prev,
+        [projectId]: {
+          currentPhase: 'brd',
+          unlockedPhases: ['brd'],
+          unlockedModules: {
+            brd: ['overview'],
+            uiux: [],
+            architectural: [],
+            'code-development': [],
+            testing: [],
+            deployment: []
+          },
+          completedModules: {
+            brd: [],
+            uiux: [],
+            architectural: [],
+            'code-development': [],
+            testing: [],
+            deployment: []
+          }
+        }
+      }));
+    }
+  };
+
+  const unlockNextPhase = (projectId, currentPhase) => {
+    const phases = ['brd', 'uiux', 'architectural', 'code-development', 'testing', 'deployment'];
+    const currentIndex = phases.indexOf(currentPhase);
+    
+    if (currentIndex < phases.length - 1) {
+      const nextPhase = phases[currentIndex + 1];
+      setProgress(prev => ({
+        ...prev,
+        [projectId]: {
+          ...prev[projectId],
+          unlockedPhases: [...new Set([...prev[projectId].unlockedPhases, nextPhase])],
+          unlockedModules: {
+            ...prev[projectId].unlockedModules,
+            [nextPhase]: ['overview']
+          }
+        }
+      }));
+    }
+  };
+
+  const unlockNextModule = (projectId, phase, currentModule) => {
+    const moduleOrder = {
+      brd: ['overview', 'functional-requirements', 'non-functional-requirements', 'user-stories', 'conclusion'],
+      uiux: ['overview', 'wireframing', 'prototyping', 'visual-design', 'usability-testing', 'conclusion'],
+      architectural: ['overview', 'system-architecture', 'database-design', 'api-design', 'security-considerations', 'conclusion'],
+      'code-development': ['overview', 'environment-setup', 'frontend-development', 'backend-development', 'integration', 'conclusion'],
+      testing: ['overview', 'unit-testing', 'integration-testing', 'end-to-end-testing', 'performance-testing', 'conclusion'],
+      deployment: ['overview', 'deployment-strategy', 'production-setup', 'monitoring', 'maintenance', 'conclusion']
+    };
+
+    const modules = moduleOrder[phase] || [];
+    const currentIndex = modules.indexOf(currentModule);
+    
+    if (currentIndex < modules.length - 1) {
+      const nextModule = modules[currentIndex + 1];
+      setProgress(prev => ({
+        ...prev,
+        [projectId]: {
+          ...prev[projectId],
+          unlockedModules: {
+            ...prev[projectId].unlockedModules,
+            [phase]: [...new Set([...prev[projectId].unlockedModules[phase], nextModule])]
+          }
+        }
+      }));
+    }
+  };
+
+  const completeModule = (projectId, phase, module) => {
+    setProgress(prev => ({
+      ...prev,
+      [projectId]: {
+        ...prev[projectId],
+        completedModules: {
+          ...prev[projectId].completedModules,
+          [phase]: [...new Set([...prev[projectId].completedModules[phase], module])]
+        }
+      }
+    }));
+  };
+
+  const isPhaseUnlocked = (projectId, phase) => {
+    return progress[projectId]?.unlockedPhases?.includes(phase) || false;
+  };
+
+  const isModuleUnlocked = (projectId, phase, module) => {
+    return progress[projectId]?.unlockedModules?.[phase]?.includes(module) || false;
+  };
+
+  const isModuleCompleted = (projectId, phase, module) => {
+    return progress[projectId]?.completedModules?.[phase]?.includes(module) || false;
+  };
+
+  const getCurrentPhase = (projectId) => {
+    return progress[projectId]?.currentPhase || 'brd';
+  };
+
+  const setCurrentPhase = (projectId, phase) => {
+    setProgress(prev => ({
+      ...prev,
+      [projectId]: {
+        ...prev[projectId],
+        currentPhase: phase
+      }
+    }));
+  };
+
+  const value = {
+    progress,
+    initializeProject,
+    unlockNextPhase,
+    unlockNextModule,
+    completeModule,
+    isPhaseUnlocked,
+    isModuleUnlocked,
+    isModuleCompleted,
+    getCurrentPhase,
+    setCurrentPhase
+  };
+
+  return (
+    <ProjectProgressContext.Provider value={value}>
+      {children}
+    </ProjectProgressContext.Provider>
+  );
+};
