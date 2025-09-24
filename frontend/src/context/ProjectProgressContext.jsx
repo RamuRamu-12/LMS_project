@@ -39,9 +39,9 @@ export const ProjectProgressProvider = ({ children }) => {
           unlockedPhases: ['brd'],
           unlockedModules: {
             brd: ['overview'],
-            uiux: ['overview'],
-            architectural: ['overview'],
-            'code-development': ['overview'],
+            uiux: [],
+            architectural: [],
+            'code-development': [],
             testing: [],
             deployment: []
           },

@@ -89,7 +89,7 @@ const PhaseNavigationBar = ({ currentPhase = null }) => {
           {phases.map((phase, index) => {
             const isActive = currentPhase === phase.id;
             const isUnlocked = isPhaseUnlocked(projectId, phase.id);
-            const isCompleted = phases.findIndex(p => p.id === currentPhase) > index;
+            const isCompleted = false; // We'll implement proper completion logic later
             
             return (
               <motion.button
