@@ -271,80 +271,203 @@ const ArchitecturalDesignPhasePage = () => {
 
       case 'system-architecture':
         return (
-          <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">System Architecture</h3>
-            <div className="prose prose-lg max-w-none">
-              <p className="text-gray-600 leading-relaxed mb-6">
-                The system architecture defines the overall structure of the application, including the relationships 
+          <div className="space-y-8">
+            <div className="text-center">
+              <h3 className="text-3xl font-bold text-gray-800 mb-4">System Architecture</h3>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                The system architecture defines the overall structure of the E-Commerce application, including the relationships 
                 between different components, data flow, and communication patterns.
               </p>
-              
-              <div className="space-y-6">
-                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Architecture Overview</h4>
-                  <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                    <div className="text-center text-sm text-gray-600 mb-4">3-Tier Architecture</div>
+            </div>
+            
+            {/* Main Architecture Diagram */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-indigo-50 to-blue-50 px-6 py-4 border-b border-gray-200">
+                <h4 className="text-xl font-semibold text-gray-800">E-Commerce System Architecture Diagram</h4>
+                <p className="text-sm text-gray-600 mt-1">Complete system overview showing all components and their interactions</p>
+                      </div>
+              <div className="p-6">
+                <div className="flex justify-center">
+                  <img 
+                    src="/ecommerce_architecture.svg" 
+                    alt="E-Commerce System Architecture Diagram" 
+                    className="max-w-full h-auto rounded-lg shadow-sm border border-gray-200"
+                    style={{ maxHeight: '600px' }}
+                  />
+                      </div>
+                      </div>
+                    </div>
+
+            {/* Architecture Layers Explanation */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Client Layer */}
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">💻</span>
+                  </div>
+                  <h4 className="text-lg font-semibold text-gray-800">Client Applications</h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-4">Multi-platform client support for maximum accessibility</p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    Desktop Browser (Chrome, Firefox, Safari)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    Mobile Browser (iOS Safari, Chrome Mobile)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    Tablet Browser (iPad, Android Tablets)
+                  </li>
+                </ul>
+                </div>
+
+              {/* Core Services Layer */}
+              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">⚙️</span>
+                  </div>
+                  <h4 className="text-lg font-semibold text-gray-800">Core Services</h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-4">Microservices architecture for scalability and maintainability</p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Next.js Frontend & API Gateway
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Product Management Service
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Cart & Order Services
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Authentication & Payment Services
+                  </li>
+                        </ul>
+                      </div>
+
+              {/* Data & External Services Layer */}
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">🗄️</span>
+                  </div>
+                  <h4 className="text-lg font-semibold text-gray-800">Data & External Services</h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-4">Robust data storage and third-party integrations</p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    PostgreSQL Database
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    Cloudinary (Image Storage)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    Stripe (Payment Processing)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    Resend (Email Service)
+                  </li>
+                        </ul>
+                      </div>
+                    </div>
+
+            {/* Data Flow Section */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+              <h4 className="text-xl font-semibold text-gray-800 mb-6">Data Flow & Communication Patterns</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h5 className="text-lg font-medium text-gray-800 mb-4">Request Flow</h5>
                     <div className="space-y-3">
-                      <div className="bg-blue-100 rounded-lg p-3 text-center">
-                        <div className="font-medium text-blue-800">Presentation Layer</div>
-                        <div className="text-sm text-blue-600">React.js Frontend</div>
+                    <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                      <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                      <span className="text-sm text-gray-700">Client sends request to Next.js API</span>
                       </div>
-                      <div className="bg-green-100 rounded-lg p-3 text-center">
-                        <div className="font-medium text-green-800">Business Logic Layer</div>
-                        <div className="text-sm text-green-600">Node.js/Express.js API</div>
+                    <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+                      <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                      <span className="text-sm text-gray-700">API routes to appropriate microservice</span>
                       </div>
-                      <div className="bg-purple-100 rounded-lg p-3 text-center">
-                        <div className="font-medium text-purple-800">Data Layer</div>
-                        <div className="text-sm text-purple-600">PostgreSQL Database</div>
+                    <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
+                      <div className="w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                      <span className="text-sm text-gray-700">Service processes request and queries database</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
+                      <div className="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                      <span className="text-sm text-gray-700">Response sent back through API to client</span>
+                  </div>
+                  </div>
+                </div>
+                <div>
+                  <h5 className="text-lg font-medium text-gray-800 mb-4">Key Features</h5>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-800">Scalable Architecture</span>
+                        <p className="text-xs text-gray-600">Microservices can be scaled independently based on demand</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-800">High Availability</span>
+                        <p className="text-xs text-gray-600">Redundant services and database replication</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-800">Security First</span>
+                        <p className="text-xs text-gray-600">JWT authentication and encrypted data transmission</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-800">Cloud Native</span>
+                        <p className="text-xs text-gray-600">Deployed on Vercel with external service integrations</p>
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div className="bg-gray-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Key Components</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-3">
-                      <div className="bg-white rounded-lg p-4">
-                        <h5 className="font-medium text-gray-800 mb-2">Frontend Components</h5>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• User Interface (React Components)</li>
-                          <li>• State Management (Redux/Context)</li>
-                          <li>• Routing (React Router)</li>
-                          <li>• HTTP Client (Axios)</li>
-                        </ul>
-                      </div>
-                      <div className="bg-white rounded-lg p-4">
-                        <h5 className="font-medium text-gray-800 mb-2">Backend Services</h5>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• REST API Server</li>
-                          <li>• Authentication Service</li>
-                          <li>• Business Logic Controllers</li>
-                          <li>• Data Access Layer</li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="bg-white rounded-lg p-4">
-                        <h5 className="font-medium text-gray-800 mb-2">Database Layer</h5>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• PostgreSQL Database</li>
-                          <li>• Data Models & Migrations</li>
-                          <li>• Query Optimization</li>
-                          <li>• Backup & Recovery</li>
-                        </ul>
-                      </div>
-                      <div className="bg-white rounded-lg p-4">
-                        <h5 className="font-medium text-gray-800 mb-2">Infrastructure</h5>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• Cloud Hosting (AWS/Azure)</li>
-                          <li>• CDN for Static Assets</li>
-                          <li>• Load Balancing</li>
-                          <li>• Monitoring & Logging</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
+            {/* Technology Stack */}
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6">
+              <h4 className="text-xl font-semibold text-gray-800 mb-6">Technology Stack</h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                  <div className="text-2xl mb-2">⚛️</div>
+                  <div className="text-sm font-medium text-gray-800">React.js</div>
+                  <div className="text-xs text-gray-600">Frontend Framework</div>
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                  <div className="text-2xl mb-2">🚀</div>
+                  <div className="text-sm font-medium text-gray-800">Next.js</div>
+                  <div className="text-xs text-gray-600">Full-Stack Framework</div>
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                  <div className="text-2xl mb-2">🐘</div>
+                  <div className="text-sm font-medium text-gray-800">PostgreSQL</div>
+                  <div className="text-xs text-gray-600">Database</div>
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                  <div className="text-2xl mb-2">☁️</div>
+                  <div className="text-sm font-medium text-gray-800">Vercel</div>
+                  <div className="text-xs text-gray-600">Hosting Platform</div>
                 </div>
               </div>
             </div>
@@ -353,108 +476,266 @@ const ArchitecturalDesignPhasePage = () => {
 
       case 'database-design':
         return (
-          <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Database Design</h3>
-            <div className="prose prose-lg max-w-none">
-              <p className="text-gray-600 leading-relaxed mb-6">
+          <div className="space-y-8">
+            <div className="text-center">
+              <h3 className="text-3xl font-bold text-gray-800 mb-4">Database Design</h3>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
                 The database design defines the data structure, relationships, and storage requirements 
-                for the {project.title} application.
+                for the E-Commerce application, ensuring efficient data management and optimal performance.
               </p>
-              
-              <div className="space-y-6">
-                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Core Entities</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-3">
-                      <div className="bg-blue-50 rounded-lg p-3">
-                        <h5 className="font-medium text-gray-800 mb-2">Users Table</h5>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• id (Primary Key)</li>
-                          <li>• email, password_hash</li>
-                          <li>• first_name, last_name</li>
-                          <li>• role (admin/customer)</li>
-                          <li>• created_at, updated_at</li>
+            </div>
+            
+            {/* Main Database Schema Diagram */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4 border-b border-gray-200">
+                <h4 className="text-xl font-semibold text-gray-800">E-Commerce Database Schema Diagram</h4>
+                <p className="text-sm text-gray-600 mt-1">Complete database structure showing all tables, relationships, and constraints</p>
+                      </div>
+              <div className="p-6">
+                <div className="flex justify-center">
+                  <img 
+                    src="/database_design.svg" 
+                    alt="E-Commerce Database Schema Diagram" 
+                    className="max-w-full h-auto rounded-lg shadow-sm border border-gray-200"
+                    style={{ maxHeight: '600px' }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Database Overview Cards */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Core Tables */}
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">🗂️</span>
+                  </div>
+                  <h4 className="text-lg font-semibold text-gray-800">Core Tables</h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-4">Essential entities for e-commerce functionality</p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    Users (Authentication & Profiles)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    Products (Catalog Management)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    Categories (Product Organization)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    Orders (Transaction Records)
+                  </li>
                         </ul>
                       </div>
-                      <div className="bg-green-50 rounded-lg p-3">
-                        <h5 className="font-medium text-gray-800 mb-2">Products Table</h5>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• id (Primary Key)</li>
-                          <li>• name, description</li>
-                          <li>• price, category_id</li>
-                          <li>• inventory_count</li>
-                          <li>• image_url, created_at</li>
+
+              {/* Relationship Tables */}
+              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">🔗</span>
+                    </div>
+                  <h4 className="text-lg font-semibold text-gray-800">Relationship Tables</h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-4">Junction tables for complex relationships</p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Order Items (Order-Product Link)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Cart Items (Shopping Cart)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Wishlist (User-Product Favorites)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Product Categories (Many-to-Many)
+                  </li>
+                        </ul>
+                      </div>
+
+              {/* Support Tables */}
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">⚙️</span>
+                  </div>
+                  <h4 className="text-lg font-semibold text-gray-800">Support Tables</h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-4">Additional tables for enhanced functionality</p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    Addresses (User Locations)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    Reviews (Product Feedback)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    Payments (Transaction Records)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    Inventory (Stock Management)
+                  </li>
                         </ul>
                       </div>
                     </div>
-                    <div className="space-y-3">
-                      <div className="bg-purple-50 rounded-lg p-3">
-                        <h5 className="font-medium text-gray-800 mb-2">Orders Table</h5>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• id (Primary Key)</li>
-                          <li>• user_id (Foreign Key)</li>
-                          <li>• total_amount</li>
-                          <li>• status, payment_status</li>
-                          <li>• shipping_address</li>
-                        </ul>
+
+            {/* Database Relationships Section */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+              <h4 className="text-xl font-semibold text-gray-800 mb-6">Database Relationships & Constraints</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h5 className="text-lg font-medium text-gray-800 mb-4">Primary Relationships</h5>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                      <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                      <span className="text-sm text-gray-700">Users → Orders (One-to-Many)</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+                      <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                      <span className="text-sm text-gray-700">Orders → Order Items (One-to-Many)</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
+                      <div className="w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                      <span className="text-sm text-gray-700">Categories → Products (One-to-Many)</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
+                      <div className="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                      <span className="text-sm text-gray-700">Products ↔ Categories (Many-to-Many)</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h5 className="text-lg font-medium text-gray-800 mb-4">Key Constraints</h5>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-800">Primary Keys</span>
+                        <p className="text-xs text-gray-600">Auto-incrementing IDs for unique identification</p>
                       </div>
-                      <div className="bg-orange-50 rounded-lg p-3">
-                        <h5 className="font-medium text-gray-800 mb-2">Order Items Table</h5>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• id (Primary Key)</li>
-                          <li>• order_id (Foreign Key)</li>
-                          <li>• product_id (Foreign Key)</li>
-                          <li>• quantity, unit_price</li>
-                          <li>• total_price</li>
-                        </ul>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-800">Foreign Keys</span>
+                        <p className="text-xs text-gray-600">Referential integrity between related tables</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-800">Unique Constraints</span>
+                        <p className="text-xs text-gray-600">Email addresses and product SKUs must be unique</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-800">Check Constraints</span>
+                        <p className="text-xs text-gray-600">Price and quantity values must be positive</p>
                       </div>
                     </div>
                   </div>
                 </div>
+                  </div>
+                </div>
 
-                <div className="bg-gray-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Database Relationships</h4>
-                  <div className="space-y-4">
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">One-to-Many Relationships</h5>
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• User → Orders (1:many)</li>
-                        <li>• Order → Order Items (1:many)</li>
-                        <li>• Category → Products (1:many)</li>
+            {/* Performance & Optimization */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Indexing Strategy */}
+              <div className="bg-gradient-to-br from-amber-50 to-orange-100 rounded-xl p-6 border border-amber-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">⚡</span>
+                  </div>
+                  <h4 className="text-lg font-semibold text-gray-800">Indexing Strategy</h4>
+                </div>
+                <div className="space-y-3">
+                  <div className="bg-white rounded-lg p-3">
+                    <h5 className="text-sm font-medium text-gray-800 mb-2">Primary Indexes</h5>
+                    <ul className="text-xs text-gray-600 space-y-1">
+                      <li>• All primary keys (auto-indexed)</li>
+                      <li>• Foreign key columns</li>
+                      <li>• Email addresses (unique)</li>
                       </ul>
                     </div>
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Many-to-Many Relationships</h5>
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• Products ↔ Categories (many:many)</li>
-                        <li>• Users ↔ Products (Wishlist) (many:many)</li>
+                  <div className="bg-white rounded-lg p-3">
+                    <h5 className="text-sm font-medium text-gray-800 mb-2">Search Indexes</h5>
+                    <ul className="text-xs text-gray-600 space-y-1">
+                      <li>• Product names and descriptions</li>
+                      <li>• Order status and dates</li>
+                      <li>• User search patterns</li>
                       </ul>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Performance Optimizations</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <h5 className="font-medium text-gray-800 mb-2">Indexes</h5>
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• Primary keys (auto-indexed)</li>
-                        <li>• Foreign key indexes</li>
-                        <li>• Search field indexes</li>
-                        <li>• Composite indexes for queries</li>
-                      </ul>
+              {/* Query Optimization */}
+              <div className="bg-gradient-to-br from-teal-50 to-cyan-100 rounded-xl p-6 border border-teal-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-teal-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">🚀</span>
                     </div>
-                    <div>
-                      <h5 className="font-medium text-gray-800 mb-2">Query Optimization</h5>
-                      <ul className="text-sm text-gray-600 space-y-1">
+                  <h4 className="text-lg font-semibold text-gray-800">Query Optimization</h4>
+                </div>
+                <div className="space-y-3">
+                  <div className="bg-white rounded-lg p-3">
+                    <h5 className="text-sm font-medium text-gray-800 mb-2">Performance Features</h5>
+                    <ul className="text-xs text-gray-600 space-y-1">
                         <li>• Efficient JOIN operations</li>
                         <li>• Pagination for large datasets</li>
-                        <li>• Caching strategies</li>
                         <li>• Connection pooling</li>
                       </ul>
                     </div>
+                  <div className="bg-white rounded-lg p-3">
+                    <h5 className="text-sm font-medium text-gray-800 mb-2">Caching Strategy</h5>
+                    <ul className="text-xs text-gray-600 space-y-1">
+                      <li>• Redis for session data</li>
+                      <li>• Product catalog caching</li>
+                      <li>• Query result caching</li>
+                    </ul>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Database Technology Stack */}
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6">
+              <h4 className="text-xl font-semibold text-gray-800 mb-6">Database Technology Stack</h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                  <div className="text-2xl mb-2">🐘</div>
+                  <div className="text-sm font-medium text-gray-800">PostgreSQL</div>
+                  <div className="text-xs text-gray-600">Primary Database</div>
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                  <div className="text-2xl mb-2">🔧</div>
+                  <div className="text-sm font-medium text-gray-800">Prisma ORM</div>
+                  <div className="text-xs text-gray-600">Database Toolkit</div>
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                  <div className="text-2xl mb-2">⚡</div>
+                  <div className="text-sm font-medium text-gray-800">Redis</div>
+                  <div className="text-xs text-gray-600">Caching Layer</div>
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                  <div className="text-2xl mb-2">☁️</div>
+                  <div className="text-sm font-medium text-gray-800">Neon</div>
+                  <div className="text-xs text-gray-600">Cloud Database</div>
                 </div>
               </div>
             </div>
@@ -463,110 +744,284 @@ const ArchitecturalDesignPhasePage = () => {
 
       case 'api-design':
         return (
-          <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">API Design</h3>
-            <div className="prose prose-lg max-w-none">
-              <p className="text-gray-600 leading-relaxed mb-6">
+          <div className="space-y-8">
+            <div className="text-center">
+              <h3 className="text-3xl font-bold text-gray-800 mb-4">API Design</h3>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
                 The API design defines the communication interface between the frontend and backend, 
-                ensuring consistent and efficient data exchange.
+                ensuring consistent and efficient data exchange with robust security and performance.
               </p>
-              
-              <div className="space-y-6">
-                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">RESTful API Endpoints</h4>
-                  <div className="space-y-4">
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-3">Authentication Endpoints</h5>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center gap-4">
+            </div>
+            
+            {/* Main API Design Diagram */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-violet-50 to-purple-50 px-6 py-4 border-b border-gray-200">
+                <h4 className="text-xl font-semibold text-gray-800">E-Commerce API Architecture Diagram</h4>
+                <p className="text-sm text-gray-600 mt-1">Complete API structure showing endpoints, authentication, and data flow</p>
+              </div>
+              <div className="p-6">
+                <div className="flex justify-center">
+                    <img 
+                      src="/api_design_clear.svg" 
+                      alt="E-Commerce API Design Diagram" 
+                      className="max-w-full h-auto rounded-lg shadow-sm border border-gray-200"
+                      style={{ maxHeight: 'auto', width: 'auto' }}
+                    />
+                </div>
+              </div>
+            </div>
+
+            {/* API Categories Overview */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Authentication APIs */}
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">🔐</span>
+                  </div>
+                  <h4 className="text-lg font-semibold text-gray-800">Authentication APIs</h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-4">Secure user authentication and authorization</p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    User Registration & Login
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    JWT Token Management
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    Password Reset & Recovery
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    Profile Management
+                  </li>
+                </ul>
+              </div>
+
+              {/* Product APIs */}
+              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">📦</span>
+                  </div>
+                  <h4 className="text-lg font-semibold text-gray-800">Product APIs</h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-4">Product catalog and inventory management</p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Product CRUD Operations
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Category Management
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Search & Filtering
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Inventory Tracking
+                  </li>
+                </ul>
+              </div>
+
+              {/* Order APIs */}
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">🛒</span>
+                  </div>
+                  <h4 className="text-lg font-semibold text-gray-800">Order APIs</h4>
+                </div>
+                <p className="text-sm text-gray-600 mb-4">Shopping cart and order processing</p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    Cart Management
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    Order Processing
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    Payment Integration
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    Order Tracking
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* API Endpoints Section */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+              <h4 className="text-xl font-semibold text-gray-800 mb-6">RESTful API Endpoints</h4>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                  <h5 className="text-lg font-medium text-gray-800 mb-4">Authentication Endpoints</h5>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
                           <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-mono">POST</span>
                           <span className="font-mono text-gray-600">/api/auth/register</span>
-                          <span className="text-gray-500">User registration</span>
+                      <span className="text-sm text-gray-500">User registration</span>
                         </div>
-                        <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
                           <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-mono">POST</span>
                           <span className="font-mono text-gray-600">/api/auth/login</span>
-                          <span className="text-gray-500">User login</span>
+                      <span className="text-sm text-gray-500">User login</span>
                         </div>
-                        <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
                           <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-mono">GET</span>
                           <span className="font-mono text-gray-600">/api/auth/profile</span>
-                          <span className="text-gray-500">Get user profile</span>
+                      <span className="text-sm text-gray-500">Get user profile</span>
                         </div>
+                    <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                      <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-mono">PUT</span>
+                      <span className="font-mono text-gray-600">/api/auth/profile</span>
+                      <span className="text-sm text-gray-500">Update profile</span>
                       </div>
                     </div>
-
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-3">Product Endpoints</h5>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center gap-4">
+                </div>
+                <div>
+                  <h5 className="text-lg font-medium text-gray-800 mb-4">Product Endpoints</h5>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
                           <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-mono">GET</span>
                           <span className="font-mono text-gray-600">/api/products</span>
-                          <span className="text-gray-500">Get all products</span>
+                      <span className="text-sm text-gray-500">Get all products</span>
                         </div>
-                        <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
                           <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-mono">GET</span>
                           <span className="font-mono text-gray-600">/api/products/:id</span>
-                          <span className="text-gray-500">Get product by ID</span>
+                      <span className="text-sm text-gray-500">Get product by ID</span>
                         </div>
-                        <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
                           <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-mono">POST</span>
                           <span className="font-mono text-gray-600">/api/products</span>
-                          <span className="text-gray-500">Create product (Admin)</span>
+                      <span className="text-sm text-gray-500">Create product</span>
                         </div>
-                        <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
                           <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-mono">PUT</span>
                           <span className="font-mono text-gray-600">/api/products/:id</span>
-                          <span className="text-gray-500">Update product (Admin)</span>
+                      <span className="text-sm text-gray-500">Update product</span>
                         </div>
                       </div>
                     </div>
+                        </div>
+                        </div>
 
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-3">Order Endpoints</h5>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center gap-4">
-                          <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-mono">GET</span>
-                          <span className="font-mono text-gray-600">/api/orders</span>
-                          <span className="text-gray-500">Get user orders</span>
+            {/* API Standards & Features */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Request/Response Standards */}
+              <div className="bg-gradient-to-br from-amber-50 to-orange-100 rounded-xl p-6 border border-amber-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">📋</span>
                         </div>
-                        <div className="flex items-center gap-4">
-                          <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-mono">POST</span>
-                          <span className="font-mono text-gray-600">/api/orders</span>
-                          <span className="text-gray-500">Create new order</span>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-mono">GET</span>
-                          <span className="font-mono text-gray-600">/api/orders/:id</span>
-                          <span className="text-gray-500">Get order details</span>
-                        </div>
+                  <h4 className="text-lg font-semibold text-gray-800">Request/Response Standards</h4>
                       </div>
+                <div className="space-y-3">
+                  <div className="bg-white rounded-lg p-3">
+                    <h5 className="text-sm font-medium text-gray-800 mb-2">Data Format</h5>
+                    <ul className="text-xs text-gray-600 space-y-1">
+                      <li>• JSON for all requests/responses</li>
+                      <li>• Consistent error message format</li>
+                      <li>• Standardized HTTP status codes</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white rounded-lg p-3">
+                    <h5 className="text-sm font-medium text-gray-800 mb-2">Pagination</h5>
+                    <ul className="text-xs text-gray-600 space-y-1">
+                      <li>• Limit and offset parameters</li>
+                      <li>• Total count in response headers</li>
+                      <li>• Consistent pagination metadata</li>
+                    </ul>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">API Standards</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Request/Response Format</h5>
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• JSON data format</li>
-                        <li>• Consistent error handling</li>
-                        <li>• HTTP status codes</li>
-                        <li>• Pagination support</li>
+              {/* Security Features */}
+              <div className="bg-gradient-to-br from-red-50 to-pink-100 rounded-xl p-6 border border-red-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg">🛡️</span>
+                  </div>
+                  <h4 className="text-lg font-semibold text-gray-800">Security Features</h4>
+                </div>
+                <div className="space-y-3">
+                  <div className="bg-white rounded-lg p-3">
+                    <h5 className="text-sm font-medium text-gray-800 mb-2">Authentication</h5>
+                    <ul className="text-xs text-gray-600 space-y-1">
+                      <li>• JWT token-based authentication</li>
+                      <li>• Role-based access control (RBAC)</li>
+                      <li>• Token refresh mechanism</li>
                       </ul>
                     </div>
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Security</h5>
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• JWT token authentication</li>
-                        <li>• Input validation</li>
-                        <li>• Rate limiting</li>
+                  <div className="bg-white rounded-lg p-3">
+                    <h5 className="text-sm font-medium text-gray-800 mb-2">Protection</h5>
+                    <ul className="text-xs text-gray-600 space-y-1">
+                      <li>• Rate limiting per endpoint</li>
+                      <li>• Input validation & sanitization</li>
                         <li>• CORS configuration</li>
                       </ul>
                     </div>
                   </div>
+                </div>
+              </div>
+
+            {/* API Performance & Monitoring */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+              <h4 className="text-xl font-semibold text-gray-800 mb-6">API Performance & Monitoring</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-2xl mb-2">⚡</div>
+                  <div className="text-sm font-medium text-gray-800">Response Time</div>
+                  <div className="text-xs text-gray-600">Average &lt; 200ms</div>
+                </div>
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-2xl mb-2">📊</div>
+                  <div className="text-sm font-medium text-gray-800">Monitoring</div>
+                  <div className="text-xs text-gray-600">Real-time metrics</div>
+                </div>
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-2xl mb-2">🔄</div>
+                  <div className="text-sm font-medium text-gray-800">Caching</div>
+                  <div className="text-xs text-gray-600">Redis integration</div>
+                </div>
+              </div>
+            </div>
+
+            {/* API Technology Stack */}
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6">
+              <h4 className="text-xl font-semibold text-gray-800 mb-6">API Technology Stack</h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                  <div className="text-2xl mb-2">🚀</div>
+                  <div className="text-sm font-medium text-gray-800">Next.js API</div>
+                  <div className="text-xs text-gray-600">API Routes</div>
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                  <div className="text-2xl mb-2">🔧</div>
+                  <div className="text-sm font-medium text-gray-800">Prisma</div>
+                  <div className="text-xs text-gray-600">Database ORM</div>
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                  <div className="text-2xl mb-2">🔐</div>
+                  <div className="text-sm font-medium text-gray-800">JWT</div>
+                  <div className="text-xs text-gray-600">Authentication</div>
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                  <div className="text-2xl mb-2">📝</div>
+                  <div className="text-sm font-medium text-gray-800">Swagger</div>
+                  <div className="text-xs text-gray-600">API Documentation</div>
                 </div>
               </div>
             </div>
@@ -575,115 +1030,394 @@ const ArchitecturalDesignPhasePage = () => {
 
       case 'security-architecture':
         return (
-          <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Security Architecture</h3>
-            <div className="prose prose-lg max-w-none">
-              <p className="text-gray-600 leading-relaxed mb-6">
-                The security architecture ensures the protection of user data, system integrity, 
-                and compliance with security standards.
+          <div className="space-y-8">
+            <div className="text-center">
+              <h3 className="text-3xl font-bold text-gray-800 mb-4">Security Architecture</h3>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Comprehensive security measures and protocols designed to protect the E-Commerce application, 
+                ensuring data integrity, user privacy, and compliance with industry standards.
               </p>
-              
-              <div className="space-y-6">
-                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Authentication & Authorization</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-3">
-                      <div className="bg-blue-50 rounded-lg p-3">
-                        <h5 className="font-medium text-gray-800 mb-2">Authentication Methods</h5>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• JWT Token-based auth</li>
-                          <li>• Password hashing (bcrypt)</li>
-                          <li>• Session management</li>
-                          <li>• Multi-factor authentication</li>
-                        </ul>
-                      </div>
-                      <div className="bg-green-50 rounded-lg p-3">
-                        <h5 className="font-medium text-gray-800 mb-2">Role-Based Access Control</h5>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• Admin privileges</li>
-                          <li>• Customer permissions</li>
-                          <li>• Resource-level access</li>
-                          <li>• API endpoint protection</li>
-                        </ul>
-                      </div>
+            </div>
+
+            {/* Security Overview Diagram */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-red-50 to-orange-50 px-6 py-4 border-b border-gray-200">
+                <h4 className="text-xl font-semibold text-gray-800">E-Commerce Security Architecture</h4>
+                <p className="text-sm text-gray-600 mt-1">Multi-layered security approach protecting all system components</p>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Client Security */}
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-2xl">🖥️</span>
+                      <h5 className="font-semibold text-gray-800">Client Security</h5>
                     </div>
-                    <div className="space-y-3">
-                      <div className="bg-purple-50 rounded-lg p-3">
-                        <h5 className="font-medium text-gray-800 mb-2">Data Protection</h5>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• HTTPS encryption</li>
-                          <li>• Database encryption</li>
-                          <li>• Sensitive data masking</li>
-                          <li>• Secure data transmission</li>
-                        </ul>
-                      </div>
-                      <div className="bg-orange-50 rounded-lg p-3">
-                        <h5 className="font-medium text-gray-800 mb-2">Input Validation</h5>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• SQL injection prevention</li>
-                          <li>• XSS protection</li>
-                          <li>• CSRF tokens</li>
-                          <li>• Input sanitization</li>
-                        </ul>
-                      </div>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• HTTPS/TLS encryption</li>
+                      <li>• Content Security Policy (CSP)</li>
+                      <li>• XSS protection</li>
+                      <li>• Secure cookie handling</li>
+                    </ul>
+                  </div>
+
+                  {/* API Security */}
+                  <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-2xl">🔌</span>
+                      <h5 className="font-semibold text-gray-800">API Security</h5>
                     </div>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• JWT authentication</li>
+                      <li>• Rate limiting</li>
+                      <li>• Input validation</li>
+                      <li>• CORS configuration</li>
+                    </ul>
+                  </div>
+
+                  {/* Database Security */}
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-2xl">🗄️</span>
+                      <h5 className="font-semibold text-gray-800">Database Security</h5>
+                    </div>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Encrypted connections</li>
+                      <li>• SQL injection prevention</li>
+                      <li>• Access control</li>
+                      <li>• Data encryption at rest</li>
+                    </ul>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div className="bg-gray-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Security Measures</h4>
+            {/* Authentication & Authorization */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+              <h4 className="text-xl font-semibold text-gray-800 mb-6">Authentication & Authorization</h4>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                  <h5 className="text-lg font-medium text-gray-800 mb-4">Authentication Methods</h5>
                   <div className="space-y-4">
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Network Security</h5>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• Firewall configuration</li>
-                          <li>• DDoS protection</li>
-                          <li>• SSL/TLS certificates</li>
-                        </ul>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• VPN access for admin</li>
-                          <li>• Network monitoring</li>
-                          <li>• Intrusion detection</li>
-                        </ul>
+                    <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-xl">🔐</span>
+                        <h6 className="font-medium text-gray-800">JWT Token Authentication</h6>
                       </div>
+                      <p className="text-sm text-gray-600 mb-2">Secure token-based authentication with refresh mechanism</p>
+                      <ul className="text-xs text-gray-600 space-y-1">
+                        <li>• Access tokens (15 min expiry)</li>
+                        <li>• Refresh tokens (7 days expiry)</li>
+                        <li>• Automatic token refresh</li>
+                        <li>• Secure token storage</li>
+                      </ul>
                     </div>
-                    
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Application Security</h5>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• Secure coding practices</li>
-                          <li>• Regular security audits</li>
-                          <li>• Dependency scanning</li>
-                        </ul>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          <li>• Error handling</li>
-                          <li>• Logging and monitoring</li>
-                          <li>• Backup and recovery</li>
-                        </ul>
+
+                    <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-xl">🔑</span>
+                        <h6 className="font-medium text-gray-800">Password Security</h6>
                       </div>
+                      <p className="text-sm text-gray-600 mb-2">Strong password policies and secure storage</p>
+                      <ul className="text-xs text-gray-600 space-y-1">
+                        <li>• bcrypt hashing (12 rounds)</li>
+                        <li>• Minimum 8 characters</li>
+                        <li>• Special characters required</li>
+                        <li>• Password strength validation</li>
+                      </ul>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Compliance & Standards</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="text-center">
-                      <div className="text-2xl mb-2">🔒</div>
-                      <div className="font-medium text-gray-800">GDPR Compliance</div>
-                      <div className="text-sm text-gray-600">Data protection regulations</div>
+                <div>
+                  <h5 className="text-lg font-medium text-gray-800 mb-4">Role-Based Access Control</h5>
+                  <div className="space-y-4">
+                    <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-xl">👑</span>
+                        <h6 className="font-medium text-gray-800">Admin Role</h6>
+                      </div>
+                      <ul className="text-xs text-gray-600 space-y-1">
+                        <li>• Full system access</li>
+                        <li>• User management</li>
+                        <li>• Product CRUD operations</li>
+                        <li>• Order management</li>
+                        <li>• Analytics dashboard</li>
+                      </ul>
                     </div>
-                    <div className="text-center">
-                      <div className="text-2xl mb-2">🛡️</div>
-                      <div className="font-medium text-gray-800">OWASP Standards</div>
-                      <div className="text-sm text-gray-600">Web application security</div>
+
+                    <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-xl">👤</span>
+                        <h6 className="font-medium text-gray-800">Customer Role</h6>
+                      </div>
+                      <ul className="text-xs text-gray-600 space-y-1">
+                        <li>• Browse products</li>
+                        <li>• Manage cart</li>
+                        <li>• Place orders</li>
+                        <li>• View order history</li>
+                        <li>• Update profile</li>
+                      </ul>
                     </div>
-                    <div className="text-center">
-                      <div className="text-2xl mb-2">✅</div>
-                      <div className="font-medium text-gray-800">ISO 27001</div>
-                      <div className="text-sm text-gray-600">Information security management</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Data Protection */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+              <h4 className="text-xl font-semibold text-gray-800 mb-6">Data Protection & Privacy</h4>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-4 border border-indigo-200">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-2xl">🔒</span>
+                    <h5 className="font-semibold text-gray-800">Encryption</h5>
+                  </div>
+                  <ul className="text-sm text-gray-600 space-y-2">
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                      TLS 1.3 for data in transit
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                      AES-256 for data at rest
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                      Encrypted database connections
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                      Secure key management
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-gradient-to-br from-teal-50 to-teal-100 rounded-lg p-4 border border-teal-200">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-2xl">🛡️</span>
+                    <h5 className="font-semibold text-gray-800">Privacy Controls</h5>
+                  </div>
+                  <ul className="text-sm text-gray-600 space-y-2">
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-teal-500 rounded-full"></span>
+                      GDPR compliance
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-teal-500 rounded-full"></span>
+                      Data anonymization
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-teal-500 rounded-full"></span>
+                      Right to be forgotten
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-teal-500 rounded-full"></span>
+                      Consent management
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg p-4 border border-amber-200">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-2xl">🔍</span>
+                    <h5 className="font-semibold text-gray-800">Monitoring</h5>
+                  </div>
+                  <ul className="text-sm text-gray-600 space-y-2">
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+                      Real-time threat detection
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+                      Security event logging
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+                      Anomaly detection
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+                      Automated alerts
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Security Implementation */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Input Validation & Sanitization */}
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+                <h4 className="text-lg font-semibold text-gray-800 mb-4">Input Validation & Sanitization</h4>
+                <div className="space-y-4">
+                  <div className="bg-red-50 rounded-lg p-3 border border-red-200">
+                    <h5 className="font-medium text-gray-800 mb-2">SQL Injection Prevention</h5>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Parameterized queries with Prisma ORM</li>
+                      <li>• Input validation on all endpoints</li>
+                      <li>• Database query sanitization</li>
+                      <li>• Regular security testing</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-yellow-50 rounded-lg p-3 border border-yellow-200">
+                    <h5 className="font-medium text-gray-800 mb-2">XSS Protection</h5>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Content Security Policy headers</li>
+                      <li>• Input sanitization with DOMPurify</li>
+                      <li>• Output encoding</li>
+                      <li>• React's built-in XSS protection</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                    <h5 className="font-medium text-gray-800 mb-2">CSRF Protection</h5>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• CSRF tokens for state-changing operations</li>
+                      <li>• SameSite cookie attributes</li>
+                      <li>• Origin header validation</li>
+                      <li>• Double submit cookie pattern</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* API Security */}
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+                <h4 className="text-lg font-semibold text-gray-800 mb-4">API Security Measures</h4>
+                <div className="space-y-4">
+                  <div className="bg-green-50 rounded-lg p-3 border border-green-200">
+                    <h5 className="font-medium text-gray-800 mb-2">Rate Limiting</h5>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• 100 requests per minute per IP</li>
+                      <li>• 1000 requests per hour per user</li>
+                      <li>• Sliding window algorithm</li>
+                      <li>• Redis-based rate limiting</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-purple-50 rounded-lg p-3 border border-purple-200">
+                    <h5 className="font-medium text-gray-800 mb-2">Request Validation</h5>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Schema validation with Zod</li>
+                      <li>• Request size limits</li>
+                      <li>• File upload restrictions</li>
+                      <li>• Malicious payload detection</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-indigo-50 rounded-lg p-3 border border-indigo-200">
+                    <h5 className="font-medium text-gray-800 mb-2">CORS Configuration</h5>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Whitelist specific origins</li>
+                      <li>• Credentials handling</li>
+                      <li>• Preflight request handling</li>
+                      <li>• Dynamic origin validation</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Security */}
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
+              <h4 className="text-xl font-semibold text-gray-800 mb-6">Payment Security</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-2xl">💳</span>
+                  </div>
+                  <h5 className="font-semibold text-gray-800 mb-2">PCI DSS Compliance</h5>
+                  <p className="text-sm text-gray-600">Secure payment processing standards</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-2xl">🔐</span>
+                  </div>
+                  <h5 className="font-semibold text-gray-800 mb-2">Stripe Integration</h5>
+                  <p className="text-sm text-gray-600">Tokenized payment processing</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-2xl">🛡️</span>
+                  </div>
+                  <h5 className="font-semibold text-gray-800 mb-2">Fraud Detection</h5>
+                  <p className="text-sm text-gray-600">Real-time transaction monitoring</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Security Standards & Compliance */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+              <h4 className="text-xl font-semibold text-gray-800 mb-6">Security Standards & Compliance</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-3xl mb-3">🔒</div>
+                  <h5 className="font-semibold text-gray-800 mb-2">GDPR</h5>
+                  <p className="text-sm text-gray-600">EU data protection regulation compliance</p>
+                </div>
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-3xl mb-3">🛡️</div>
+                  <h5 className="font-semibold text-gray-800 mb-2">OWASP Top 10</h5>
+                  <p className="text-sm text-gray-600">Web application security risks</p>
+                </div>
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-3xl mb-3">✅</div>
+                  <h5 className="font-semibold text-gray-800 mb-2">ISO 27001</h5>
+                  <p className="text-sm text-gray-600">Information security management</p>
+                </div>
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-3xl mb-3">🔐</div>
+                  <h5 className="font-semibold text-gray-800 mb-2">SOC 2</h5>
+                  <p className="text-sm text-gray-600">Security and availability controls</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Security Monitoring & Incident Response */}
+            <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-6 border border-red-200">
+              <h4 className="text-xl font-semibold text-gray-800 mb-6">Security Monitoring & Incident Response</h4>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                  <h5 className="text-lg font-medium text-gray-800 mb-4">Real-time Monitoring</h5>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                      <div className="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                      <span className="text-sm text-gray-700">Automated threat detection</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                      <div className="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                      <span className="text-sm text-gray-700">Security event logging</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                      <div className="w-8 h-8 bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                      <span className="text-sm text-gray-700">Performance monitoring</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                      <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                      <span className="text-sm text-gray-700">Automated incident response</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h5 className="text-lg font-medium text-gray-800 mb-4">Incident Response Plan</h5>
+                  <div className="space-y-3">
+                    <div className="bg-white rounded-lg p-3">
+                      <h6 className="font-medium text-gray-800 mb-1">Detection & Analysis</h6>
+                      <p className="text-xs text-gray-600">Automated alerts and manual monitoring</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-3">
+                      <h6 className="font-medium text-gray-800 mb-1">Containment</h6>
+                      <p className="text-xs text-gray-600">Immediate threat isolation and mitigation</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-3">
+                      <h6 className="font-medium text-gray-800 mb-1">Recovery</h6>
+                      <p className="text-xs text-gray-600">System restoration and data recovery</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-3">
+                      <h6 className="font-medium text-gray-800 mb-1">Post-Incident</h6>
+                      <p className="text-xs text-gray-600">Analysis, documentation, and improvement</p>
                     </div>
                   </div>
                 </div>
@@ -880,7 +1614,7 @@ const ArchitecturalDesignPhasePage = () => {
                   { id: 'system-architecture' },
                   { id: 'database-design' },
                   { id: 'api-design' },
-                  { id: 'security-considerations' },
+                  { id: 'security-architecture' },
                   { id: 'conclusion' }
                 ];
                 const currentIndex = architecturalTabs.findIndex(tab => tab.id === selectedTab);

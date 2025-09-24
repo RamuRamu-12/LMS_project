@@ -116,28 +116,28 @@ const UIUXPhasePage = () => {
       description: 'Design phase overview and objectives'
     },
     {
-      id: 'wireframing',
-      label: 'Wireframing',
-      icon: '📐',
-      description: 'Low-fidelity wireframes and layouts'
+      id: 'design-system',
+      label: 'Design System',
+      icon: '🎨',
+      description: 'Color palette, typography, and components'
     },
     {
-      id: 'prototyping',
-      label: 'Prototyping',
-      icon: '🔧',
-      description: 'Interactive prototypes and user flows'
+      id: 'customer-pages',
+      label: 'Customer Pages',
+      icon: '👥',
+      description: 'Customer-facing pages and interfaces'
     },
     {
-      id: 'visual-design',
-      label: 'Visual Design',
-      icon: '🎭',
-      description: 'High-fidelity designs and branding'
+      id: 'admin-pages',
+      label: 'Admin Pages',
+      icon: '⚙️',
+      description: 'Administrative interface and management'
     },
     {
-      id: 'usability-testing',
-      label: 'Usability Testing',
-      icon: '🧪',
-      description: 'User testing and validation'
+      id: 'navigation-flow',
+      label: 'Navigation Flow',
+      icon: '🗺️',
+      description: 'User journey maps and navigation patterns'
     },
     {
       id: 'conclusion',
@@ -242,335 +242,848 @@ const UIUXPhasePage = () => {
           </div>
         );
 
-      case 'wireframing':
+      case 'design-system':
         return (
           <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Wireframing</h3>
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Design System</h3>
             <div className="prose prose-lg max-w-none">
               <p className="text-gray-600 leading-relaxed mb-6">
-                Wireframing is the foundation of good UX design. We create low-fidelity layouts that focus on 
-                structure, hierarchy, and user flow without visual distractions.
+                A comprehensive design system ensures consistency and efficiency across all pages and components 
+                of the E-commerce platform.
               </p>
               
-              <div className="space-y-6">
+              {project.title === 'E-Commerce Web Application' ? (
+              <div className="space-y-8">
+                {/* Color Palette */}
                 <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Key Wireframe Components</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <h4 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <span className="text-2xl">🎨</span>
+                    Simple Color Palette
+                  </h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="space-y-4">
-                      <div className="border-l-4 border-blue-500 pl-4">
-                        <h5 className="font-medium text-gray-800">Navigation Structure</h5>
-                        <p className="text-gray-600 text-sm">Main menu, breadcrumbs, and user account navigation</p>
+                      <div className="bg-blue-50 rounded-lg p-4">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-8 h-8 bg-blue-600 rounded"></div>
+                          <div>
+                            <h5 className="font-semibold text-gray-800">Primary</h5>
+                            <p className="text-sm text-gray-600">#3B82F6</p>
                       </div>
-                      <div className="border-l-4 border-green-500 pl-4">
-                        <h5 className="font-medium text-gray-800">Content Areas</h5>
-                        <p className="text-gray-600 text-sm">Header, main content, sidebar, and footer sections</p>
                       </div>
-                      <div className="border-l-4 border-purple-500 pl-4">
-                        <h5 className="font-medium text-gray-800">Interactive Elements</h5>
-                        <p className="text-gray-600 text-sm">Buttons, forms, modals, and call-to-action areas</p>
+                        <p className="text-xs text-gray-500">Main brand color for buttons, links, and highlights</p>
+                      </div>
+                      
+                      <div className="bg-green-50 rounded-lg p-4">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-8 h-8 bg-green-600 rounded"></div>
+                          <div>
+                            <h5 className="font-semibold text-gray-800">Success</h5>
+                            <p className="text-sm text-gray-600">#10B981</p>
+                    </div>
+                        </div>
+                        <p className="text-xs text-gray-500">Success states, confirmations, and positive actions</p>
                       </div>
                     </div>
+                    
                     <div className="space-y-4">
-                      <div className="border-l-4 border-orange-500 pl-4">
-                        <h5 className="font-medium text-gray-800">Information Architecture</h5>
-                        <p className="text-gray-600 text-sm">Content hierarchy and information organization</p>
+                      <div className="bg-red-50 rounded-lg p-4">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-8 h-8 bg-red-600 rounded"></div>
+                          <div>
+                            <h5 className="font-semibold text-gray-800">Error</h5>
+                            <p className="text-sm text-gray-600">#EF4444</p>
                       </div>
-                      <div className="border-l-4 border-red-500 pl-4">
-                        <h5 className="font-medium text-gray-800">User Flow</h5>
-                        <p className="text-gray-600 text-sm">Step-by-step user journey through the application</p>
                       </div>
-                      <div className="border-l-4 border-indigo-500 pl-4">
-                        <h5 className="font-medium text-gray-800">Responsive Breakpoints</h5>
-                        <p className="text-gray-600 text-sm">Mobile, tablet, and desktop layout variations</p>
+                        <p className="text-xs text-gray-500">Error states, warnings, and destructive actions</p>
                       </div>
+                      
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-8 h-8 bg-gray-600 rounded"></div>
+                          <div>
+                            <h5 className="font-semibold text-gray-800">Text</h5>
+                            <p className="text-sm text-gray-600">#374151</p>
                     </div>
+                        </div>
+                        <p className="text-xs text-gray-500">Primary text color for readability</p>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Wireframe Tools & Methods</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="bg-white rounded-lg p-4 text-center">
-                      <div className="text-2xl mb-2">📱</div>
-                      <h5 className="font-medium text-gray-800">Figma</h5>
-                      <p className="text-sm text-gray-600">Collaborative design tool</p>
+                    <div className="space-y-4">
+                      <div className="bg-white rounded-lg p-4 border border-gray-200">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-8 h-8 bg-white border border-gray-300 rounded"></div>
+                          <div>
+                            <h5 className="font-semibold text-gray-800">Background</h5>
+                            <p className="text-sm text-gray-600">#FFFFFF</p>
                     </div>
-                    <div className="bg-white rounded-lg p-4 text-center">
-                      <div className="text-2xl mb-2">✏️</div>
-                      <h5 className="font-medium text-gray-800">Sketch</h5>
-                      <p className="text-sm text-gray-600">Vector-based design</p>
                     </div>
-                    <div className="bg-white rounded-lg p-4 text-center">
-                      <div className="text-2xl mb-2">📋</div>
-                      <h5 className="font-medium text-gray-800">Paper & Pencil</h5>
-                      <p className="text-sm text-gray-600">Rapid ideation</p>
+                        <p className="text-xs text-gray-500">Main background color for pages and cards</p>
                     </div>
+                      
+                      <div className="bg-gray-100 rounded-lg p-4">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-8 h-8 bg-gray-300 rounded"></div>
+                          <div>
+                            <h5 className="font-semibold text-gray-800">Border</h5>
+                            <p className="text-sm text-gray-600">#E5E7EB</p>
                   </div>
                 </div>
+                        <p className="text-xs text-gray-500">Subtle borders and dividers</p>
               </div>
             </div>
           </div>
-        );
+                </div>
 
-      case 'prototyping':
-        return (
-          <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Prototyping</h3>
-            <div className="prose prose-lg max-w-none">
-              <p className="text-gray-600 leading-relaxed mb-6">
-                Prototypes bring wireframes to life with interactive elements, allowing stakeholders to experience 
-                the user journey before development begins.
-              </p>
+                {/* Typography */}
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <span className="text-2xl">📝</span>
+                    Typography
+                  </h4>
               
               <div className="space-y-6">
-                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Prototype Types</h4>
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <h5 className="font-semibold text-gray-800 mb-3">Font Family</h5>
+                      <div className="bg-white rounded-lg p-4 border border-gray-200">
+                        <p className="text-lg font-medium text-gray-800 mb-2">Inter (Google Fonts)</p>
+                        <p className="text-sm text-gray-600">Clean, modern, and highly readable font for web interfaces</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div className="bg-blue-50 rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Low-Fidelity Prototypes</h5>
-                      <p className="text-gray-600 text-sm mb-2">Basic clickable wireframes with simple interactions</p>
-                      <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Click-through navigation</li>
-                        <li>• Basic form interactions</li>
-                        <li>• Simple state changes</li>
-                      </ul>
+                          <h6 className="font-semibold text-gray-800 mb-2">Headers</h6>
+                          <div className="space-y-2">
+                            <div className="text-2xl font-bold text-gray-800">24px, Bold</div>
+                            <p className="text-xs text-gray-500">Page titles and main headings</p>
+                          </div>
                     </div>
                     
                     <div className="bg-green-50 rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">High-Fidelity Prototypes</h5>
-                      <p className="text-gray-600 text-sm mb-2">Detailed prototypes with realistic content and interactions</p>
-                      <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Realistic data and content</li>
-                        <li>• Advanced animations</li>
-                        <li>• Complete user flows</li>
-                      </ul>
+                          <h6 className="font-semibold text-gray-800 mb-2">Body</h6>
+                          <div className="space-y-2">
+                            <div className="text-base text-gray-600">16px, Regular</div>
+                            <p className="text-xs text-gray-500">Main content and descriptions</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Key User Flows</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">User Registration</h5>
-                      <div className="text-sm text-gray-600 space-y-1">
-                        <div>1. Landing page → Sign up</div>
-                        <div>2. Form validation → Confirmation</div>
-                        <div>3. Email verification → Dashboard</div>
+                      <div className="space-y-4">
+                        <div className="bg-purple-50 rounded-lg p-4">
+                          <h6 className="font-semibold text-gray-800 mb-2">Small</h6>
+                          <div className="space-y-2">
+                            <div className="text-sm text-gray-500">14px, Regular</div>
+                            <p className="text-xs text-gray-500">Captions, labels, and secondary text</p>
                       </div>
                     </div>
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Product Purchase</h5>
-                      <div className="text-sm text-gray-600 space-y-1">
-                        <div>1. Browse products → Add to cart</div>
-                        <div>2. Review cart → Checkout</div>
-                        <div>3. Payment → Order confirmation</div>
+                        
+                        <div className="bg-orange-50 rounded-lg p-4">
+                          <h6 className="font-semibold text-gray-800 mb-2">Usage Guidelines</h6>
+                          <ul className="text-xs text-gray-500 space-y-1">
+                            <li>• Maintain consistent line height (1.5)</li>
+                            <li>• Use proper contrast ratios</li>
+                            <li>• Limit to 2-3 font weights</li>
+                          </ul>
                       </div>
                     </div>
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Admin Management</h5>
-                      <div className="text-sm text-gray-600 space-y-1">
-                        <div>1. Login → Dashboard</div>
-                        <div>2. Manage products → Update inventory</div>
-                        <div>3. View orders → Update status</div>
                       </div>
                     </div>
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Search & Filter</h5>
-                      <div className="text-sm text-gray-600 space-y-1">
-                        <div>1. Search input → Results</div>
-                        <div>2. Apply filters → Refined results</div>
-                        <div>3. Sort options → Final selection</div>
+                      </div>
+
+                {/* Simple Components */}
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <span className="text-2xl">🧩</span>
+                    Simple Components
+                  </h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <h5 className="font-semibold text-gray-800 mb-3">Buttons</h5>
+                      <div className="space-y-3">
+                        <div className="px-4 py-2 bg-blue-600 text-white text-sm rounded text-center">Primary Button</div>
+                        <div className="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded text-center">Secondary Button</div>
+                        <p className="text-xs text-gray-500">40px height, rounded corners</p>
+                    </div>
+                  </div>
+                    
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <h5 className="font-semibold text-gray-800 mb-3">Cards</h5>
+                      <div className="space-y-3">
+                        <div className="bg-white border border-gray-200 rounded p-4">
+                          <div className="w-full h-16 bg-gray-100 rounded mb-2"></div>
+                          <div className="text-sm text-gray-600">Card Content</div>
+                </div>
+                        <p className="text-xs text-gray-500">White background, light border, 16px padding</p>
+              </div>
+            </div>
+                    
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <h5 className="font-semibold text-gray-800 mb-3">Inputs</h5>
+                      <div className="space-y-3">
+                        <input 
+                          type="text" 
+                          placeholder="Input field" 
+                          className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+                          disabled
+                        />
+                        <p className="text-xs text-gray-500">40px height, light border</p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        );
-
-      case 'visual-design':
-        return (
-          <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Visual Design</h3>
-            <div className="prose prose-lg max-w-none">
-              <p className="text-gray-600 leading-relaxed mb-6">
-                Visual design brings the wireframes and prototypes to life with colors, typography, imagery, 
-                and branding that creates an engaging and professional user experience.
-              </p>
-              
+              ) : (
+                // Generic content for other projects
               <div className="space-y-6">
                 <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
                   <h4 className="text-lg font-semibold text-gray-800 mb-4">Design System</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
                       <div>
-                        <h5 className="font-medium text-gray-800 mb-2">Color Palette</h5>
+                        <h5 className="font-medium text-gray-700 mb-2">Color Palette</h5>
                         <div className="flex space-x-2">
                           <div className="w-8 h-8 bg-blue-600 rounded"></div>
                           <div className="w-8 h-8 bg-green-600 rounded"></div>
                           <div className="w-8 h-8 bg-purple-600 rounded"></div>
                           <div className="w-8 h-8 bg-orange-600 rounded"></div>
                         </div>
-                        <p className="text-sm text-gray-600 mt-2">Primary, secondary, and accent colors</p>
                       </div>
                       <div>
-                        <h5 className="font-medium text-gray-800 mb-2">Typography</h5>
+                        <h5 className="font-medium text-gray-700 mb-2">Typography</h5>
                         <div className="space-y-1">
                           <div className="text-2xl font-bold text-gray-800">Headings</div>
-                          <div className="text-lg font-semibold text-gray-700">Subheadings</div>
                           <div className="text-base text-gray-600">Body text</div>
-                          <div className="text-sm text-gray-500">Captions</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-4">
-                      <div>
-                        <h5 className="font-medium text-gray-800 mb-2">Spacing Scale</h5>
-                        <div className="space-y-2">
-                          <div className="flex items-center space-x-2">
-                            <div className="w-2 h-2 bg-gray-400 rounded"></div>
-                            <span className="text-sm text-gray-600">4px - xs</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-4 h-4 bg-gray-400 rounded"></div>
-                            <span className="text-sm text-gray-600">8px - sm</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-6 h-6 bg-gray-400 rounded"></div>
-                            <span className="text-sm text-gray-600">16px - md</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 bg-gray-400 rounded"></div>
-                            <span className="text-sm text-gray-600">32px - lg</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <h5 className="font-medium text-gray-800 mb-2">Component Library</h5>
-                        <div className="space-y-2">
-                          <div className="px-3 py-1 bg-blue-600 text-white text-sm rounded">Button</div>
-                          <div className="px-3 py-1 border border-gray-300 text-sm rounded">Input</div>
-                          <div className="px-3 py-1 bg-gray-100 text-sm rounded">Card</div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-
-                <div className="bg-gray-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Key Design Principles</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Consistency</h5>
-                      <p className="text-sm text-gray-600">Uniform design patterns across all pages and components</p>
-                    </div>
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Accessibility</h5>
-                      <p className="text-sm text-gray-600">WCAG 2.1 compliance for inclusive design</p>
-                    </div>
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Responsiveness</h5>
-                      <p className="text-sm text-gray-600">Seamless experience across all device sizes</p>
-                    </div>
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Brand Alignment</h5>
-                      <p className="text-sm text-gray-600">Visual identity that reflects company values</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         );
 
-      case 'usability-testing':
+      case 'customer-pages':
         return (
           <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Usability Testing</h3>
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Customer Pages</h3>
             <div className="prose prose-lg max-w-none">
               <p className="text-gray-600 leading-relaxed mb-6">
-                Usability testing validates our design decisions with real users, ensuring the interface 
-                is intuitive, efficient, and meets user needs and expectations.
+                Customer-facing pages designed for optimal user experience and conversion. These pages form the 
+                core of the E-commerce platform's user interface.
               </p>
               
-              <div className="space-y-6">
+              {project.title === 'E-Commerce Web Application' ? (
+              <div className="space-y-8">
+                {/* Homepage Wireframe */}
                 <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Testing Methods</h4>
-                  <div className="space-y-4">
-                    <div className="bg-blue-50 rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Moderated Testing</h5>
-                      <p className="text-gray-600 text-sm mb-2">One-on-one sessions with guided tasks and real-time feedback</p>
-                      <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• In-person or remote sessions</li>
-                        <li>• Think-aloud protocol</li>
-                        <li>• Detailed observation and notes</li>
-                      </ul>
-                    </div>
-                    
-                    <div className="bg-green-50 rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Unmoderated Testing</h5>
-                      <p className="text-gray-600 text-sm mb-2">Self-guided testing with automated data collection</p>
-                      <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Remote testing platforms</li>
-                        <li>• Screen recording and analytics</li>
-                        <li>• Larger sample sizes</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-gray-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Key Testing Scenarios</h4>
-                  <div className="space-y-4">
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Task 1: User Registration</h5>
-                      <p className="text-sm text-gray-600 mb-2">"Create a new account and complete your profile"</p>
-                      <div className="text-xs text-gray-500">
-                        <strong>Success Criteria:</strong> Complete registration in under 3 minutes with no errors
-                      </div>
-                    </div>
-                    
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Task 2: Product Discovery</h5>
-                      <p className="text-sm text-gray-600 mb-2">"Find a specific product and add it to your cart"</p>
-                      <div className="text-xs text-gray-500">
-                        <strong>Success Criteria:</strong> Locate product using search or filters within 2 minutes
-                      </div>
-                    </div>
-                    
-                    <div className="bg-white rounded-lg p-4">
-                      <h5 className="font-medium text-gray-800 mb-2">Task 3: Checkout Process</h5>
-                      <p className="text-sm text-gray-600 mb-2">"Complete a purchase with payment information"</p>
-                      <div className="text-xs text-gray-500">
-                        <strong>Success Criteria:</strong> Complete checkout without confusion or errors
+                  <h4 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <span className="text-2xl">🏠</span>
+                    Homepage
+                  </h4>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4 overflow-x-auto">
+                    <div className="min-w-max">
+                      <div className="bg-white border-2 border-gray-300 rounded-lg p-4 font-mono text-xs">
+                        <div className="border-b border-gray-300 pb-2 mb-4">
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold">[Logo] [Home] [Products] [About] [Contact] [Cart] [Login]</span>
+                          </div>
+                        </div>
+                        
+                        <div className="text-center py-8 mb-6">
+                          <div className="text-lg font-bold mb-2">Welcome to Our Store</div>
+                          <div className="text-sm mb-4">Shop Amazing Products</div>
+                          <div className="bg-blue-600 text-white px-4 py-2 rounded text-xs inline-block">[Shop Now]</div>
+                        </div>
+                        
+                        <div className="bg-gray-200 h-32 rounded mb-4 flex items-center justify-center">
+                          <span className="text-gray-500">[Hero Image]</span>
+                        </div>
+                        
+                        <div className="border-t border-gray-300 pt-4">
+                          <div className="text-center font-bold mb-4">Featured Products</div>
+                          <div className="grid grid-cols-4 gap-2">
+                            {[1,2,3,4].map(i => (
+                              <div key={i} className="border border-gray-300 rounded p-2 text-center">
+                                <div className="bg-gray-200 h-16 rounded mb-1"></div>
+                                <div className="text-xs">Product {i}</div>
+                                <div className="text-xs font-bold">$99.99</div>
+                                <div className="bg-blue-600 text-white px-2 py-1 rounded text-xs mt-1">[Add Cart]</div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <div className="border-t border-gray-300 pt-4 mt-4 text-center text-xs">
+                          <div>[About] [Contact] [Privacy] [Terms]</div>
+                          <div className="mt-2">© 2024 E-Commerce Platform. All rights reserved.</div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Testing Metrics</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-purple-600">95%</div>
-                      <div className="text-sm text-gray-600">Task Completion Rate</div>
+                {/* Products Page Wireframe */}
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <span className="text-2xl">🛍️</span>
+                    Products Page
+                  </h4>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4 overflow-x-auto">
+                    <div className="min-w-max">
+                      <div className="bg-white border-2 border-gray-300 rounded-lg p-4 font-mono text-xs">
+                        <div className="border-b border-gray-300 pb-2 mb-4">
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold">[Logo] [Home] [Products] [About] [Contact] [Cart] [Login]</span>
+                          </div>
+                        </div>
+                        
+                        <div className="font-bold mb-4">Products</div>
+                        
+                        <div className="grid grid-cols-4 gap-2 mb-4">
+                          {[1,2,3,4].map(i => (
+                            <div key={i} className="border border-gray-300 rounded p-2 text-center">
+                              <div className="bg-gray-200 h-16 rounded mb-1"></div>
+                              <div className="text-xs">Product {i}</div>
+                              <div className="text-xs font-bold">$99.99</div>
+                              <div className="bg-blue-600 text-white px-2 py-1 rounded text-xs mt-1">[Add Cart]</div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="grid grid-cols-4 gap-2 mb-4">
+                          {[5,6,7,8].map(i => (
+                            <div key={i} className="border border-gray-300 rounded p-2 text-center">
+                              <div className="bg-gray-200 h-16 rounded mb-1"></div>
+                              <div className="text-xs">Product {i}</div>
+                              <div className="text-xs font-bold">$99.99</div>
+                              <div className="bg-blue-600 text-white px-2 py-1 rounded text-xs mt-1">[Add Cart]</div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="text-center">
+                          <span className="text-xs">[Previous] 1 2 3 [Next]</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-600">2.3 min</div>
-                      <div className="text-sm text-gray-600">Average Task Time</div>
+                  </div>
+                </div>
+
+                {/* Product Detail Page Wireframe */}
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <span className="text-2xl">📦</span>
+                    Product Detail Page
+                  </h4>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4 overflow-x-auto">
+                    <div className="min-w-max">
+                      <div className="bg-white border-2 border-gray-300 rounded-lg p-4 font-mono text-xs">
+                        <div className="border-b border-gray-300 pb-2 mb-4">
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold">[Logo] [Home] [Products] [About] [Contact] [Cart] [Login]</span>
+                          </div>
+                        </div>
+                        
+                        <div className="text-xs mb-4">Home &gt; Products &gt; Product Name</div>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="border border-gray-300 rounded p-4">
+                            <div className="bg-gray-200 h-32 rounded mb-2 flex items-center justify-center">
+                              <span className="text-gray-500">Main Image</span>
+                            </div>
+                          </div>
+                          <div className="space-y-3">
+                            <div className="font-bold">Product Name</div>
+                            <div className="font-bold text-lg">$99.99</div>
+                            <div className="text-xs">
+                              <div>Description:</div>
+                              <div>This is a great product</div>
+                            </div>
+                            <div className="text-xs">
+                              <div>Quantity: [1] [+][-]</div>
+                            </div>
+                            <div className="bg-blue-600 text-white px-4 py-2 rounded text-xs inline-block">[Add to Cart]</div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">4.2/5</div>
-                      <div className="text-sm text-gray-600">User Satisfaction</div>
+                  </div>
+                </div>
+
+                {/* Cart Page Wireframe */}
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <span className="text-2xl">🛒</span>
+                    Shopping Cart Page
+                  </h4>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4 overflow-x-auto">
+                    <div className="min-w-max">
+                      <div className="bg-white border-2 border-gray-300 rounded-lg p-4 font-mono text-xs">
+                        <div className="border-b border-gray-300 pb-2 mb-4">
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold">[Logo] [Home] [Products] [About] [Contact] [Cart(2)] [Login]</span>
+                          </div>
+                        </div>
+                        
+                        <div className="font-bold mb-4">Shopping Cart (2 items)</div>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                      <div>
+                            <div className="font-bold mb-2">Cart Items</div>
+                        <div className="space-y-2">
+                              <div className="border border-gray-300 rounded p-2 flex items-center gap-2">
+                                <div className="bg-gray-200 w-12 h-12 rounded"></div>
+                                <div className="flex-1">
+                                  <div className="font-bold">Product 1</div>
+                                  <div>$99.99</div>
+                                  <div className="text-xs">Qty: [1] [+][-] [Remove]</div>
+                          </div>
+                          </div>
+                              <div className="border border-gray-300 rounded p-2 flex items-center gap-2">
+                                <div className="bg-gray-200 w-12 h-12 rounded"></div>
+                                <div className="flex-1">
+                                  <div className="font-bold">Product 2</div>
+                                  <div>$149.99</div>
+                                  <div className="text-xs">Qty: [1] [+][-] [Remove]</div>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                            <div className="font-bold mb-2">Order Summary</div>
+                            <div className="border border-gray-300 rounded p-2 space-y-1">
+                              <div className="text-xs">Subtotal: $249.98</div>
+                              <div className="text-xs">Tax: $20.00</div>
+                              <div className="text-xs border-t border-gray-300 pt-1">Total: $269.98</div>
+                              <div className="bg-blue-600 text-white px-4 py-2 rounded text-xs mt-2 text-center">[Checkout]</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Checkout Page Wireframe */}
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <span className="text-2xl">💳</span>
+                    Checkout Page
+                  </h4>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4 overflow-x-auto">
+                    <div className="min-w-max">
+                      <div className="bg-white border-2 border-gray-300 rounded-lg p-4 font-mono text-xs">
+                        <div className="border-b border-gray-300 pb-2 mb-4">
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold">[Logo] [Home] [Products] [About] [Contact] [Cart] [Login]</span>
+                          </div>
+                        </div>
+                        
+                        <div className="font-bold mb-4">Checkout</div>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <div className="font-bold mb-2">Shipping Info</div>
+                        <div className="space-y-2">
+                              <div>
+                                <div className="text-xs">Full Name</div>
+                                <div className="border border-gray-300 rounded px-2 py-1">[___________________]</div>
+                        </div>
+                              <div>
+                                <div className="text-xs">Email</div>
+                                <div className="border border-gray-300 rounded px-2 py-1">[___________________]</div>
+                      </div>
+                              <div>
+                                <div className="text-xs">Address</div>
+                                <div className="border border-gray-300 rounded px-2 py-1">[___________________]</div>
+                              </div>
+                              <div>
+                                <div className="text-xs">City</div>
+                                <div className="border border-gray-300 rounded px-2 py-1">[___________________]</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div>
+                            <div className="font-bold mb-2">Order Summary</div>
+                            <div className="border border-gray-300 rounded p-2 space-y-1">
+                              <div className="text-xs">Product 1 - $99.99</div>
+                              <div className="text-xs">Product 2 - $149.99</div>
+                              <div className="text-xs border-t border-gray-300 pt-1">Subtotal: $249.98</div>
+                              <div className="text-xs">Tax: $20.00</div>
+                              <div className="text-xs border-t border-gray-300 pt-1">Total: $269.98</div>
+                              <div className="bg-blue-600 text-white px-4 py-2 rounded text-xs mt-2 text-center">[Continue to Payment]</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Login Page Wireframe */}
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <span className="text-2xl">🔐</span>
+                    Login Page
+                  </h4>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4 overflow-x-auto">
+                    <div className="min-w-max">
+                      <div className="bg-white border-2 border-gray-300 rounded-lg p-4 font-mono text-xs">
+                        <div className="border-b border-gray-300 pb-2 mb-4">
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold">[Logo]</span>
+                            <span className="text-xs">[Back to Home]</span>
+                    </div>
+                    </div>
+                        
+                        <div className="text-center py-8">
+                          <div className="font-bold text-lg mb-4">Login to Our Store</div>
+                          
+                          <div className="border border-gray-300 rounded p-4 max-w-sm mx-auto">
+                            <div className="space-y-3">
+                              <div>
+                                <div className="text-xs mb-1">Email</div>
+                                <div className="border border-gray-300 rounded px-2 py-1">[_____________________________]</div>
+                    </div>
+                              <div>
+                                <div className="text-xs mb-1">Password</div>
+                                <div className="border border-gray-300 rounded px-2 py-1">[_____________________________]</div>
+                    </div>
+                              <div className="bg-blue-600 text-white px-4 py-2 rounded text-center">[Login]</div>
+                              <div className="text-center text-xs">Don't have an account? [Sign Up]</div>
+                  </div>
+                </div>
+              </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+              ) : (
+                // Generic content for other projects
+                <div className="space-y-6">
+                  <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                    <h4 className="text-lg font-semibold text-gray-800 mb-4">Customer Pages</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <h5 className="font-medium text-gray-800 mb-2">Homepage</h5>
+                        <p className="text-sm text-gray-600">Main landing page with navigation and key content</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <h5 className="font-medium text-gray-800 mb-2">Product Pages</h5>
+                        <p className="text-sm text-gray-600">Product listing and detail pages</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         );
+
+      case 'admin-pages':
+        return (
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Admin Pages</h3>
+            <div className="prose prose-lg max-w-none">
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Administrative interface designed for efficient management of products, orders, and system operations.
+              </p>
+              
+              {project.title === 'E-Commerce Web Application' ? (
+              <div className="space-y-8">
+                {/* Admin Dashboard Wireframe */}
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <span className="text-2xl">📊</span>
+                    Admin Dashboard
+                  </h4>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4 overflow-x-auto">
+                    <div className="min-w-max">
+                      <div className="bg-white border-2 border-gray-300 rounded-lg p-4 font-mono text-xs">
+                        <div className="border-b border-gray-300 pb-2 mb-4">
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold">[Admin Logo] [Dashboard] [Products] [Orders] [Logout]</span>
+                          </div>
+                    </div>
+                    
+                        <div className="font-bold mb-4">Dashboard</div>
+                        
+                        <div className="border border-gray-300 rounded p-4 mb-4">
+                          <div className="font-bold mb-2">Key Metrics</div>
+                          <div className="grid grid-cols-4 gap-2">
+                            {[
+                              { title: 'Total Orders', value: '1,234' },
+                              { title: "Today's Orders", value: '45' },
+                              { title: 'Pending Orders', value: '23' },
+                              { title: 'Revenue This Month', value: '$45,678' }
+                            ].map((metric, i) => (
+                              <div key={i} className="border border-gray-300 rounded p-2 text-center">
+                                <div className="text-xs font-bold">{metric.title}</div>
+                                <div className="text-sm font-bold">{metric.value}</div>
+                    </div>
+                            ))}
+                  </div>
+                </div>
+
+                        <div className="border border-gray-300 rounded p-4">
+                          <div className="font-bold mb-2">Recent Orders</div>
+                          <div className="space-y-1">
+                            <div className="border border-gray-300 rounded p-2">
+                              <div className="text-xs">Order #12345 - John Doe - $99.99</div>
+                              <div className="text-xs">Status: Pending - [Process] [View]</div>
+                            </div>
+                          </div>
+                          <div className="text-center mt-2">
+                            <span className="text-xs">[View All Orders]</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                      </div>
+                    </div>
+                    
+                {/* Admin Products Page Wireframe */}
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <span className="text-2xl">📦</span>
+                    Admin Products Page
+                  </h4>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4 overflow-x-auto">
+                    <div className="min-w-max">
+                      <div className="bg-white border-2 border-gray-300 rounded-lg p-4 font-mono text-xs">
+                        <div className="border-b border-gray-300 pb-2 mb-4">
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold">[Admin Logo] [Dashboard] [Products] [Orders] [Logout]</span>
+                      </div>
+                    </div>
+                    
+                        <div className="font-bold mb-4">Products</div>
+                        <div className="mb-4">
+                          <span className="bg-blue-600 text-white px-3 py-1 rounded text-xs">[Add New Product]</span>
+                      </div>
+                        
+                        <div className="border border-gray-300 rounded p-4">
+                          <div className="font-bold mb-2">Product List</div>
+                          <div className="space-y-2">
+                            <div className="border border-gray-300 rounded p-2 flex items-center gap-2">
+                              <div className="bg-gray-200 w-12 h-12 rounded"></div>
+                              <div className="flex-1">
+                                <div className="font-bold">Product 1 - $99.99</div>
+                                <div className="text-xs">Stock: 15 units</div>
+                              </div>
+                              <div className="space-x-1">
+                                <span className="bg-green-600 text-white px-2 py-1 rounded text-xs">[Edit]</span>
+                                <span className="bg-red-600 text-white px-2 py-1 rounded text-xs">[Delete]</span>
+                              </div>
+                            </div>
+                            <div className="border border-gray-300 rounded p-2 flex items-center gap-2">
+                              <div className="bg-gray-200 w-12 h-12 rounded"></div>
+                              <div className="flex-1">
+                                <div className="font-bold">Product 2 - $149.99</div>
+                                <div className="text-xs">Stock: 8 units</div>
+                              </div>
+                              <div className="space-x-1">
+                                <span className="bg-green-600 text-white px-2 py-1 rounded text-xs">[Edit]</span>
+                                <span className="bg-red-600 text-white px-2 py-1 rounded text-xs">[Delete]</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="text-center mt-2">
+                            <span className="text-xs">[Previous] 1 2 3 [Next]</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Admin Orders Page Wireframe */}
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <span className="text-2xl">📋</span>
+                    Admin Orders Page
+                  </h4>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4 overflow-x-auto">
+                    <div className="min-w-max">
+                      <div className="bg-white border-2 border-gray-300 rounded-lg p-4 font-mono text-xs">
+                        <div className="border-b border-gray-300 pb-2 mb-4">
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold">[Admin Logo] [Dashboard] [Products] [Orders] [Logout]</span>
+                    </div>
+                    </div>
+                        
+                        <div className="font-bold mb-4">Orders</div>
+                        
+                        <div className="border border-gray-300 rounded p-4">
+                          <div className="font-bold mb-2">Order List</div>
+                          <div className="space-y-2">
+                            <div className="border border-gray-300 rounded p-2">
+                              <div className="text-xs font-bold">Order #12345 - John Doe</div>
+                              <div className="text-xs">Date: Dec 20, 2024</div>
+                              <div className="text-xs">Total: $99.99</div>
+                              <div className="text-xs">Status: [Pending ▼] [Process] [View]</div>
+                    </div>
+                            <div className="border border-gray-300 rounded p-2">
+                              <div className="text-xs font-bold">Order #12344 - Jane Smith</div>
+                              <div className="text-xs">Date: Dec 19, 2024</div>
+                              <div className="text-xs">Total: $149.99</div>
+                              <div className="text-xs">Status: [Shipped ▼] [Track] [View]</div>
+                  </div>
+                </div>
+                          <div className="text-center mt-2">
+                            <span className="text-xs">[Previous] 1 2 3 [Next]</span>
+              </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              ) : (
+                // Generic content for other projects
+                <div className="space-y-6">
+                  <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                    <h4 className="text-lg font-semibold text-gray-800 mb-4">Admin Pages</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <h5 className="font-medium text-gray-800 mb-2">Dashboard</h5>
+                        <p className="text-sm text-gray-600">Main admin dashboard with key metrics</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <h5 className="font-medium text-gray-800 mb-2">Management</h5>
+                        <p className="text-sm text-gray-600">Content and data management interfaces</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+
+      case 'navigation-flow':
+        return (
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Navigation Flow</h3>
+            <div className="prose prose-lg max-w-none">
+              <p className="text-gray-600 leading-relaxed mb-6">
+                User journey maps and navigation patterns that guide users through the E-commerce platform.
+              </p>
+              
+              {project.title === 'E-Commerce Web Application' ? (
+              <div className="space-y-8">
+                {/* Customer Flow */}
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <span className="text-2xl">👥</span>
+                    Customer Flow
+                  </h4>
+                  
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6">
+                    <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+                      <div className="bg-white rounded-lg p-3 shadow-sm border border-blue-200">
+                        <div className="font-bold text-blue-800">Homepage</div>
+                      </div>
+                      <div className="text-gray-500">→</div>
+                      <div className="bg-white rounded-lg p-3 shadow-sm border border-green-200">
+                        <div className="font-bold text-green-800">Products</div>
+                      </div>
+                      <div className="text-gray-500">→</div>
+                      <div className="bg-white rounded-lg p-3 shadow-sm border border-purple-200">
+                        <div className="font-bold text-purple-800">Product Detail</div>
+                      </div>
+                      <div className="text-gray-500">→</div>
+                      <div className="bg-white rounded-lg p-3 shadow-sm border border-orange-200">
+                        <div className="font-bold text-orange-800">Add to Cart</div>
+                      </div>
+                      <div className="text-gray-500">→</div>
+                      <div className="bg-white rounded-lg p-3 shadow-sm border border-red-200">
+                        <div className="font-bold text-red-800">Cart</div>
+                      </div>
+                      <div className="text-gray-500">→</div>
+                      <div className="bg-white rounded-lg p-3 shadow-sm border border-indigo-200">
+                        <div className="font-bold text-indigo-800">Checkout</div>
+                      </div>
+                      <div className="text-gray-500">→</div>
+                      <div className="bg-white rounded-lg p-3 shadow-sm border border-pink-200">
+                        <div className="font-bold text-pink-800">Payment</div>
+                      </div>
+                      <div className="text-gray-500">→</div>
+                      <div className="bg-white rounded-lg p-3 shadow-sm border border-emerald-200">
+                        <div className="font-bold text-emerald-800">Order Confirmed</div>
+                      </div>
+                    </div>
+                    <div className="text-center mt-4 text-xs text-gray-600">
+                      Login/Register (if needed) can be accessed at any point
+                    </div>
+                  </div>
+                </div>
+
+                {/* Admin Flow */}
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <span className="text-2xl">⚙️</span>
+                    Admin Flow
+                  </h4>
+                  
+                  <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg p-6">
+                    <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+                      <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-200">
+                        <div className="font-bold text-gray-800">Admin Login</div>
+                      </div>
+                      <div className="text-gray-500">→</div>
+                      <div className="bg-white rounded-lg p-3 shadow-sm border border-blue-200">
+                        <div className="font-bold text-blue-800">Dashboard</div>
+                      </div>
+                      <div className="text-gray-500">→</div>
+                      <div className="bg-white rounded-lg p-3 shadow-sm border border-green-200">
+                        <div className="font-bold text-green-800">Products Management</div>
+                      </div>
+                      <div className="text-gray-500">→</div>
+                      <div className="bg-white rounded-lg p-3 shadow-sm border border-purple-200">
+                        <div className="font-bold text-purple-800">Orders Management</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              ) : (
+                // Generic content for other projects
+                <div className="space-y-6">
+                  <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                    <h4 className="text-lg font-semibold text-gray-800 mb-4">Navigation Flow</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <h5 className="font-medium text-gray-800 mb-2">User Journey</h5>
+                        <p className="text-sm text-gray-600">Main user flow through the application</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <h5 className="font-medium text-gray-800 mb-2">Admin Flow</h5>
+                        <p className="text-sm text-gray-600">Administrative user navigation patterns</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+
+
 
       case 'conclusion':
         return (
@@ -757,10 +1270,10 @@ const UIUXPhasePage = () => {
                 // Auto-advance to next module
                 const uiuxTabs = [
                   { id: 'overview' },
-                  { id: 'wireframing' },
-                  { id: 'prototyping' },
-                  { id: 'visual-design' },
-                  { id: 'usability-testing' },
+                  { id: 'design-system' },
+                  { id: 'customer-pages' },
+                  { id: 'admin-pages' },
+                  { id: 'navigation-flow' },
                   { id: 'conclusion' }
                 ];
                 const currentIndex = uiuxTabs.findIndex(tab => tab.id === selectedTab);

@@ -57,13 +57,13 @@ const ProjectManagementDetailPage = () => {
     try {
       const [projectRes, videosRes, documentsRes] = await Promise.all([
         fetch(`/api/projects/${projectId}`, {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('accessToken')}` }
         }),
         fetch(`/api/projects/${projectId}/videos`, {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('accessToken')}` }
         }),
         fetch(`/api/projects/${projectId}/documents`, {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('accessToken')}` }
         })
       ]);
 
@@ -98,7 +98,7 @@ const ProjectManagementDetailPage = () => {
         method,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         },
         body: JSON.stringify(videoForm)
       });
@@ -146,7 +146,7 @@ const ProjectManagementDetailPage = () => {
         method,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         },
         body: JSON.stringify(documentForm)
       });
@@ -216,7 +216,7 @@ const ProjectManagementDetailPage = () => {
       
       const response = await fetch(url, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('accessToken')}` }
       });
 
       const data = await response.json();

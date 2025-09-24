@@ -15,7 +15,7 @@ router.get('/:projectId/videos', videoController.getProjectVideos);
 router.get('/videos/:id', videoController.getVideoById);
 router.post('/videos/:id/view', videoController.incrementViewCount);
 
-// Admin routes
+// Admin routes - require authentication
 router.use(auth.authenticate);
 router.use(auth.requireAdmin);
 
