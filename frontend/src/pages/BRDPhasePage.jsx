@@ -13,9 +13,14 @@ const BRDPhasePage = () => {
   const [selectedTab, setSelectedTab] = useState('overview');
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { isModuleUnlocked, unlockNextPhase } = useProjectProgress();
+  const { isModuleUnlocked, unlockNextPhase, initializeProject } = useProjectProgress();
 
   useEffect(() => {
+    // Initialize project progress
+    if (projectId) {
+      initializeProject(projectId);
+    }
+    
     // Mock data for testing - in real app, fetch based on projectId
     const mockProjects = [
       {
@@ -79,7 +84,7 @@ const BRDPhasePage = () => {
       setProject(foundProject);
     }
     setLoading(false);
-  }, [projectId]);
+  }, [projectId, initializeProject]);
 
   const brdTabs = [
     {

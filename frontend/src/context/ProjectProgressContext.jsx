@@ -12,50 +12,68 @@ export const useProjectProgress = () => {
 
 export const ProjectProgressProvider = ({ children }) => {
   const [progress, setProgress] = useState({});
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Load progress from localStorage on mount
   useEffect(() => {
-    const savedProgress = localStorage.getItem('projectProgress');
-    if (savedProgress) {
-      try {
-        setProgress(JSON.parse(savedProgress));
-      } catch (error) {
-        console.error('Error loading project progress:', error);
+    try {
+      const savedProgress = localStorage.getItem('projectProgress');
+      if (savedProgress) {
+        const parsedProgress = JSON.parse(savedProgress);
+        setProgress(parsedProgress);
+      } else {
+        setProgress({});
       }
+    } catch (error) {
+      console.error('Error loading project progress:', error);
+      setProgress({});
+    } finally {
+      setIsInitialized(true);
     }
   }, []);
 
   // Save progress to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('projectProgress', JSON.stringify(progress));
+    if (Object.keys(progress).length > 0) {
+      try {
+        localStorage.setItem('projectProgress', JSON.stringify(progress));
+      } catch (error) {
+        console.error('Error saving project progress:', error);
+      }
+    }
   }, [progress]);
 
   const initializeProject = (projectId) => {
-    if (!progress[projectId]) {
-      setProgress(prev => ({
-        ...prev,
-        [projectId]: {
-          currentPhase: 'brd',
-          unlockedPhases: ['brd'],
-          unlockedModules: {
-            brd: ['overview'],
-            uiux: ['overview'],
-            architectural: ['overview'],
-            'code-development': ['overview'],
-            testing: [],
-            deployment: []
-          },
-          completedModules: {
-            brd: [],
-            uiux: [],
-            architectural: [],
-            'code-development': [],
-            testing: [],
-            deployment: []
+    setProgress(prev => {
+      // If project doesn't exist or needs to be reset, initialize it
+      if (!prev[projectId] || !prev[projectId].unlockedPhases?.includes('brd')) {
+        const newProgress = {
+          ...prev,
+          [projectId]: {
+            currentPhase: 'brd',
+            unlockedPhases: ['brd'],
+            unlockedModules: {
+              brd: ['overview'],
+              uiux: [],
+              architectural: [],
+              'code-development': [],
+              testing: [],
+              deployment: []
+            },
+            completedModules: {
+              brd: [],
+              uiux: [],
+              architectural: [],
+              'code-development': [],
+              testing: [],
+              deployment: []
+            }
           }
-        }
-      }));
-    }
+        };
+        return newProgress;
+      }
+      return prev;
+    });
   };
 
   const unlockNextPhase = (projectId, currentPhase) => {
@@ -147,6 +165,7 @@ export const ProjectProgressProvider = ({ children }) => {
 
   const value = {
     progress,
+    isInitialized,
     initializeProject,
     unlockNextPhase,
     unlockNextModule,

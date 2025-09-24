@@ -10,7 +10,7 @@ const RealtimeProjectsPageSimple = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { initializeProject } = useProjectProgress();
+  const { initializeProject, isPhaseUnlocked } = useProjectProgress();
 
   useEffect(() => {
     // Mock data for testing
@@ -205,6 +205,7 @@ const RealtimeProjectsPageSimple = () => {
   const handleBeginJourney = () => {
     if (selectedProject) {
       initializeProject(selectedProject.id);
+      // Navigate immediately - the BRD page will handle the initialization
       navigate(`/realtime-projects/${selectedProject.id}/brd`);
     }
   };

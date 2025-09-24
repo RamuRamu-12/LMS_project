@@ -6,14 +6,14 @@ import { useProjectProgress } from '../../context/ProjectProgressContext';
 const PhaseNavigationBar = ({ currentPhase = null }) => {
   const navigate = useNavigate();
   const { projectId } = useParams();
-  const { isPhaseUnlocked, initializeProject } = useProjectProgress();
+  const { isPhaseUnlocked, initializeProject, progress, isInitialized } = useProjectProgress();
 
   // Initialize project progress when component mounts
   React.useEffect(() => {
     if (projectId) {
       initializeProject(projectId);
     }
-  }, [projectId, initializeProject]);
+  }, [projectId, initializeProject, progress]);
 
   const phases = [
     {
@@ -71,6 +71,16 @@ const PhaseNavigationBar = ({ currentPhase = null }) => {
       navigate(phase.route);
     }
   };
+
+  if (!isInitialized) {
+    return (
+      <div className="py-1">
+        <div className="flex justify-center items-center">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <motion.div
