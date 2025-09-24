@@ -227,19 +227,25 @@ const DeploymentPhasePage = () => {
       id: 'deployment-planning',
       label: 'Deployment Planning',
       icon: '📋',
-      description: 'Deployment possibilities and setup strategies'
+      description: 'Infrastructure setup and deployment strategy'
     },
     {
       id: 'environment-setup',
       label: 'Environment Setup',
       icon: '🏗️',
-      description: 'Local and cloud environment configuration'
+      description: 'Production, staging, and development environments'
     },
     {
-      id: 'final-steps',
-      label: 'Final Steps',
-      icon: '🎉',
-      description: 'Project completion and code download'
+      id: 'cicd-pipeline',
+      label: 'CI/CD Pipeline',
+      icon: '⚙️',
+      description: 'Automated deployment and continuous integration'
+    },
+    {
+      id: 'monitoring',
+      label: 'Monitoring & Maintenance',
+      icon: '📊',
+      description: 'Application monitoring and ongoing maintenance'
     }
   ];
 
@@ -339,292 +345,106 @@ const DeploymentPhasePage = () => {
 
       case 'deployment-planning':
         return (
-          <div className="space-y-8">
-            <div className="text-center">
-              <h3 className="text-3xl font-bold text-gray-800 mb-4">E-Commerce Deployment Planning</h3>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                Comprehensive deployment strategy for E-commerce applications covering local development 
-                setup and cloud deployment options for production environments.
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Deployment Planning</h3>
+            <div className="prose prose-lg max-w-none">
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Deployment planning involves creating a comprehensive strategy for deploying the application 
+                to production with minimal downtime and maximum reliability.
               </p>
-            </div>
-
-            {/* Deployment Possibilities */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-              <h4 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Deployment Possibilities</h4>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <h5 className="text-lg font-medium text-gray-800 mb-3">Local Development</h5>
-                    <div className="space-y-3">
-                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
-                      <h6 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                        <span className="text-xl">💻</span>
-                        Local Machine Setup
-                      </h6>
-                      <div className="text-sm text-gray-600 space-y-1">
-                        <div><strong>Purpose:</strong> Development and testing</div>
-                        <div><strong>Requirements:</strong> Node.js, PostgreSQL, Git</div>
-                        <div><strong>Benefits:</strong> Fast development, offline work</div>
-                        <div><strong>Limitations:</strong> Single user, limited scalability</div>
-                      </div>
-                      </div>
-                    <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
-                      <h6 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                        <span className="text-xl">🐳</span>
-                        Docker Local Setup
-                      </h6>
-                      <div className="text-sm text-gray-600 space-y-1">
-                        <div><strong>Purpose:</strong> Containerized development</div>
-                        <div><strong>Requirements:</strong> Docker, Docker Compose</div>
-                        <div><strong>Benefits:</strong> Consistent environment, easy setup</div>
-                        <div><strong>Use Case:</strong> Team development, production-like setup</div>
-                    </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <h5 className="text-lg font-medium text-gray-800 mb-3">Cloud Deployment</h5>
-                    <div className="space-y-3">
-                    <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
-                      <h6 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                        <span className="text-xl">☁️</span>
-                        AWS Deployment
-                      </h6>
-                      <div className="text-sm text-gray-600 space-y-1">
-                        <div><strong>Services:</strong> EC2, RDS, S3, CloudFront</div>
-                        <div><strong>Benefits:</strong> Scalable, reliable, global reach</div>
-                        <div><strong>Cost:</strong> Pay-as-you-use, enterprise-grade</div>
-                        <div><strong>Best For:</strong> Production, high-traffic applications</div>
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
-                      <h6 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                        <span className="text-xl">🌐</span>
-                        Google Cloud Platform
-                      </h6>
-                      <div className="text-sm text-gray-600 space-y-1">
-                        <div><strong>Services:</strong> Compute Engine, Cloud SQL, Storage</div>
-                        <div><strong>Benefits:</strong> AI/ML integration, global network</div>
-                        <div><strong>Cost:</strong> Competitive pricing, free tier</div>
-                        <div><strong>Best For:</strong> Data-driven applications, analytics</div>
-                      </div>
-                    </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-            {/* Local Deployment Setup Scripts */}
-            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl p-6 border border-emerald-200">
-              <h4 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Local Deployment Setup</h4>
+              
               <div className="space-y-6">
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h5 className="text-lg font-medium text-gray-800 mb-4">Prerequisites Installation</h5>
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Infrastructure Requirements</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <div className="bg-blue-50 rounded-lg p-3">
+                        <h5 className="font-medium text-gray-800 mb-2">Server Requirements</h5>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• CPU: 4+ cores, 2.4GHz+</li>
+                          <li>• RAM: 8GB+ (16GB recommended)</li>
+                          <li>• Storage: 100GB+ SSD</li>
+                          <li>• Network: 1Gbps+ bandwidth</li>
+                        </ul>
+                      </div>
+                      <div className="bg-green-50 rounded-lg p-3">
+                        <h5 className="font-medium text-gray-800 mb-2">Database Requirements</h5>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• PostgreSQL 13+</li>
+                          <li>• 50GB+ storage</li>
+                          <li>• Automated backups</li>
+                          <li>• Read replicas for scaling</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="bg-purple-50 rounded-lg p-3">
+                        <h5 className="font-medium text-gray-800 mb-2">CDN & Storage</h5>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• CloudFlare or AWS CloudFront</li>
+                          <li>• S3-compatible object storage</li>
+                          <li>• Image optimization</li>
+                          <li>• Global content delivery</li>
+                        </ul>
+                      </div>
+                      <div className="bg-orange-50 rounded-lg p-3">
+                        <h5 className="font-medium text-gray-800 mb-2">Security & SSL</h5>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• SSL/TLS certificates</li>
+                          <li>• Firewall configuration</li>
+                          <li>• DDoS protection</li>
+                          <li>• Security headers</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Deployment Strategy</h4>
                   <div className="space-y-4">
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h6 className="font-medium text-gray-800 mb-2">Node.js & npm Installation</h6>
-                      <pre className="text-sm text-gray-600 bg-gray-100 p-3 rounded overflow-x-auto">
-{`# Install Node.js (LTS version)
-curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-sudo apt-get install -y nodejs
-
-# Verify installation
-node --version
-npm --version`}
-                      </pre>
-                    </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h6 className="font-medium text-gray-800 mb-2">PostgreSQL Installation</h6>
-                      <pre className="text-sm text-gray-600 bg-gray-100 p-3 rounded overflow-x-auto">
-{`# Install PostgreSQL
-sudo apt update
-sudo apt install postgresql postgresql-contrib
-
-# Start PostgreSQL service
-sudo systemctl start postgresql
-sudo systemctl enable postgresql
-
-# Create database and user
-sudo -u postgres psql
-CREATE DATABASE ecommerce_db;
-CREATE USER ecommerce_user WITH PASSWORD 'your_password';
-GRANT ALL PRIVILEGES ON DATABASE ecommerce_db TO ecommerce_user;`}
-                      </pre>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h5 className="text-lg font-medium text-gray-800 mb-4">E-Commerce Application Setup</h5>
-                  <div className="space-y-4">
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h6 className="font-medium text-gray-800 mb-2">Clone and Install Dependencies</h6>
-                      <pre className="text-sm text-gray-600 bg-gray-100 p-3 rounded overflow-x-auto">
-{`# Clone the repository
-git clone https://github.com/your-username/ecommerce-app.git
-cd ecommerce-app
-
-# Install dependencies
-npm install
-
-# Install Prisma CLI globally
-npm install -g prisma`}
-                      </pre>
-                    </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h6 className="font-medium text-gray-800 mb-2">Environment Configuration</h6>
-                      <pre className="text-sm text-gray-600 bg-gray-100 p-3 rounded overflow-x-auto">
-{`# Create environment file
-cp .env.example .env
-
-# Configure environment variables
-DATABASE_URL="postgresql://ecommerce_user:your_password@localhost:5432/ecommerce_db"
-NEXTAUTH_SECRET="your-nextauth-secret"
-NEXTAUTH_URL="http://localhost:3000"
-STRIPE_SECRET_KEY="sk_test_your_stripe_secret_key"
-STRIPE_PUBLISHABLE_KEY="pk_test_your_stripe_publishable_key"`}
-                      </pre>
-                    </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h6 className="font-medium text-gray-800 mb-2">Database Setup and Migration</h6>
-                      <pre className="text-sm text-gray-600 bg-gray-100 p-3 rounded overflow-x-auto">
-{`# Generate Prisma client
-npx prisma generate
-
-# Run database migrations
-npx prisma db push
-
-# Seed the database with sample data
-npx prisma db seed
-
-# Start the development server
-npm run dev`}
-                      </pre>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Cloud Deployment Options */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-              <h4 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Cloud Deployment Options</h4>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <h5 className="text-lg font-medium text-gray-800 mb-3">AWS Deployment</h5>
-                  <div className="space-y-3">
-                    <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
-                      <h6 className="font-semibold text-gray-800 mb-2">AWS Services Setup</h6>
+                    <div className="bg-white rounded-lg p-4">
+                      <h5 className="font-medium text-gray-800 mb-2">Blue-Green Deployment</h5>
                       <div className="text-sm text-gray-600 space-y-2">
-                        <div><strong>EC2 Instance:</strong> t3.medium (2 vCPU, 4GB RAM)</div>
-                        <div><strong>RDS PostgreSQL:</strong> db.t3.micro for development</div>
-                        <div><strong>S3 Bucket:</strong> For file storage and static assets</div>
-                        <div><strong>CloudFront:</strong> CDN for global content delivery</div>
+                        <div><strong>Benefits:</strong> Zero-downtime deployments, instant rollback capability</div>
+                        <div><strong>Process:</strong> Deploy to green environment → Test → Switch traffic → Monitor</div>
+                        <div><strong>Rollback:</strong> Switch traffic back to blue environment if issues detected</div>
                       </div>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h6 className="font-medium text-gray-800 mb-2">AWS Deployment Script</h6>
-                      <pre className="text-xs text-gray-600 bg-gray-100 p-3 rounded overflow-x-auto">
-{`# AWS CLI setup
-aws configure
-
-# Create EC2 instance
-aws ec2 run-instances \\
-  --image-id ami-0c02fb55956c7d316 \\
-  --instance-type t3.medium \\
-  --key-name your-key-pair \\
-  --security-group-ids sg-xxxxxxxxx \\
-  --subnet-id subnet-xxxxxxxxx
-
-# Install dependencies on EC2
-sudo apt update
-sudo apt install nodejs npm postgresql-client
-git clone https://github.com/your-username/ecommerce-app.git
-cd ecommerce-app
-npm install
-npm run build`}
-                      </pre>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <h5 className="text-lg font-medium text-gray-800 mb-3">Google Cloud Platform</h5>
-                  <div className="space-y-3">
-                    <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
-                      <h6 className="font-semibold text-gray-800 mb-2">GCP Services Setup</h6>
+                    
+                    <div className="bg-white rounded-lg p-4">
+                      <h5 className="font-medium text-gray-800 mb-2">Canary Deployment</h5>
                       <div className="text-sm text-gray-600 space-y-2">
-                        <div><strong>Compute Engine:</strong> e2-medium (2 vCPU, 4GB RAM)</div>
-                        <div><strong>Cloud SQL:</strong> PostgreSQL instance</div>
-                        <div><strong>Cloud Storage:</strong> For file storage and backups</div>
-                        <div><strong>Cloud CDN:</strong> Global content delivery</div>
-                      </div>
-                    </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h6 className="font-medium text-gray-800 mb-2">GCP Deployment Script</h6>
-                      <pre className="text-xs text-gray-600 bg-gray-100 p-3 rounded overflow-x-auto">
-{`# GCP CLI setup
-gcloud auth login
-gcloud config set project your-project-id
-
-# Create Compute Engine instance
-gcloud compute instances create ecommerce-app \\
-  --zone=us-central1-a \\
-  --machine-type=e2-medium \\
-  --image-family=ubuntu-2004-lts \\
-  --image-project=ubuntu-os-cloud \\
-  --boot-disk-size=20GB
-
-# Deploy application
-gcloud compute scp --recurse ./ecommerce-app ecommerce-app:~/`}
-                      </pre>
-                    </div>
+                        <div><strong>Benefits:</strong> Gradual rollout, risk mitigation, real-user testing</div>
+                        <div><strong>Process:</strong> Deploy to 5% → Monitor → Increase to 25% → Full rollout</div>
+                        <div><strong>Monitoring:</strong> Key metrics, error rates, performance indicators</div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-            {/* Deployment Checklist */}
-            <div className="bg-gradient-to-r from-slate-50 to-gray-50 rounded-xl p-6 border border-gray-200">
-              <h4 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Deployment Checklist</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <h5 className="text-lg font-medium text-gray-800 mb-3">Pre-Deployment</h5>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">✓</div>
-                      <span className="text-sm text-gray-700">Code review and testing completed</span>
+                <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-6">
+                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Deployment Checklist</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <h5 className="font-medium text-gray-800 mb-2">Pre-Deployment</h5>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>✅ Code review completed</li>
+                        <li>✅ All tests passing</li>
+                        <li>✅ Database migrations ready</li>
+                        <li>✅ Environment variables configured</li>
+                        <li>✅ SSL certificates installed</li>
+                      </ul>
                     </div>
-                    <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">✓</div>
-                      <span className="text-sm text-gray-700">Environment variables configured</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">✓</div>
-                      <span className="text-sm text-gray-700">Database migrations ready</span>
-                  </div>
-                    <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">✓</div>
-                      <span className="text-sm text-gray-700">SSL certificates obtained</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <h5 className="text-lg font-medium text-gray-800 mb-3">Post-Deployment</h5>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">✓</div>
-                      <span className="text-sm text-gray-700">Application health checks passing</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">✓</div>
-                      <span className="text-sm text-gray-700">Domain and DNS configured</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">✓</div>
-                      <span className="text-sm text-gray-700">Backup procedures tested</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
-                      <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">✓</div>
-                      <span className="text-sm text-gray-700">Performance monitoring active</span>
+                    <div>
+                      <h5 className="font-medium text-gray-800 mb-2">Post-Deployment</h5>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>✅ Health checks passing</li>
+                        <li>✅ Monitoring alerts configured</li>
+                        <li>✅ Backup procedures tested</li>
+                        <li>✅ Performance metrics baseline</li>
+                        <li>✅ Documentation updated</li>
+                      </ul>
                     </div>
                   </div>
                 </div>
@@ -757,196 +577,269 @@ gcloud compute scp --recurse ./ecommerce-app ecommerce-app:~/`}
           </div>
         );
 
-       case 'final-steps':
+      case 'cicd-pipeline':
         return (
-           <div className="space-y-8">
-             <div className="text-center">
-               <h3 className="text-4xl font-bold text-gray-800 mb-4">🎉 Congratulations!</h3>
-               <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-                 You have successfully completed all phases of the E-Commerce application development! 
-                 From planning to deployment, you've built a comprehensive, production-ready application.
-               </p>
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">CI/CD Pipeline</h3>
+            <div className="prose prose-lg max-w-none">
+              <p className="text-gray-600 leading-relaxed mb-6">
+                CI/CD pipeline automates the process of building, testing, and deploying the application 
+                to ensure consistent and reliable deployments.
+              </p>
+              
+              <div className="space-y-6">
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Pipeline Stages</h4>
+                  <div className="space-y-4">
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <h5 className="font-medium text-gray-800 mb-2">1. Source Control</h5>
+                      <div className="text-sm text-gray-600 space-y-2">
+                        <div><strong>Trigger:</strong> Code push to main branch</div>
+                        <div><strong>Actions:</strong> Clone repository, checkout latest code</div>
+                        <div><strong>Tools:</strong> Git, GitHub Actions / GitLab CI / Jenkins</div>
+                      </div>
                     </div>
                     
-             {/* Achievement Summary */}
-             <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl p-8 border border-emerald-200">
-               <h4 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Project Completion Summary</h4>
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                 <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-                   <div className="text-3xl mb-3">📋</div>
-                   <h5 className="font-semibold text-gray-800 mb-2">BRD Phase</h5>
-                   <p className="text-sm text-gray-600">Requirements defined and documented</p>
+                    <div className="bg-green-50 rounded-lg p-4">
+                      <h5 className="font-medium text-gray-800 mb-2">2. Build & Test</h5>
+                      <div className="text-sm text-gray-600 space-y-2">
+                        <div><strong>Actions:</strong> Install dependencies, run tests, build application</div>
+                        <div><strong>Tests:</strong> Unit tests, integration tests, linting, security scans</div>
+                        <div><strong>Artifacts:</strong> Build packages, test reports, coverage reports</div>
                       </div>
-                 <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-                   <div className="text-3xl mb-3">🎨</div>
-                   <h5 className="font-semibold text-gray-800 mb-2">UI/UX Design</h5>
-                   <p className="text-sm text-gray-600">User interface and experience designed</p>
                     </div>
-                 <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-                   <div className="text-3xl mb-3">🏗️</div>
-                   <h5 className="font-semibold text-gray-800 mb-2">Architecture</h5>
-                   <p className="text-sm text-gray-600">System architecture planned</p>
+                    
+                    <div className="bg-purple-50 rounded-lg p-4">
+                      <h5 className="font-medium text-gray-800 mb-2">3. Staging Deployment</h5>
+                      <div className="text-sm text-gray-600 space-y-2">
+                        <div><strong>Actions:</strong> Deploy to staging environment, run smoke tests</div>
+                        <div><strong>Validation:</strong> Health checks, performance tests, security scans</div>
+                        <div><strong>Approval:</strong> Manual approval for production deployment</div>
                       </div>
-                 <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-                   <div className="text-3xl mb-3">💻</div>
-                   <h5 className="font-semibold text-gray-800 mb-2">Development</h5>
-                   <p className="text-sm text-gray-600">Full-stack application built</p>
                     </div>
-                 <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-                   <div className="text-3xl mb-3">🧪</div>
-                   <h5 className="font-semibold text-gray-800 mb-2">Testing</h5>
-                   <p className="text-sm text-gray-600">Comprehensive testing completed</p>
+                    
+                    <div className="bg-orange-50 rounded-lg p-4">
+                      <h5 className="font-medium text-gray-800 mb-2">4. Production Deployment</h5>
+                      <div className="text-sm text-gray-600 space-y-2">
+                        <div><strong>Actions:</strong> Blue-green deployment, traffic switching</div>
+                        <div><strong>Monitoring:</strong> Real-time monitoring, alert notifications</div>
+                        <div><strong>Rollback:</strong> Automatic rollback on failure detection</div>
                       </div>
-                 <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-                   <div className="text-3xl mb-3">🚀</div>
-                   <h5 className="font-semibold text-gray-800 mb-2">Deployment</h5>
-                   <p className="text-sm text-gray-600">Application deployed and ready</p>
                     </div>
                   </div>
                 </div>
 
-             {/* E-Commerce Features Delivered */}
-             <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-               <h4 className="text-2xl font-semibold text-gray-800 mb-6 text-center">E-Commerce Features Delivered</h4>
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                 <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
-                   <div className="text-3xl mb-3">🛒</div>
-                   <h5 className="font-semibold text-gray-800 mb-2">Shopping Experience</h5>
-                   <div className="text-sm text-gray-600 space-y-1">
-                     <div>• Product browsing & search</div>
-                     <div>• Shopping cart management</div>
-                     <div>• Wishlist functionality</div>
-                     <div>• Product filtering & sorting</div>
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Pipeline Configuration</h4>
+                  <div className="space-y-4">
+                    <div className="bg-white rounded-lg p-4">
+                      <h5 className="font-medium text-gray-800 mb-2">GitHub Actions Workflow</h5>
+                      <div className="bg-gray-100 p-3 rounded text-sm font-mono">
+                        <div>name: Deploy to Production</div>
+                        <div>on:</div>
+                        <div>  push:</div>
+                        <div>    branches: [main]</div>
+                        <div>jobs:</div>
+                        <div>  test:</div>
+                        <div>    runs-on: ubuntu-latest</div>
+                        <div>    steps:</div>
+                        <div>      - uses: actions/checkout@v3</div>
+                        <div>      - name: Setup Node.js</div>
+                        <div>        uses: actions/setup-node@v3</div>
+                        <div>      - name: Install dependencies</div>
+                        <div>        run: npm ci</div>
+                        <div>      - name: Run tests</div>
+                        <div>        run: npm test</div>
                       </div>
                     </div>
-                 <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
-                   <div className="text-3xl mb-3">💳</div>
-                   <h5 className="font-semibold text-gray-800 mb-2">Payment Processing</h5>
-                   <div className="text-sm text-gray-600 space-y-1">
-                     <div>• Stripe integration</div>
-                     <div>• Secure payment processing</div>
-                     <div>• Order management</div>
-                     <div>• Receipt generation</div>
+                    
+                    <div className="bg-white rounded-lg p-4">
+                      <h5 className="font-medium text-gray-800 mb-2">Docker Configuration</h5>
+                      <div className="bg-gray-100 p-3 rounded text-sm font-mono">
+                        <div>FROM node:18-alpine</div>
+                        <div>WORKDIR /app</div>
+                        <div>COPY package*.json ./</div>
+                        <div>RUN npm ci --only=production</div>
+                        <div>COPY . .</div>
+                        <div>RUN npm run build</div>
+                        <div>EXPOSE 3000</div>
+                        <div>CMD ["npm", "start"]</div>
                       </div>
                     </div>
-                 <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
-                   <div className="text-3xl mb-3">👤</div>
-                   <h5 className="font-semibold text-gray-800 mb-2">User Management</h5>
-                   <div className="text-sm text-gray-600 space-y-1">
-                     <div>• User registration & login</div>
-                     <div>• Profile management</div>
-                     <div>• Order history</div>
-                     <div>• Session management</div>
                   </div>
                 </div>
-                 <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg">
-                   <div className="text-3xl mb-3">📦</div>
-                   <h5 className="font-semibold text-gray-800 mb-2">Admin Panel</h5>
-                   <div className="text-sm text-gray-600 space-y-1">
-                     <div>• Product management</div>
-                     <div>• Order tracking</div>
-                     <div>• User management</div>
-                     <div>• Analytics dashboard</div>
+
+                <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6">
+                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Deployment Metrics</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+                    <div>
+                      <div className="text-2xl font-bold text-green-600">5 min</div>
+                      <div className="text-sm text-gray-600">Deployment Time</div>
                     </div>
+                    <div>
+                      <div className="text-2xl font-bold text-blue-600">99.9%</div>
+                      <div className="text-sm text-gray-600">Success Rate</div>
                     </div>
-                 <div className="text-center p-4 bg-gradient-to-br from-red-50 to-red-100 rounded-lg">
-                   <div className="text-3xl mb-3">🔐</div>
-                   <h5 className="font-semibold text-gray-800 mb-2">Security Features</h5>
-                   <div className="text-sm text-gray-600 space-y-1">
-                     <div>• Data encryption</div>
-                     <div>• Authentication security</div>
-                     <div>• Payment security (PCI)</div>
-                     <div>• Input validation</div>
+                    <div>
+                      <div className="text-2xl font-bold text-purple-600">2 min</div>
+                      <div className="text-sm text-gray-600">Rollback Time</div>
                     </div>
+                    <div>
+                      <div className="text-2xl font-bold text-orange-600">0</div>
+                      <div className="text-sm text-gray-600">Failed Deployments</div>
                     </div>
-                 <div className="text-center p-4 bg-gradient-to-br from-teal-50 to-teal-100 rounded-lg">
-                   <div className="text-3xl mb-3">📱</div>
-                   <h5 className="font-semibold text-gray-800 mb-2">Cross-Platform</h5>
-                   <div className="text-sm text-gray-600 space-y-1">
-                     <div>• Mobile responsiveness</div>
-                     <div>• Browser compatibility</div>
-                     <div>• Device testing</div>
-                     <div>• Accessibility compliance</div>
                   </div>
                 </div>
               </div>
             </div>
-
-             {/* Technology Stack */}
-             <div className="bg-gradient-to-r from-slate-50 to-gray-50 rounded-xl p-6 border border-gray-200">
-               <h4 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Technology Stack Implemented</h4>
-               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                 <div className="text-center p-3 bg-white rounded-lg shadow-sm">
-                   <div className="text-2xl mb-2">⚛️</div>
-                   <div className="text-sm font-medium text-gray-800">React & Next.js</div>
-                      </div>
-                 <div className="text-center p-3 bg-white rounded-lg shadow-sm">
-                   <div className="text-2xl mb-2">🗄️</div>
-                   <div className="text-sm font-medium text-gray-800">PostgreSQL</div>
-                      </div>
-                 <div className="text-center p-3 bg-white rounded-lg shadow-sm">
-                   <div className="text-2xl mb-2">🔧</div>
-                   <div className="text-sm font-medium text-gray-800">Prisma ORM</div>
-                    </div>
-                 <div className="text-center p-3 bg-white rounded-lg shadow-sm">
-                   <div className="text-2xl mb-2">💳</div>
-                   <div className="text-sm font-medium text-gray-800">Stripe</div>
-                      </div>
-                 <div className="text-center p-3 bg-white rounded-lg shadow-sm">
-                   <div className="text-2xl mb-2">🎨</div>
-                   <div className="text-sm font-medium text-gray-800">Tailwind CSS</div>
-                      </div>
-                 <div className="text-center p-3 bg-white rounded-lg shadow-sm">
-                   <div className="text-2xl mb-2">🔐</div>
-                   <div className="text-sm font-medium text-gray-800">NextAuth</div>
-                    </div>
-                 <div className="text-center p-3 bg-white rounded-lg shadow-sm">
-                   <div className="text-2xl mb-2">☁️</div>
-                   <div className="text-sm font-medium text-gray-800">AWS/GCP</div>
-                  </div>
-                 <div className="text-center p-3 bg-white rounded-lg shadow-sm">
-                   <div className="text-2xl mb-2">🧪</div>
-                   <div className="text-sm font-medium text-gray-800">Jest & Cypress</div>
-                </div>
-                      </div>
-                    </div>
-                    
-             {/* Download Code Section */}
-             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 border border-blue-200 text-center">
-               <h4 className="text-3xl font-semibold text-gray-800 mb-4">Download Your E-Commerce Application</h4>
-               <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-                 Your complete E-Commerce application is ready! Download the source code and start building your online business.
-               </p>
-               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                 <button className="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-lg flex items-center gap-3">
-                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                   </svg>
-                   Download Source Code
-                 </button>
-                 <button className="px-8 py-4 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium text-lg flex items-center gap-3">
-                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                   </svg>
-                   Download Documentation
-                 </button>
-                        </div>
-               <div className="mt-6 text-sm text-gray-500">
-                 <p>Includes: Complete source code, setup instructions, database schema, and deployment guides</p>
-                  </div>
-                </div>
-
-             {/* Final Message */}
-             <div className="text-center">
-               <h5 className="text-xl font-semibold text-gray-800 mb-4">Ready to Launch Your E-Commerce Business?</h5>
-               <p className="text-gray-600 max-w-2xl mx-auto">
-                 You now have a complete, production-ready E-Commerce application with all the features needed to start selling online. 
-                 Customize it further, add your products, and launch your business!
-               </p>
-            </div>
           </div>
         );
 
+      case 'monitoring':
+        return (
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Monitoring & Maintenance</h3>
+            <div className="prose prose-lg max-w-none">
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Monitoring and maintenance ensure the application runs smoothly in production with 
+                proactive issue detection and resolution.
+              </p>
+              
+              <div className="space-y-6">
+                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Application Monitoring</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <div className="bg-blue-50 rounded-lg p-3">
+                        <h5 className="font-medium text-gray-800 mb-2">Performance Metrics</h5>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• Response time monitoring</li>
+                          <li>• Throughput tracking</li>
+                          <li>• Error rate monitoring</li>
+                          <li>• Resource utilization</li>
+                        </ul>
+                      </div>
+                      <div className="bg-green-50 rounded-lg p-3">
+                        <h5 className="font-medium text-gray-800 mb-2">Health Checks</h5>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• Database connectivity</li>
+                          <li>• API endpoint health</li>
+                          <li>• External service status</li>
+                          <li>• System resource checks</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="bg-purple-50 rounded-lg p-3">
+                        <h5 className="font-medium text-gray-800 mb-2">Logging & Alerts</h5>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• Centralized logging</li>
+                          <li>• Error tracking</li>
+                          <li>• Alert notifications</li>
+                          <li>• Incident management</li>
+                        </ul>
+                      </div>
+                      <div className="bg-orange-50 rounded-lg p-3">
+                        <h5 className="font-medium text-gray-800 mb-2">Security Monitoring</h5>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• Intrusion detection</li>
+                          <li>• Failed login attempts</li>
+                          <li>• Suspicious activity</li>
+                          <li>• Vulnerability scanning</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 rounded-lg p-6">
+                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Monitoring Tools</h4>
+                  <div className="space-y-4">
+                    <div className="bg-white rounded-lg p-4">
+                      <h5 className="font-medium text-gray-800 mb-2">Application Performance Monitoring (APM)</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="text-center">
+                          <div className="text-2xl mb-2">📊</div>
+                          <div className="font-medium text-gray-800">New Relic</div>
+                          <div className="text-sm text-gray-600">Real-time performance monitoring</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl mb-2">🔍</div>
+                          <div className="font-medium text-gray-800">DataDog</div>
+                          <div className="text-sm text-gray-600">Infrastructure monitoring</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl mb-2">⚡</div>
+                          <div className="font-medium text-gray-800">Sentry</div>
+                          <div className="text-sm text-gray-600">Error tracking and debugging</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white rounded-lg p-4">
+                      <h5 className="font-medium text-gray-800 mb-2">Log Management</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <h6 className="font-medium text-gray-700 mb-1">ELK Stack</h6>
+                          <ul className="text-sm text-gray-600 space-y-1">
+                            <li>• Elasticsearch for search</li>
+                            <li>• Logstash for processing</li>
+                            <li>• Kibana for visualization</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h6 className="font-medium text-gray-700 mb-1">Cloud Solutions</h6>
+                          <ul className="text-sm text-gray-600 space-y-1">
+                            <li>• AWS CloudWatch</li>
+                            <li>• Google Cloud Logging</li>
+                            <li>• Azure Monitor</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6">
+                  <h4 className="text-lg font-semibold text-gray-800 mb-4">Maintenance Schedule</h4>
+                  <div className="space-y-4">
+                    <div className="bg-white rounded-lg p-4">
+                      <h5 className="font-medium text-gray-800 mb-2">Daily Tasks</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• Check system health status</li>
+                          <li>• Review error logs</li>
+                          <li>• Monitor performance metrics</li>
+                        </ul>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• Verify backup completion</li>
+                          <li>• Check security alerts</li>
+                          <li>• Update monitoring dashboards</li>
+                        </ul>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white rounded-lg p-4">
+                      <h5 className="font-medium text-gray-800 mb-2">Weekly Tasks</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• Security patch updates</li>
+                          <li>• Performance optimization</li>
+                          <li>• Capacity planning review</li>
+                        </ul>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• Database maintenance</li>
+                          <li>• Log rotation and cleanup</li>
+                          <li>• Disaster recovery testing</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
 
       default:
         return <div>Content not found</div>;
@@ -1053,7 +946,6 @@ gcloud compute scp --recurse ./ecommerce-app ecommerce-app:~/`}
             </motion.div>
             
             {/* Next Button - positioned relative to module content */}
-             {selectedTab !== 'final-steps' && (
             <NextButton 
               currentPhase="deployment" 
               currentModule={selectedTab}
@@ -1061,9 +953,11 @@ gcloud compute scp --recurse ./ecommerce-app ecommerce-app:~/`}
                 // Auto-advance to next module
                 const deploymentTabs = [
                   { id: 'overview' },
-                     { id: 'deployment-planning' },
-                     { id: 'environment-setup' },
-                     { id: 'final-steps' }
+                  { id: 'deployment-strategy' },
+                  { id: 'production-setup' },
+                  { id: 'monitoring' },
+                  { id: 'maintenance' },
+                  { id: 'conclusion' }
                 ];
                 const currentIndex = deploymentTabs.findIndex(tab => tab.id === selectedTab);
                 if (currentIndex < deploymentTabs.length - 1) {
@@ -1071,7 +965,6 @@ gcloud compute scp --recurse ./ecommerce-app ecommerce-app:~/`}
                 }
               }}
             />
-             )}
           </div>
         </div>
       </div>

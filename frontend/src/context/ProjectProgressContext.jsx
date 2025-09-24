@@ -81,11 +81,11 @@ export const ProjectProgressProvider = ({ children }) => {
   const unlockNextModule = (projectId, phase, currentModule) => {
     const moduleOrder = {
       brd: ['overview', 'functional-requirements', 'non-functional-requirements', 'user-stories', 'conclusion'],
-      uiux: ['overview', 'design-system', 'customer-pages', 'admin-pages', 'navigation-flow', 'conclusion'],
-      architectural: ['overview', 'system-architecture', 'database-design', 'api-design', 'security-architecture', 'conclusion'],
-      'code-development': ['overview', 'frontend-development', 'backend-development', 'database-implementation', 'testing', 'conclusion'],
-      testing: ['overview', 'test-planning', 'unit-testing', 'integration-testing', 'performance-testing', 'conclusion'],
-      deployment: ['overview', 'deployment-planning', 'environment-setup', 'final-steps']
+      uiux: ['overview', 'wireframing', 'prototyping', 'visual-design', 'usability-testing', 'conclusion'],
+      architectural: ['overview', 'system-architecture', 'database-design', 'api-design', 'security-considerations', 'conclusion'],
+      'code-development': ['overview', 'environment-setup', 'frontend-development', 'backend-development', 'integration', 'conclusion'],
+      testing: ['overview', 'unit-testing', 'integration-testing', 'end-to-end-testing', 'performance-testing', 'conclusion'],
+      deployment: ['overview', 'deployment-strategy', 'production-setup', 'monitoring', 'maintenance', 'conclusion']
     };
 
     const modules = moduleOrder[phase] || [];

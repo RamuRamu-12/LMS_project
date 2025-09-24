@@ -7,8 +7,8 @@ const NextButton = ({ currentPhase, currentModule, onNext }) => {
   const { projectId } = useParams();
   const { unlockNextModule, completeModule } = useProjectProgress();
 
-  // Don't show the button for conclusion and final-steps modules since they have their own navigation
-  if (currentModule === 'conclusion' || currentModule === 'final-steps') {
+  // Don't show the button for conclusion module since it has its own navigation
+  if (currentModule === 'conclusion') {
     return null;
   }
 

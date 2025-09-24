@@ -8,11 +8,11 @@ const getProjectVideos = async (req, res) => {
     const { projectId } = req.params;
     const { videoType, phase, isPublic } = req.query;
     
-    const whereClause = { project_id: projectId };
+    const whereClause = { projectId };
     
-    if (videoType) whereClause.video_type = videoType;
+    if (videoType) whereClause.videoType = videoType;
     if (phase) whereClause.phase = phase;
-    if (isPublic !== undefined) whereClause.is_public = isPublic === 'true';
+    if (isPublic !== undefined) whereClause.isPublic = isPublic === 'true';
 
     const videos = await Video.findAll({
       where: whereClause,
@@ -25,10 +25,10 @@ const getProjectVideos = async (req, res) => {
         {
           model: User,
           as: 'uploader',
-          attributes: ['id', 'name', 'email']
+          attributes: ['id', 'firstName', 'lastName', 'email']
         }
       ],
-      order: [['video_type', 'ASC'], ['phase_number', 'ASC'], ['createdAt', 'DESC']]
+      order: [['videoType', 'ASC'], ['phaseNumber', 'ASC'], ['createdAt', 'DESC']]
     });
 
     res.json({
@@ -60,7 +60,7 @@ const getVideoById = async (req, res) => {
         {
           model: User,
           as: 'uploader',
-          attributes: ['id', 'name', 'email']
+          attributes: ['id', 'firstName', 'lastName', 'email']
         }
       ]
     });
@@ -94,56 +94,14 @@ const createVideo = async (req, res) => {
       title,
       description,
       videoUrl,
-      video_url,
       thumbnailUrl,
-      thumbnail_url,
       videoType,
-      video_type,
       phase,
       phaseNumber,
-      phase_number,
       duration,
       tags,
-      isPublic,
-      is_public = true
+      isPublic = true
     } = req.body;
-
-    // Use the provided field names or fall back to snake_case
-    const finalVideoUrl = videoUrl || video_url;
-    const finalThumbnailUrl = thumbnailUrl || thumbnail_url;
-    const finalVideoType = videoType || video_type;
-    const finalPhaseNumber = phaseNumber || phase_number;
-    const finalIsPublic = isPublic !== undefined ? isPublic : is_public;
-
-    // Validate required fields
-    if (!title || !finalVideoUrl || !finalVideoType) {
-      return res.status(400).json({
-        success: false,
-        message: 'Title, video URL, and video type are required'
-      });
-    }
-
-    // Validate video type
-    if (!['overview', 'phase'].includes(finalVideoType)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Video type must be either "overview" or "phase"'
-      });
-    }
-
-    // Parse tags safely
-    let parsedTags = null;
-    if (tags && tags.trim() !== '') {
-      try {
-        parsedTags = JSON.parse(tags);
-      } catch (parseError) {
-        logger.error('Error parsing tags:', parseError);
-        return res.status(400).json({
-          success: false,
-          message: 'Invalid tags format. Must be valid JSON array.'
-        });
-      }
-    }
 
     // Check if project exists
     const project = await Project.findByPk(projectId);
@@ -154,19 +112,10 @@ const createVideo = async (req, res) => {
       });
     }
 
-    // Log the data we're about to create
-    logger.info('Creating video with data:', {
-      project_id: projectId,
-      title,
-      video_url: finalVideoUrl,
-      video_type: finalVideoType,
-      uploaded_by: req.user.id
-    });
-
     // For overview videos, check if one already exists
-    if (finalVideoType === 'overview') {
+    if (videoType === 'overview') {
       const existingOverview = await Video.findOne({
-        where: { project_id: projectId, video_type: 'overview' }
+        where: { projectId, videoType: 'overview' }
       });
       
       if (existingOverview) {
@@ -178,25 +127,25 @@ const createVideo = async (req, res) => {
     }
 
     const video = await Video.create({
-      project_id: projectId,
+      projectId,
       title,
       description,
-      video_url: finalVideoUrl,
-      thumbnail_url: finalThumbnailUrl,
-      video_type: finalVideoType,
+      videoUrl,
+      thumbnailUrl,
+      videoType,
       phase,
-      phase_number: finalPhaseNumber ? parseInt(finalPhaseNumber) : null,
-      duration: duration ? parseInt(duration) : null,
-      tags: parsedTags,
-      is_public: finalIsPublic,
-      uploaded_by: req.user.id,
-      updated_by: req.user.id
+      phaseNumber,
+      duration,
+      tags: tags ? JSON.parse(tags) : null,
+      isPublic,
+      uploadedBy: req.user.id,
+      updatedBy: req.user.id
     });
 
-    // If this is an overview video, update the project's overview_video_url
-    if (finalVideoType === 'overview') {
+    // If this is an overview video, update the project's overviewVideoUrl
+    if (videoType === 'overview') {
       await Project.update(
-        { overview_video_url: finalVideoUrl, updated_by: req.user.id },
+        { overviewVideoUrl: videoUrl, updatedBy: req.user.id },
         { where: { id: projectId } }
       );
     }
@@ -212,18 +161,10 @@ const createVideo = async (req, res) => {
         {
           model: User,
           as: 'uploader',
-          attributes: ['id', 'name', 'email']
+          attributes: ['id', 'firstName', 'lastName', 'email']
         }
       ]
     });
-
-    if (!createdVideo) {
-      logger.error('Created video not found after creation:', video.id);
-      return res.status(500).json({
-        success: false,
-        message: 'Video created but could not be retrieved'
-      });
-    }
 
     res.status(201).json({
       success: true,
@@ -232,14 +173,10 @@ const createVideo = async (req, res) => {
     });
   } catch (error) {
     logger.error('Error creating video:', error);
-    logger.error('Request body:', req.body);
-    logger.error('Project ID:', projectId);
-    logger.error('User ID:', req.user?.id);
     res.status(500).json({
       success: false,
       message: 'Error creating video',
-      error: error.message,
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      error: error.message
     });
   }
 };
@@ -250,34 +187,12 @@ const updateVideo = async (req, res) => {
     const { id } = req.params;
     const updateData = req.body;
     
-    // Add updated_by to the update data
-    updateData.updated_by = req.user.id;
+    // Add updatedBy to the update data
+    updateData.updatedBy = req.user.id;
 
     // Parse tags if provided
     if (updateData.tags && typeof updateData.tags === 'string') {
       updateData.tags = JSON.parse(updateData.tags);
-    }
-
-    // Handle field name mapping for frontend compatibility
-    if (updateData.videoUrl) {
-      updateData.video_url = updateData.videoUrl;
-      delete updateData.videoUrl;
-    }
-    if (updateData.thumbnailUrl) {
-      updateData.thumbnail_url = updateData.thumbnailUrl;
-      delete updateData.thumbnailUrl;
-    }
-    if (updateData.videoType) {
-      updateData.video_type = updateData.videoType;
-      delete updateData.videoType;
-    }
-    if (updateData.phaseNumber) {
-      updateData.phase_number = updateData.phaseNumber;
-      delete updateData.phaseNumber;
-    }
-    if (updateData.isPublic !== undefined) {
-      updateData.is_public = updateData.isPublic;
-      delete updateData.isPublic;
     }
 
     const video = await Video.findByPk(id);
@@ -292,11 +207,11 @@ const updateVideo = async (req, res) => {
       where: { id }
     });
 
-    // If this is an overview video and videoUrl was updated, update the project's overview_video_url
-    if (video.video_type === 'overview' && updateData.video_url) {
+    // If this is an overview video and videoUrl was updated, update the project's overviewVideoUrl
+    if (video.videoType === 'overview' && updateData.videoUrl) {
       await Project.update(
-        { overview_video_url: updateData.video_url, updated_by: req.user.id },
-        { where: { id: video.project_id } }
+        { overviewVideoUrl: updateData.videoUrl, updatedBy: req.user.id },
+        { where: { id: video.projectId } }
       );
     }
 
@@ -311,7 +226,7 @@ const updateVideo = async (req, res) => {
         {
           model: User,
           as: 'uploader',
-          attributes: ['id', 'name', 'email']
+          attributes: ['id', 'firstName', 'lastName', 'email']
         }
       ]
     });
@@ -345,11 +260,11 @@ const deleteVideo = async (req, res) => {
       });
     }
 
-    // If this is an overview video, clear the project's overview_video_url
-    if (video.video_type === 'overview') {
+    // If this is an overview video, clear the project's overviewVideoUrl
+    if (video.videoType === 'overview') {
       await Project.update(
-        { overview_video_url: null, updated_by: req.user.id },
-        { where: { id: video.project_id } }
+        { overviewVideoUrl: null, updatedBy: req.user.id },
+        { where: { id: video.projectId } }
       );
     }
 
@@ -377,7 +292,7 @@ const incrementViewCount = async (req, res) => {
   try {
     const { id } = req.params;
     
-    await Video.increment('view_count', {
+    await Video.increment('viewCount', {
       where: { id }
     });
 
@@ -399,15 +314,15 @@ const incrementViewCount = async (req, res) => {
 const getVideoStats = async (req, res) => {
   try {
     const totalVideos = await Video.count();
-    const publicVideos = await Video.count({ where: { is_public: true } });
-    const totalViews = await Video.sum('view_count') || 0;
+    const publicVideos = await Video.count({ where: { isPublic: true } });
+    const totalViews = await Video.sum('viewCount') || 0;
     
     const videosByType = await Video.findAll({
       attributes: [
-        'video_type',
+        'videoType',
         [Video.sequelize.fn('COUNT', Video.sequelize.col('id')), 'count']
       ],
-      group: ['video_type'],
+      group: ['videoType'],
       raw: true
     });
 
@@ -416,7 +331,7 @@ const getVideoStats = async (req, res) => {
         'phase',
         [Video.sequelize.fn('COUNT', Video.sequelize.col('id')), 'count']
       ],
-      where: { video_type: 'phase' },
+      where: { videoType: 'phase' },
       group: ['phase'],
       raw: true
     });
